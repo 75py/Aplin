@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.android.databinding'
 apply plugin: 'kotlin-android'
+apply plugin: 'deploygate'
+
+
+apply from: 'signingConfigs/release.gradle', to: android
 
 android {
     compileSdkVersion 23
@@ -11,7 +15,7 @@ android {
         minSdkVersion 21
         targetSdkVersion "$target_sdk_version"
         versionCode 1
-        versionName "1.0.0"
+        versionName PUBLISH_VERSION
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         multiDexKeepProguard file('multi-dex-keep.txt')
@@ -20,6 +24,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     sourceSets {
@@ -95,4 +100,23 @@ repositories {
 }
 kapt {
     generateStubs = true
+}
+
+deploygate {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+
+    userName = properties.getProperty("deploygate.userName")
+    token = properties.getProperty("deploygate.token")
+
+    apks {
+        release {
+            sourceFile = file("./build/outputs/apk/app-release.apk")
+        }
+
+        debug {
+            sourceFile = file("./build/outputs/apk/app-debug.apk")
+        }
+    }
 }
