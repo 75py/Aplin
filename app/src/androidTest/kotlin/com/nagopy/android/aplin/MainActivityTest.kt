@@ -1,10 +1,10 @@
 package com.nagopy.android.aplin
 
 import android.app.Application
-import android.support.test.InstrumentationRegistry
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.widget.TextView
+import com.nagopy.android.aplin.view.MainActivity
 import org.assertj.android.api.Assertions
 import org.junit.Before
 import org.junit.Rule
@@ -42,15 +42,8 @@ class MainActivityTest {
     }
 
     @Test
-    public fun testText() {
-        val textView = rule.activity.findViewById(R.id.text) as TextView
-        Assertions.assertThat(textView).isVisible()
-        Assertions.assertThat(textView).hasText("test")
-    }
-
-    @Test
     fun testInject() {
-        assertNotNull(rule.activity.app)
+        assertNotNull(rule.activity.application)
     }
 
 }

@@ -1,9 +1,52 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorEdgeEffect">@color/theme_quaternary</item>
+        <item name="android:colorControlHighlight">@color/theme_quinary</item>
+
+        <item name="android:colorBackground">@color/theme_background</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+    </style>
+
+    <style name="OverflowMenuButton" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_more</item>
+    </style>
+
+    <style name="TextAppearance.AppTheme.Large" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="TextAppearance.AppTheme.Medium" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="TextAppearance.AppTheme.Small" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextColor">@color/text_color_tertiary</item>
+        <item name="tabSelectedTextColor">@color/text_color_primary</item>
+        <item name="tabIndicatorColor">@color/colorPrimaryDark</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabGravity">center</item>
+        <item name="android:background">@drawable/tab_indicator</item>
+        <item name="android:textSize">@dimen/toolbar_text_size</item>
+        <item name="android:paddingLeft">@dimen/unit_4</item>
+        <item name="android:paddingRight">@dimen/unit_4</item>
+        <item name="android:fadingEdge">horizontal</item>
+        <item name="android:fadingEdgeLength">@dimen/unit_4</item>
     </style>
 
 </resources>

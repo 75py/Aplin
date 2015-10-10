@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="@dimen/list_item_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/list_item_vertical_margin">
+
+    <!-- TODO
+     selectable_item_background がAPI16で動かないので確認
+     -->
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/unit_2"
+        android:layout_marginRight="@dimen/unit_2"
+        android:contentDescription="icon"
+        tools:ignore="HardcodedText"
+        tools:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:textAppearance="@style/TextAppearance.AppTheme.Medium"
+        tools:text="My pkgs" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/label"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.AppTheme.Small"
+        android:textColor="@color/text_color_secondary"
+        tools:text="Running" />
+
+    <TextView
+        android:id="@+id/packageName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/status"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.AppTheme.Small"
+        android:textColor="@color/text_color_secondary"
+        tools:text="com.nagopy.android.mypkgs" />
+</RelativeLayout>

@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/action_share"
+        app:showAsAction="withText|ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_share_label"
+                android:title="@string/action_share_label" />
+            <item
+                android:id="@+id/action_share_package_name"
+                android:title="@string/action_share_package_name" />
+            <item
+                android:id="@+id/action_share_label_and_package_name"
+                android:title="@string/action_share_label_and_package_name" />
+<!--
+            <item
+                android:id="@+id/action_share_csv"
+                android:title="@string/action_share_csv" />
+-->
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/action_preference"
+        app:showAsAction="withText|ifRoom" />
+    <item
+        android:id="@+id/action_about"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/action_about"
+        app:showAsAction="withText|ifRoom" />
+</menu>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="?android:attr/selectableItemBackground" />
+    <item>
+        <selector>
+            <item
+                android:drawable="@color/theme_quaternary_translucent"
+                android:state_pressed="true" />
+        </selector>
+    </item>
+</layer-list>

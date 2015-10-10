@@ -1,0 +1,9 @@
+<PreferenceScreen>
+
+    <com.nagopy.android.aplin.model.preference.CategorySetting_MultiSelectionPreference />
+
+    <com.nagopy.android.aplin.model.preference.DisplayItemSetting_MultiSelectionPreference />
+
+    <com.nagopy.android.aplin.model.preference.SortSetting_SingleSelectionPreference />
+
+</PreferenceScreen>
