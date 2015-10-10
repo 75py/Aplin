@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Aplin</string>
+
+    <string name="sort">Sort</string>
+    <string name="sort_default">Default</string>
+    <string name="sort_default_summary">Order by app name, package name</string>
+    <string name="sort_package_name">Package name</string>
+    <string name="sort_package_name_summary">Order by package name</string>
+    <string name="sort_update_time_desc">Update time desc</string>
+    <string name="sort_update_time_desc_summary">Order by update time desc, app name, packagename</string>
+
 </resources>

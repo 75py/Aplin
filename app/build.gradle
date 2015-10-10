@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
         minSdkVersion 19
-        targetSdkVersion 23
+        targetSdkVersion "$target_sdk_version"
         versionCode 1
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -53,10 +53,13 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:8.1.0'
     compile 'com.cookpad.android.rxt4a:rxt4a:0.10.0'
     compile 'com.jakewharton.timber:timber:4.0.1'
+    compile 'com.nagopy.android:easyprefs:0.2.0'
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt 'com.android.databinding:compiler:1.0-rc4'
+    kapt files("${sdk_dir}/platforms/android-${target_sdk_version}/android.jar")
+    kapt 'com.nagopy.android:easyprefs-processor:0.2.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'com.google.dexmaker:dexmaker:1.2'
@@ -75,6 +78,10 @@ dependencies {
 buildscript {
     ext.kotlin_version = '0.14.451'
     ext.dagger_version = '2.0.1'
+    ext.target_sdk_version = 23
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    ext.sdk_dir = properties.getProperty("sdk.dir")
     repositories {
         mavenCentral()
     }
