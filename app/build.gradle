@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.android.databinding'
 apply plugin: 'kotlin-android'
 
 android {
@@ -10,8 +11,10 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        multiDexKeepProguard file('multi-dex-keep.txt')
     }
     buildTypes {
         release {
@@ -53,6 +56,7 @@ dependencies {
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt 'com.android.databinding:compiler:1.0-rc4'
 
     testCompile 'junit:junit:4.12'
     testCompile 'com.google.dexmaker:dexmaker:1.2'

@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin
 
 import android.app.Application
+import android.support.test.InstrumentationRegistry
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.widget.TextView
@@ -15,22 +16,24 @@ import kotlin.test.assertNotNull
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
-    val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+    val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, false, false)
 
     @Rule
     public fun getActivityTestRule() = rule
 
     @Before
     fun before() {
-        val mock = Mockito.mock(Application::class.java)
+        val targetApp = Mockito.mock(Application::class.java, Mockito.RETURNS_DEEP_STUBS)
+        Mockito.`when`(targetApp.getString(R.string.app_name)).thenReturn("test")
         Aplin.component = DaggerApplicationComponent.builder()
-                .applicationModule(object : ApplicationModule(mock) {
+                .applicationModule(object : ApplicationModule(targetApp) {
                     override fun provideApplication(): Application {
-                        return mock
+                        return targetApp
                     }
                     // ここで必要に応じてモックにする
                 })
                 .build()
+        rule.launchActivity(null)
     }
 
     @Test
@@ -42,7 +45,7 @@ class MainActivityTest {
     public fun testText() {
         val textView = rule.activity.findViewById(R.id.text) as TextView
         Assertions.assertThat(textView).isVisible()
-        Assertions.assertThat(textView).hasText(R.string.app_name)
+        Assertions.assertThat(textView).hasText("test")
     }
 
     @Test
