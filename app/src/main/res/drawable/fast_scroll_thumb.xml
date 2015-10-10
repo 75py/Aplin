@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <gradient android:endColor="@color/theme_secondary_translucent" android:startColor="@color/theme_secondary" />
+            <size android:width="@dimen/unit_10" android:height="@dimen/unit_16" />
+            <corners android:radius="@dimen/unit_2" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:endColor="@color/theme_quaternary_translucent" android:startColor="@color/theme_quaternary" />
+            <size android:width="@dimen/unit_10" android:height="@dimen/unit_16" />
+            <corners android:radius="@dimen/unit_2" />
+        </shape>
+    </item>
+</selector>

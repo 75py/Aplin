@@ -1,0 +1,122 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.android.databinding'
+apply plugin: 'kotlin-android'
+apply plugin: 'deploygate'
+
+
+apply from: 'signingConfigs/release.gradle', to: android
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "com.nagopy.android.aplin"
+        minSdkVersion 21
+        targetSdkVersion "$target_sdk_version"
+        versionCode 1
+        versionName PUBLISH_VERSION
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        multiDexKeepProguard file('multi-dex-keep.txt')
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+    packagingOptions {
+        exclude 'asm-license.txt'
+        exclude 'LICENSE'
+        exclude 'NOTICE'
+        exclude 'DEPENDENCIES'
+        exclude 'LICENSE.txt'
+        exclude 'NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+    lintOptions {
+        abortOnError false
+        disable 'PrivateResource'
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.google.android.gms:play-services-ads:8.1.0'
+    compile 'com.cookpad.android.rxt4a:rxt4a:0.10.0'
+    compile 'com.jakewharton.timber:timber:4.0.1'
+    compile 'com.nagopy.android:easyprefs:0.2.0'
+    compile "com.google.dagger:dagger:$dagger_version"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt 'com.android.databinding:compiler:1.0-rc4'
+    kapt files("${sdk_dir}/platforms/android-${target_sdk_version}/android.jar")
+    kapt 'com.nagopy.android:easyprefs-processor:0.2.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.google.dexmaker:dexmaker:1.2'
+    testCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
+    androidTestCompile 'com.android.support:support-annotations:23.0.1'
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+    androidTestCompile 'com.squareup.assertj:assertj-android:1.1.0'
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+}
+buildscript {
+    ext.kotlin_version = '0.14.451'
+    ext.dagger_version = '2.0.1'
+    ext.target_sdk_version = 23
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    ext.sdk_dir = properties.getProperty("sdk.dir")
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
+}
+kapt {
+    generateStubs = true
+}
+
+deploygate {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+
+    userName = properties.getProperty("deploygate.userName")
+    token = properties.getProperty("deploygate.token")
+
+    apks {
+        release {
+            sourceFile = file("./build/outputs/apk/app-release.apk")
+        }
+
+        debug {
+            sourceFile = file("./build/outputs/apk/app-debug.apk")
+        }
+    }
+}

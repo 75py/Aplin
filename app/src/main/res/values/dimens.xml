@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="activity_horizontal_margin">@dimen/unit_4</dimen>
+
+    <dimen name="list_item_vertical_margin">@dimen/unit_4</dimen>
+    <dimen name="toolbar_text_size">@dimen/abc_text_size_subtitle_material_toolbar</dimen>
+
+    <dimen name="divider">1dp</dimen>
+
+    <dimen name="unit_1">3dp</dimen>
+    <dimen name="unit_2">6dp</dimen>
+    <dimen name="unit_3">9dp</dimen>
+    <dimen name="unit_4">12dp</dimen>
+    <dimen name="unit_5">15dp</dimen>
+    <dimen name="unit_6">18dp</dimen>
+    <dimen name="unit_7">21dp</dimen>
+    <dimen name="unit_8">24dp</dimen>
+    <dimen name="unit_9">27dp</dimen>
+    <dimen name="unit_10">30dp</dimen>
+    <dimen name="unit_11">33dp</dimen>
+    <dimen name="unit_12">36dp</dimen>
+    <dimen name="unit_13">39dp</dimen>
+    <dimen name="unit_14">42dp</dimen>
+    <dimen name="unit_15">45dp</dimen>
+    <dimen name="unit_16">48dp</dimen>
+    <dimen name="unit_17">51dp</dimen>
+    <dimen name="unit_18">54dp</dimen>
+    <dimen name="unit_19">57dp</dimen>
+    <dimen name="unit_20">60dp</dimen>
+    <dimen name="unit_30">90dp</dimen>
+    <dimen name="unit_40">120dp</dimen>
+    <dimen name="unit_50">150dp</dimen>
+    <dimen name="unit_60">180dp</dimen>
+
+</resources>

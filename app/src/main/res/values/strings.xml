@@ -1,0 +1,68 @@
+<resources>
+    <string name="adUnitId" translatable="false">ca-app-pub-2998260208076899/4555689360</string>
+
+    <string name="app_name">Aplin</string>
+
+    <string name="action_share">Share</string>
+    <string name="action_share_label">App name</string>
+    <string name="action_share_package_name">Package name</string>
+    <string name="action_share_label_and_package_name">App name &amp; Package name</string>
+    <string name="action_share_csv">CSV</string>
+    <string name="action_search">Search</string>
+    <string name="action_reload">Reload</string>
+    <string name="action_about">About</string>
+    <string name="action_preference">Preference</string>
+    <string name="action_open_source_license">Open source license</string>
+
+    <string name="category">Categories</string>
+    <string name="category_all">All</string>
+    <string name="category_all_summary" />
+    <string name="category_all_running">All, running</string>
+    <string name="category_all_running_summary" />
+    <string name="category_system">System</string>
+    <string name="category_system_summary" />
+    <string name="category_system_running">System, running</string>
+    <string name="category_system_running_summary" />
+    <string name="category_system_undisablable">Undisablable</string>
+    <string name="category_system_undisablable_summary">Applications that you cannot click disable button.</string>
+    <string name="category_system_undisablable_running">Undisablable, running</string>
+    <string name="category_system_undisablable_running_summary" />
+    <string name="category_system_disablable">Disablable</string>
+    <string name="category_system_disablable_summary">Applications that you can click disable button.</string>
+    <string name="category_system_disablable_running">Disablable, running</string>
+    <string name="category_system_disablable_running_summary" />
+    <string name="category_disabled">"Disabled"</string>
+    <string name="category_disabled_summary" />
+    <string name="category_user">"User"</string>
+    <string name="category_user_summary" />
+    <string name="category_user_running">"User, running"</string>
+    <string name="category_user_running_summary" />
+    <string name="category_default">Default</string>
+    <string name="category_default_summary">Applications that are default for some action. Ex: launcher app</string>
+    <string name="category_recently_used">Recently used</string>
+    <string name="category_recently_used_summary">Please allow usage access</string>
+
+    <string name="sort">Sort</string>
+    <string name="sort_default">Default</string>
+    <string name="sort_default_summary">Order by app name, package name</string>
+    <string name="sort_package_name">Package name</string>
+    <string name="sort_package_name_summary">Order by package name</string>
+    <string name="sort_update_time_desc">Update time desc</string>
+    <string name="sort_update_time_desc_summary">Order by update time desc, app name, packagename</string>
+
+    <string name="display_item">Display items</string>
+    <string name="display_item_process">Process</string>
+    <string name="display_item_process_summary" />
+    <string name="display_item_not_installed">Not installed</string>
+    <string name="display_item_not_installed_summary" />
+    <string name="display_item_not_installed_format">Not installed</string>
+    <string name="display_item_first_install_time">First install time</string>
+    <string name="display_item_first_install_time_summary" />
+    <string name="display_item_first_install_time_format">First install : %1$s</string>
+    <string name="display_item_last_update_time">Last update time</string>
+    <string name="display_item_last_update_time_summary" />
+    <string name="display_item_last_update_time_format">Last update : %1$s</string>
+    <string name="display_item_recently_used_count">Recently used count</string>
+    <string name="display_item_recently_used_count_summary">Please allow usage access</string>
+    <string name="display_item_recently_used_count_format">Recently used : %1$s</string>
+</resources>

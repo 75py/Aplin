@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ff9800</color>
+    <color name="colorPrimaryDark">#984d00</color>
+    <color name="colorAccent">#2979ff</color>
+
+    <color name="colorDivider">@android:color/darker_gray</color>
+
+
+    <color name="theme_primary">#FF730D</color>
+    <color name="theme_secondary">#e8890c</color>
+    <color name="theme_tertiary">#FFAC00</color>
+    <color name="theme_quaternary">#E8B60C</color>
+    <color name="theme_quinary">#FFE10D</color>
+
+    <color name="theme_primary_translucent">#7FFF730D</color>
+    <color name="theme_secondary_translucent">#7FE8890C</color>
+    <color name="theme_tertiary_translucent">#7FFFAC00</color>
+    <color name="theme_quaternary_translucent">#7FE8B60C</color>
+    <color name="theme_quinary_translucent">#7FFFE10D</color>
+
+    <color name="theme_background">@color/background_material_light</color>
+    <color name="text_color_primary">@color/primary_text_default_material_light</color>
+    <color name="text_color_secondary">@color/secondary_text_default_material_light</color>
+    <color name="text_color_tertiary">#60000000</color>
+</resources>
