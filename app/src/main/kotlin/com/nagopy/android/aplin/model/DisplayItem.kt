@@ -52,6 +52,10 @@ public enum class DisplayItem
             }
             return true
         }
+
+        override fun maxSdkVersion(): Int {
+            return VersionCode.LOLLIPOP
+        }
     },
     /**
      * インストール状態
