@@ -3,6 +3,6 @@
     android:shape="rectangle">
     <size android:width="@dimen/unit_4" />
     <gradient
-        android:endColor="@color/theme_quinary_translucent"
-        android:startColor="@color/theme_quaternary_translucent" />
+        android:endColor="@color/colorQuinaryTranslucent"
+        android:startColor="@color/colorQuaternaryTranslucent" />
 </shape>

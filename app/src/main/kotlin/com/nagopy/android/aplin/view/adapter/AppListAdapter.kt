@@ -76,7 +76,7 @@ public class AppListAdapter(
         val entity = filteredData.get(position)
 
         val textColor = ContextCompat.getColor(context,
-                if (entity.isEnabled) R.color.text_color else R.color.text_color_tertiary)
+                if (entity.isEnabled) R.color.text_color else R.color.textColorTertiary)
 
         holder.label.text = entity.label
         holder.label.setTextColor(textColor)

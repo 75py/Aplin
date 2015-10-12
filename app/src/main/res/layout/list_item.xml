@@ -47,7 +47,7 @@
         android:layout_toRightOf="@+id/icon"
         android:gravity="end"
         android:textAppearance="@style/TextAppearance.AppTheme.Small"
-        android:textColor="@color/text_color_secondary"
+        android:textColor="@color/textColorSecondary"
         tools:text="Running" />
 
     <TextView
@@ -59,6 +59,6 @@
         android:layout_toRightOf="@+id/icon"
         android:gravity="end"
         android:textAppearance="@style/TextAppearance.AppTheme.Small"
-        android:textColor="@color/text_color_secondary"
+        android:textColor="@color/textColorSecondary"
         tools:text="com.nagopy.android.mypkgs" />
 </RelativeLayout>

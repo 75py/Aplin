@@ -4,7 +4,7 @@
     <item>
         <selector>
             <item
-                android:drawable="@color/theme_quaternary_translucent"
+                android:drawable="@color/colorQuaternaryTranslucent"
                 android:state_pressed="true" />
         </selector>
     </item>
