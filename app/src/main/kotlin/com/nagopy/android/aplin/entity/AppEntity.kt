@@ -35,4 +35,6 @@ data class AppEntity {
     /** UsageStatsManagerで取得 */
     var launchTimes: Int = 0
 
+    var versionName: String? = null
+
 }

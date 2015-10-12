@@ -88,14 +88,9 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             }
         }
     },
-    process(VersionCode.BASE..VersionCode.LOLLIPOP) {
+    process(Constants.ALL_SDK_VERSION) {
         override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            val runningProcessMap = appConverter.appProcessManager.getRunningStatusMap()
-            val processList = runningProcessMap.get(applicationInfo.packageName)
-            if (processList != null) {
-                Collections.sort(processList)
-                entity.process = processList
-            }
+
         }
     },
     lastTimeUsed(VersionCode.LOLLIPOP..Int.MAX_VALUE) {
@@ -104,6 +99,15 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             if (times != null) {
                 entity.launchTimes = times
             }
+        }
+    },
+    versionName(VersionCode.BASE..Int.MAX_VALUE) {
+        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+            val packageInfo = appConverter.packageManager.getPackageInfo(
+                    applicationInfo.packageName,
+                    PackageManager.GET_META_DATA
+            )
+            entity.versionName = packageInfo.versionName
         }
     }
     ;
