@@ -18,7 +18,7 @@ public class IconProperties
  * コンストラクタ
  */
 @Inject
-constructor(application: Application) {
+constructor(application: Application, activityManager: ActivityManager) {
 
     /**
      * デフォルト表示用のアプリケーションアイコン
@@ -31,29 +31,7 @@ constructor(application: Application) {
 
     init {
         defaultIcon = ResourcesCompat.getDrawable(application.resources, android.R.drawable.sym_def_app_icon, null)
-        iconSize = getIconSize(application)
+        iconSize = activityManager.launcherLargeIconSize
     }
 
-    companion object {
-
-        /**
-         * ランチャーで表示するアイコンのサイズを取得する.
-
-         * @param context Context
-         * *
-         * @return ランチャーのアイコンサイズ
-         */
-        fun getIconSize(context: Context): Int {
-            val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            return activityManager.launcherLargeIconSize
-            /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            return activityManager.getLauncherLargeIconSize();
-        } else {
-            return (int) context.getResources().getDimension(android.R.dimen.app_icon_size);
-        }
-        */
-        }
-    }
 }

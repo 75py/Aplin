@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * メイン画面用プレゼンター
  */
-public class MainScreenPresenter
+public open class MainScreenPresenter
 @Inject
 constructor() : Presenter {
 
@@ -42,7 +42,7 @@ constructor() : Presenter {
 
     var view: MainScreenView? = null
 
-    fun initialize(view: MainScreenView) {
+    open fun initialize(view: MainScreenView) {
         this.view = view
         view.hideAppList()
         view.showIndicator()

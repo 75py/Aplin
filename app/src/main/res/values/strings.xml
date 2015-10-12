@@ -65,4 +65,7 @@
     <string name="display_item_recently_used_count">Recently used count</string>
     <string name="display_item_recently_used_count_summary">Please allow usage access</string>
     <string name="display_item_recently_used_count_format">Recently used : %1$s</string>
+    <string name="display_item_version_name">Version name</string>
+    <string name="display_item_version_name_summary" />
+    <string name="display_item_version_name_format">Version: %1$s</string>
 </resources>

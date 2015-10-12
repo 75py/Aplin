@@ -9,7 +9,7 @@ import com.nagopy.android.easyprefs.annotations.EasyPrefMultiSelection
 @EasyPrefMultiSelection(
         target = DisplayItem::class
         , title = R.string.display_item
-        , defValue = "PROCESS"
+        , defValue = "VERSION_NAME"
         , nullable = true
 )
 public interface DisplayItemSetting : EasyPref<java.util.List<DisplayItem>>

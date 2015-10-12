@@ -10,23 +10,23 @@ public interface MainScreenView {
     /**
      * インジケーターを表示する
      */
-    public fun showIndicator()
+    public open fun showIndicator()
 
     /**
      * インジケーターを非表示にする
      */
-    public fun hideIndicator()
+    public open fun hideIndicator()
 
     /**
      * カテゴリ別アプリ一覧を表示する
 
      * @param categories 表示カテゴリ一覧
      */
-    public fun showAppList(categories: List<Category>)
+    public open fun showAppList(categories: List<Category>)
 
     /**
      * カテゴリ別アプリ一覧を非表示にする
      */
-    public fun hideAppList()
+    public open fun hideAppList()
 
 }

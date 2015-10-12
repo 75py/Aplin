@@ -9,14 +9,14 @@ import javax.inject.Singleton
  * 広告表示（AdMob）の処理を移譲するためのクラス
  */
 @Singleton
-public class AdPresenter : Presenter {
+public open class AdPresenter : Presenter {
 
     @Inject
     constructor()
 
     var adView: AdView? = null
 
-    public fun initialize(adView: AdView) {
+    open fun initialize(adView: AdView) {
         this.adView = adView
         val adRequest = AdRequest.Builder()
                 .addTestDevice("2E21E51466C94A2960FCB4E0BB5DB388")

@@ -52,6 +52,10 @@ public enum class DisplayItem
             }
             return true
         }
+
+        override fun maxSdkVersion(): Int {
+            return VersionCode.LOLLIPOP
+        }
     },
     /**
      * インストール状態
@@ -105,7 +109,19 @@ public enum class DisplayItem
 
         override fun minSdkVersion(): Int = VersionCode.LOLLIPOP
 
-    };
+    },
+    /**
+     * バージョン情報
+     */
+    VERSION_NAME(R.string.display_item_version_name, R.string.display_item_version_name_summary) {
+        override fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean {
+            if (appData.versionName != null) {
+                sb.append(context.getString(R.string.display_item_version_name_format, appData.versionName))
+            }
+            return true
+        }
+    }
+    ;
 
     override fun getTitle(context: Context): String = context.getString(titleResourceId)
 

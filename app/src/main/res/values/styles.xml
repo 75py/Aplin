@@ -7,15 +7,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorEdgeEffect">@color/theme_quaternary</item>
-        <item name="android:colorControlHighlight">@color/theme_quinary</item>
+        <item name="android:colorEdgeEffect">@color/colorQuaternary</item>
+        <item name="android:colorControlHighlight">@color/colorQuinary</item>
 
-        <item name="android:colorBackground">@color/theme_background</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="windowActionModeOverlay">true</item>
 
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="android:actionOverflowButtonStyle">@style/OverflowMenuButton</item>
     </style>
 
@@ -36,8 +36,8 @@
     </style>
 
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabTextColor">@color/text_color_tertiary</item>
-        <item name="tabSelectedTextColor">@color/text_color_primary</item>
+        <item name="tabTextColor">@color/textColorTertiary</item>
+        <item name="tabSelectedTextColor">@color/textColorPrimary</item>
         <item name="tabIndicatorColor">@color/colorPrimaryDark</item>
         <item name="tabMode">scrollable</item>
         <item name="tabGravity">center</item>
