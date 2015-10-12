@@ -20,12 +20,22 @@ import android.preference.PreferenceFragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
+import com.nagopy.android.aplin.presenter.SettingsPresenter
+import javax.inject.Inject
 
 public class SettingsActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var settingsPresenter: SettingsPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Aplin.getApplicationComponent().inject(this)
+        settingsPresenter.initialize()
+
         setContentView(R.layout.activity_settings)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
@@ -33,6 +43,27 @@ public class SettingsActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         fragmentManager.beginTransaction().replace(R.id.content, SettingsFragment()).commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        settingsPresenter.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        settingsPresenter.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        settingsPresenter.destroy()
+    }
+
+    override fun finish() {
+        if (!settingsPresenter.finish()) {
+            super.finish()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

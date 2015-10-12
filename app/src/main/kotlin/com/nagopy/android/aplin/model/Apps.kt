@@ -9,7 +9,7 @@ import kotlin.properties.Delegates
 
 
 @Singleton
-public class Apps {
+public open class Apps {
 
     var context: Application by Delegates.notNull()
         @Inject set
@@ -26,11 +26,11 @@ public class Apps {
     /**
      * キャッシュを無効化する
      */
-    public fun invalidateCache() {
+    public open fun invalidateCache() {
         cache = null
     }
 
-    public fun getAll(): Observable<AppEntity> {
+    public open fun getAll(): Observable<AppEntity> {
         return Observable.create(Observable.OnSubscribe<AppEntity> { s ->
             try {
                 val resultList = cache ?: appManager.getAll()

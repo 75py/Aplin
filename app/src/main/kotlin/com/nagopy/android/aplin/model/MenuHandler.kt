@@ -12,7 +12,7 @@ import rx.Observable
 import javax.inject.Inject
 
 
-public class MenuHandler {
+public open class MenuHandler {
 
     private val MINE_TYPE_TEXT_PLAIN = "text/plain"
 

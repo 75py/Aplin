@@ -1,17 +1,23 @@
 package com.nagopy.android.aplin
 
-import android.app.Application
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import android.widget.TextView
+import com.nagopy.android.aplin.model.Apps
+import com.nagopy.android.aplin.presenter.AdPresenter
+import com.nagopy.android.aplin.presenter.MainScreenPresenter
+import com.nagopy.android.aplin.view.AppListFragment
 import com.nagopy.android.aplin.view.MainActivity
+import com.nagopy.android.aplin.view.SettingsActivity
 import org.assertj.android.api.Assertions
+import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
-import kotlin.test.assertNotNull
+import org.mockito.Mockito.mock
+import org.hamcrest.CoreMatchers.`is` as _is
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
@@ -21,29 +27,41 @@ class MainActivityTest {
     @Rule
     public fun getActivityTestRule() = rule
 
+    class MockApplicationComponent : ApplicationComponent {
+
+        override fun inject(mainActivity: MainActivity) {
+            mainActivity.adPresenter = mock(AdPresenter::class.java, Mockito.RETURNS_DEEP_STUBS)
+            mainActivity.presenter = mock(MainScreenPresenter::class.java, Mockito.RETURNS_DEEP_STUBS)
+
+            mainActivity.presenter.apps = mock(Apps::class.java)
+
+            Mockito.doNothing().`when`(mainActivity.presenter).initialize(Tests.anyObj())
+            Mockito.doNothing().`when`(mainActivity.adPresenter).initialize(Tests.anyObj())
+        }
+
+        override fun inject(appListFragment: AppListFragment) {
+            throw UnsupportedOperationException()
+        }
+
+        override fun inject(settingsActivity: SettingsActivity) {
+            throw UnsupportedOperationException()
+        }
+    }
+
     @Before
     fun before() {
-        val targetApp = Mockito.mock(Application::class.java, Mockito.RETURNS_DEEP_STUBS)
-        Mockito.`when`(targetApp.getString(R.string.app_name)).thenReturn("test")
-        Aplin.component = DaggerApplicationComponent.builder()
-                .applicationModule(object : ApplicationModule(targetApp) {
-                    override fun provideApplication(): Application {
-                        return targetApp
-                    }
-                    // ここで必要に応じてモックにする
-                })
-                .build()
+        Aplin.component = MockApplicationComponent()
         rule.launchActivity(null)
     }
 
     @Test
     public fun testLaunch() {
-        Assertions.assertThat(rule.activity).isNotNull()
-    }
-
-    @Test
-    fun testInject() {
-        assertNotNull(rule.activity.application)
+        val activity = rule.activity
+        Assertions.assertThat(activity).isNotNull()
+        Assert.assertThat(activity.presenter, _is(notNullValue()))
+        Assert.assertThat(activity.adPresenter, _is(notNullValue()))
+        Mockito.verify(activity.presenter, Mockito.times(1)).initialize(activity);
+        Mockito.verify(activity.adPresenter, Mockito.times(1)).initialize(activity.adView);
     }
 
 }
