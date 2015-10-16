@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.android.databinding'
 apply plugin: 'kotlin-android'
 apply plugin: 'deploygate'
+apply plugin: 'io.fabric'
 
 
 apply from: 'signingConfigs/release.gradle', to: android
@@ -53,9 +54,9 @@ android {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.google.android.gms:play-services-ads:8.1.0'
     compile 'com.cookpad.android.rxt4a:rxt4a:0.10.0'
     compile 'com.jakewharton.timber:timber:4.0.1'
@@ -66,13 +67,16 @@ dependencies {
     kapt 'com.android.databinding:compiler:1.0-rc4'
     kapt files("${sdk_dir}/platforms/android-${target_sdk_version}/android.jar")
     kapt 'com.nagopy.android:easyprefs-processor:0.2.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true;
+    }
 
     testCompile 'junit:junit:4.12'
     testCompile 'com.google.dexmaker:dexmaker:1.2'
     testCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
-    androidTestCompile 'com.android.support:support-annotations:23.0.1'
+    androidTestCompile 'com.android.support:support-annotations:23.1.0'
     androidTestCompile 'com.android.support.test:runner:0.4'
     androidTestCompile 'com.android.support.test:rules:0.4'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
@@ -119,4 +123,19 @@ deploygate {
             sourceFile = file("./build/outputs/apk/app-debug.apk")
         }
     }
+}
+
+// Fabric
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }
