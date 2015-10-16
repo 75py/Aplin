@@ -56,7 +56,6 @@ class AppManager {
 
             val entity = appConverter.convertToEntity(info)
             apps.add(entity)
-            Timber.v(entity.toString())
         }
         return apps
 
