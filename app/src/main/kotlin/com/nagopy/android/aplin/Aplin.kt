@@ -2,6 +2,8 @@ package com.nagopy.android.aplin
 
 import android.app.Application
 import android.content.Intent
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
 open class Aplin : Application() {
@@ -18,6 +20,8 @@ open class Aplin : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        Fabric.with(this, Crashlytics())
     }
 
     override fun startActivity(intent: Intent) {
