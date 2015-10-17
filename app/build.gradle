@@ -15,8 +15,8 @@ android {
         applicationId "com.nagopy.android.aplin"
         minSdkVersion 21
         targetSdkVersion "$target_sdk_version"
-        versionCode 1
-        versionName PUBLISH_VERSION
+        versionCode PUBLISH_VERSION_CODE
+        versionName PUBLISH_VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         multiDexKeepProguard file('multi-dex-keep.txt')

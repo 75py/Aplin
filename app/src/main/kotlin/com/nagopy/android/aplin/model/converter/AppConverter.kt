@@ -27,9 +27,6 @@ public class AppConverter {
     lateinit var devicePolicy: DevicePolicy
 
     @Inject
-    lateinit var appProcessManager: AppProcessManager
-
-    @Inject
     lateinit var appUsageStatsManager: AppUsageStatsManager
 
     val enabledSettingField: FieldReflection<Int>

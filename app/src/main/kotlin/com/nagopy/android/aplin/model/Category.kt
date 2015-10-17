@@ -28,19 +28,9 @@ public enum class Category(val minSdkVersion: Int, val maxSdkVersion: Int, val t
             return true
         }
     },
-    RUNNING(VersionCode.BASE, VersionCode.KITKAT, R.string.category_all_running, R.string.category_all_running_summary) {
-        override fun isTarget(appData: AppEntity): Boolean {
-            return !appData.process.isEmpty()
-        }
-    },
     SYSTEM(VersionCode.BASE, Int.MAX_VALUE, R.string.category_system, R.string.category_system_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return appData.isSystem
-        }
-    },
-    SYSTEM_RUNNING(VersionCode.BASE, VersionCode.KITKAT, R.string.category_system_running, R.string.category_system_running_summary) {
-        override fun isTarget(appData: AppEntity): Boolean {
-            return SYSTEM.isTarget(appData) && RUNNING.isTarget(appData)
         }
     },
     SYSTEM_UNDISABLABLE(VersionCode.BASE, Int.MAX_VALUE, R.string.category_system_undisablable, R.string.category_system_undisablable_summary) {
@@ -48,19 +38,9 @@ public enum class Category(val minSdkVersion: Int, val maxSdkVersion: Int, val t
             return SYSTEM.isTarget(appData) && (appData.isThisASystemPackage || appData.hasActiveAdmins)
         }
     },
-    SYSTEM_UNDISABLABLE_RUNNING(VersionCode.BASE, VersionCode.KITKAT, R.string.category_system_undisablable_running, R.string.category_system_undisablable_running_summary) {
-        override fun isTarget(appData: AppEntity): Boolean {
-            return SYSTEM_UNDISABLABLE.isTarget(appData) && RUNNING.isTarget(appData)
-        }
-    },
     SYSTEM_DISABLABLE(VersionCode.BASE, Int.MAX_VALUE, R.string.category_system_disablable, R.string.category_system_disablable_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return SYSTEM.isTarget(appData) && !SYSTEM_UNDISABLABLE.isTarget(appData)
-        }
-    },
-    SYSTEM_DISABLABLE_RUNNING(VersionCode.BASE, VersionCode.KITKAT, R.string.category_system_disablable_running, R.string.category_system_disablable_running_summary) {
-        override fun isTarget(appData: AppEntity): Boolean {
-            return SYSTEM_DISABLABLE.isTarget(appData) && RUNNING.isTarget(appData)
         }
     },
     DISABLED(VersionCode.BASE, Int.MAX_VALUE, R.string.category_disabled, R.string.category_disabled_summary) {
@@ -76,11 +56,6 @@ public enum class Category(val minSdkVersion: Int, val maxSdkVersion: Int, val t
     USER(VersionCode.BASE, Int.MAX_VALUE, R.string.category_user, R.string.category_user_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return !appData.isSystem
-        }
-    },
-    USER_RUNNING(VersionCode.BASE, VersionCode.KITKAT, R.string.category_user_running, R.string.category_user_running_summary) {
-        override fun isTarget(appData: AppEntity): Boolean {
-            return USER.isTarget(appData) && RUNNING.isTarget(appData)
         }
     },
     RECENTLY_USED(VersionCode.LOLLIPOP, Int.MAX_VALUE, R.string.category_recently_used, R.string.category_recently_used_summary) {

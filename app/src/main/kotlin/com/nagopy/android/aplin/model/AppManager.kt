@@ -37,12 +37,7 @@ class AppManager {
     constructor()
 
     fun getAll(): List<AppEntity> {
-        // 取得する際のフラグ
-        // 設定画面のフラグ＋無効化可能判定用にシグネチャ
-        val mRetrieveFlags = RETRIEVE_FLAGS or PackageManager.GET_SIGNATURES
-
-        val applicationInfo = packageManager.getInstalledApplications(mRetrieveFlags)
-
+        val applicationInfo = getInstalledApplications()
         val apps = ArrayList<AppEntity>(applicationInfo.size())
         for (info in applicationInfo) {
             if (!info.enabled) {
@@ -58,48 +53,38 @@ class AppManager {
             apps.add(entity)
         }
         return apps
-
     }
 
-    companion object {
+    /**
+     * アプリケーション一覧を取得する.<br>
+     * [android.content.pm.PackageManager.getInstalledApplications]の引数については、以下のクラスを参照
+     * /packages/apps/Settings/src/com/android/settings/applications/ApplicationsState.java
+     */
+    fun getInstalledApplications(): List<ApplicationInfo> {
+        val ownerRetrieveFlags = PackageManager.GET_UNINSTALLED_PACKAGES or
+                PackageManager.GET_DISABLED_COMPONENTS or
+                PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
 
-        val RETRIEVE_FLAGS = getRetrieveFlags()
+        val retrieveFlags = PackageManager.GET_DISABLED_COMPONENTS or
+                PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
 
-        /**
-         * [android.content.pm.PackageManager.getInstalledApplications]の引数に使う値を返す.
-         * 以下のクラスを参照。
-         * /packages/apps/Settings/src/com/android/settings/applications/ApplicationsState.java
-         */
-        fun getRetrieveFlags(): Int {
-            if (Build.VERSION.SDK_INT <= VersionCode.JELLY_BEAN) {
-                // 4.1以下
-                return PackageManager.GET_UNINSTALLED_PACKAGES or PackageManager.GET_DISABLED_COMPONENTS
-            }
-
-            // 4.2以上
-            // > Only the owner can see all apps.
-            // とのことなので、IDが0（＝オーナー）は全部見られる、的なフラグ設定らしい
-            val myUserIdMethod = MethodReflection<Int>(UserHandle::class.java, "myUserId")
-            val myUserId = myUserIdMethod.invoke(null)
-            if (myUserId == 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    // 4.3以上
-                    return PackageManager.GET_UNINSTALLED_PACKAGES or PackageManager.GET_DISABLED_COMPONENTS or PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
-                } else {
-                    // 4.2
-                    return PackageManager.GET_UNINSTALLED_PACKAGES or PackageManager.GET_DISABLED_COMPONENTS
-                }
+        val flags: Int
+        if (Build.VERSION.SDK_INT < VersionCode.MARSHMALLOW) {
+            val myUserIdMethod = UserHandle::class.java.getDeclaredMethod("myUserId")
+            flags = if (myUserIdMethod.invoke(null) == 0) {
+                ownerRetrieveFlags
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    // 4.3以上
-                    return PackageManager.GET_DISABLED_COMPONENTS or PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
-                } else {
-                    // 4.2
-                    return PackageManager.GET_DISABLED_COMPONENTS
-                }
+                retrieveFlags
+            }
+        } else {
+            val myUserHandle = android.os.Process.myUserHandle()
+            val isOwnerMethod = UserHandle::class.java.getDeclaredMethod("isOwner")
+            flags = if (isOwnerMethod.invoke(myUserHandle) as Boolean) {
+                ownerRetrieveFlags
+            } else {
+                retrieveFlags
             }
         }
+        return packageManager.getInstalledApplications(flags or PackageManager.GET_SIGNATURES)
     }
-
-
 }

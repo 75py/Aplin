@@ -19,9 +19,9 @@ open class Aplin : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        } else {
+            Fabric.with(this, Crashlytics())
         }
-
-        Fabric.with(this, Crashlytics())
     }
 
     override fun startActivity(intent: Intent) {
