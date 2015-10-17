@@ -37,27 +37,6 @@ public enum class DisplayItem
 (private val titleResourceId: Int, private val summaryResourceId: Int) : MultiSelectionItem {
 
     /**
-     * プロセス情報
-     */
-    PROCESS(R.string.display_item_process, R.string.display_item_process_summary) {
-        override fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean {
-            if (appData.process.isEmpty()) {
-                return false
-            } else {
-                for (str in appData.process) {
-                    sb.append(str)
-                    sb.append(Constants.LINE_SEPARATOR)
-                }
-                sb.setLength(sb.length() - 1)
-            }
-            return true
-        }
-
-        override fun maxSdkVersion(): Int {
-            return VersionCode.LOLLIPOP
-        }
-    },
-    /**
      * インストール状態
      */
     NOT_INSTALLED(R.string.display_item_not_installed, R.string.display_item_not_installed_summary) {

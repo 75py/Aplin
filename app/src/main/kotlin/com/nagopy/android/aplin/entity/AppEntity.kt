@@ -18,8 +18,6 @@ data class AppEntity {
 
     var icon: Drawable by Delegates.notNull<Drawable>()
 
-    var process: List<String> = emptyList()
-
     var isInstalled: Boolean = true // 実行ユーザーでインストールされているか、API17以上で使用するフラグ。
 
     var isThisASystemPackage: Boolean = false
