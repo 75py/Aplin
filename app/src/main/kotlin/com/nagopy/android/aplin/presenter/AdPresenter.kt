@@ -21,6 +21,7 @@ public open class AdPresenter : Presenter {
         val adRequest = AdRequest.Builder()
                 .addTestDevice("2E21E51466C94A2960FCB4E0BB5DB388")
                 .addTestDevice("561DC184323F7A23F20080805D44083C")
+                .addTestDevice("0FDB3E1E20DE9A1E911A85F87903A069")
                 .build()
         adView.loadAd(adRequest)
     }
