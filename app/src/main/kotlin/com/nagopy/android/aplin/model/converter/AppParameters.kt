@@ -11,11 +11,6 @@ import timber.log.Timber
 import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
-    packageName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.packageName = applicationInfo.packageName
-        }
-    },
     label(Constants.ALL_SDK_VERSION) {
         override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.label = applicationInfo.loadLabel(appConverter.packageManager).toString()
