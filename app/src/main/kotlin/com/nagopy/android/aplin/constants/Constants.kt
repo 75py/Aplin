@@ -58,12 +58,12 @@ public object Constants {
         runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_SERVICE, "Service")
         runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE, "Visible")
         runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_EMPTY, "Empty")
-        if (Build.VERSION.SDK_INT >= VersionCode.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_GONE, "Gone")
         }
         RUNNING_STATUS = Collections.unmodifiableMap(runningStatusMap)
     }
 
-    public val ALL_SDK_VERSION = IntRange(VersionCode.BASE, Int.MAX_VALUE)
+    public val ALL_SDK_VERSION = IntRange(Build.VERSION_CODES.BASE, Int.MAX_VALUE)
 
 }
