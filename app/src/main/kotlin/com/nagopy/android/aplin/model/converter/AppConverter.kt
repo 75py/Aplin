@@ -42,7 +42,7 @@ public class AppConverter {
     public fun convertToEntity(applicationInfo: ApplicationInfo): AppEntity {
         val entity: AppEntity = AppEntity(applicationInfo.packageName)
 
-        AppParameters.values()
+        AppParameters.values
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                 .forEach { param ->
                     param.setValue(entity, applicationInfo, this)

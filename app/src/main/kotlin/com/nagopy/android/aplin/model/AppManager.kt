@@ -37,7 +37,7 @@ class AppManager {
 
     fun getAll(): List<AppEntity> {
         val applicationInfo = getInstalledApplications()
-        val apps = ArrayList<AppEntity>(applicationInfo.size())
+        val apps = ArrayList<AppEntity>(applicationInfo.size)
         for (info in applicationInfo) {
             if (!info.enabled) {
                 // 無効になっていて、かつenabledSettingが3でないアプリは除外する

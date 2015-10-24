@@ -19,7 +19,7 @@ public class MainScreenPagerAdapter(
         return AppListFragment.newInstance(categories.get(position))
     }
 
-    override fun getCount(): Int = categories.size()
+    override fun getCount(): Int = categories.size
 
     override fun getPageTitle(position: Int): CharSequence = categories.get(position).getTitle(context)
 }
