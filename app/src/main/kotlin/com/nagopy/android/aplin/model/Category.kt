@@ -16,49 +16,49 @@
 package com.nagopy.android.aplin.model
 
 import android.content.Context
+import android.os.Build
 import com.nagopy.android.aplin.R
-import com.nagopy.android.aplin.constants.VersionCode
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.easyprefs.MultiSelectionItem
 
 public enum class Category(val minSdkVersion: Int, val maxSdkVersion: Int, val titleResourceId: Int, val summaryResourceId: Int) : MultiSelectionItem {
 
-    ALL(VersionCode.BASE, Int.MAX_VALUE, R.string.category_all, R.string.category_all_summary) {
+    ALL(Build.VERSION_CODES.BASE, Int.MAX_VALUE, R.string.category_all, R.string.category_all_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return true
         }
     },
-    SYSTEM(VersionCode.BASE, Int.MAX_VALUE, R.string.category_system, R.string.category_system_summary) {
+    SYSTEM(Build.VERSION_CODES.BASE, Int.MAX_VALUE, R.string.category_system, R.string.category_system_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return appData.isSystem
         }
     },
-    SYSTEM_UNDISABLABLE(VersionCode.BASE, Int.MAX_VALUE, R.string.category_system_undisablable, R.string.category_system_undisablable_summary) {
+    SYSTEM_UNDISABLABLE(Build.VERSION_CODES.BASE, Int.MAX_VALUE, R.string.category_system_undisablable, R.string.category_system_undisablable_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return SYSTEM.isTarget(appData) && (appData.isThisASystemPackage || appData.hasActiveAdmins)
         }
     },
-    SYSTEM_DISABLABLE(VersionCode.BASE, Int.MAX_VALUE, R.string.category_system_disablable, R.string.category_system_disablable_summary) {
+    SYSTEM_DISABLABLE(Build.VERSION_CODES.BASE, Int.MAX_VALUE, R.string.category_system_disablable, R.string.category_system_disablable_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return SYSTEM.isTarget(appData) && !SYSTEM_UNDISABLABLE.isTarget(appData)
         }
     },
-    DISABLED(VersionCode.BASE, Int.MAX_VALUE, R.string.category_disabled, R.string.category_disabled_summary) {
+    DISABLED(Build.VERSION_CODES.BASE, Int.MAX_VALUE, R.string.category_disabled, R.string.category_disabled_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return !appData.isEnabled
         }
     },
-    DEFAULT(VersionCode.BASE, Int.MAX_VALUE, R.string.category_default, R.string.category_default_summary) {
+    DEFAULT(Build.VERSION_CODES.BASE, Int.MAX_VALUE, R.string.category_default, R.string.category_default_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return appData.isDefaultApp
         }
     },
-    USER(VersionCode.BASE, Int.MAX_VALUE, R.string.category_user, R.string.category_user_summary) {
+    USER(Build.VERSION_CODES.BASE, Int.MAX_VALUE, R.string.category_user, R.string.category_user_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return !appData.isSystem
         }
     },
-    RECENTLY_USED(VersionCode.LOLLIPOP, Int.MAX_VALUE, R.string.category_recently_used, R.string.category_recently_used_summary) {
+    RECENTLY_USED(Build.VERSION_CODES.LOLLIPOP, Int.MAX_VALUE, R.string.category_recently_used, R.string.category_recently_used_summary) {
         override fun isTarget(appData: AppEntity): Boolean {
             return appData.launchTimes > 0
         }

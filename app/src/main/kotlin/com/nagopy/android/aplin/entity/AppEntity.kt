@@ -6,11 +6,9 @@ import kotlin.properties.Delegates
 /**
  * アプリケーションを表すエンティティ
  */
-data class AppEntity {
+data class AppEntity(val packageName: String) {
 
     var label: String by Delegates.notNull<String>()
-
-    var packageName: String  by Delegates.notNull<String>()
 
     var isEnabled: Boolean  by Delegates.notNull<Boolean>()
 

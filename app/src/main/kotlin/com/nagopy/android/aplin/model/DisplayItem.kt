@@ -19,7 +19,6 @@ import android.content.Context
 import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.constants.VersionCode
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.easyprefs.MultiSelectionItem
 import java.text.DateFormat
@@ -86,7 +85,7 @@ public enum class DisplayItem
             return true
         }
 
-        override fun minSdkVersion(): Int = VersionCode.LOLLIPOP
+        override fun minSdkVersion(): Int = Build.VERSION_CODES.LOLLIPOP
 
     },
     /**

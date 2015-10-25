@@ -90,8 +90,8 @@ public class AppListAdapter(
                 sb.append(Constants.LINE_SEPARATOR)
             }
         }
-        if (sb.length() > 0) {
-            sb.setLength(sb.length() - 1)
+        if (sb.length > 0) {
+            sb.setLength(sb.length - 1)
             var infoString = sb.toString().trim()
             infoString = infoString.replace((Constants.LINE_SEPARATOR + "+").toRegex(), Constants.LINE_SEPARATOR)
             holder.status.text = infoString
@@ -105,7 +105,7 @@ public class AppListAdapter(
         holder.icon.setImageDrawable(entity.icon)
     }
 
-    override fun getItemCount(): Int = filteredData.size()
+    override fun getItemCount(): Int = filteredData.size
 
 
     public fun updateApplicationList(data: List<AppEntity>, displayItems: List<DisplayItem>) {

@@ -5,12 +5,12 @@ import android.app.Application
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
-import com.nagopy.android.aplin.constants.VersionCode
+import android.os.Build
 import com.nagopy.android.aplin.forEachX
 import java.util.*
 import javax.inject.Inject
 
-@TargetApi(VersionCode.LOLLIPOP)
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class AppUsageStatsManager
 @Inject
 constructor() {
