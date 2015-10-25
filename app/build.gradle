@@ -86,7 +86,7 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
 }
 buildscript {
-    ext.kotlin_version = '0.14.451'
+    ext.kotlin_version = '1.0.0-beta-1038'
     ext.dagger_version = '2.0.1'
     ext.target_sdk_version = 23
     Properties properties = new Properties()

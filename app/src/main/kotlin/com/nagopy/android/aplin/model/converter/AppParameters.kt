@@ -4,18 +4,13 @@ import android.content.ComponentName
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.constants.VersionCode
 import com.nagopy.android.aplin.entity.AppEntity
 import timber.log.Timber
 import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
-    packageName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.packageName = applicationInfo.packageName
-        }
-    },
     label(Constants.ALL_SDK_VERSION) {
         override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.label = applicationInfo.loadLabel(appConverter.packageManager).toString()
@@ -65,7 +60,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             entity.hasActiveAdmins = appConverter.devicePolicy.packageHasActiveAdmins(applicationInfo.packageName)
         }
     },
-    isInstalled(IntRange(VersionCode.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
+    isInstalled(IntRange(Build.VERSION_CODES.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
         override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.isInstalled = (applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
         }
@@ -88,7 +83,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             }
         }
     },
-    lastTimeUsed(VersionCode.LOLLIPOP..Int.MAX_VALUE) {
+    lastTimeUsed(Build.VERSION_CODES.LOLLIPOP..Int.MAX_VALUE) {
         override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             val times = appConverter.appUsageStatsManager.getLaunchTimes().get(applicationInfo.packageName)
             if (times != null) {

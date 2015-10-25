@@ -89,7 +89,7 @@ constructor() : Presenter {
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({}, { e ->
                     Timber.e(e, "onError")
-                    Toast.makeText(application, e.getMessage(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(application, e.message, Toast.LENGTH_LONG).show()
                 })
     }
 
@@ -97,7 +97,7 @@ constructor() : Presenter {
         val onNext: (Void) -> Unit = {}
         val onError: (Throwable) -> Unit = { e ->
             Timber.e(e, "onError")
-            Toast.makeText(application, e.getMessage(), Toast.LENGTH_LONG).show()
+            Toast.makeText(application, e.message, Toast.LENGTH_LONG).show()
         }
 
         when (item.itemId) {

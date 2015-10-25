@@ -56,14 +56,8 @@ public class AppListAdapter(
             onListItemClicked(filteredData.get(holder.adapterPosition))
         }
         view.setOnLongClickListener { view ->
-            //            onListItemLongClicked(filteredData.get(holder.adapterPosition))
             return@setOnLongClickListener false
         }
-
-        //        val outValue = TypedValue();
-        //        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-        //        view.setBackgroundResource(outValue.resourceId);
-        view.setBackgroundResource(R.drawable.selectable_item_background)
 
         holder.icon.scaleType = ImageView.ScaleType.FIT_CENTER
         holder.icon.layoutParams.width = iconSize
@@ -90,8 +84,8 @@ public class AppListAdapter(
                 sb.append(Constants.LINE_SEPARATOR)
             }
         }
-        if (sb.length() > 0) {
-            sb.setLength(sb.length() - 1)
+        if (sb.length > 0) {
+            sb.setLength(sb.length - 1)
             var infoString = sb.toString().trim()
             infoString = infoString.replace((Constants.LINE_SEPARATOR + "+").toRegex(), Constants.LINE_SEPARATOR)
             holder.status.text = infoString
@@ -105,7 +99,7 @@ public class AppListAdapter(
         holder.icon.setImageDrawable(entity.icon)
     }
 
-    override fun getItemCount(): Int = filteredData.size()
+    override fun getItemCount(): Int = filteredData.size
 
 
     public fun updateApplicationList(data: List<AppEntity>, displayItems: List<DisplayItem>) {

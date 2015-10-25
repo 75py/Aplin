@@ -81,7 +81,7 @@ public class AppListFragment : Fragment(), AppListView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBar = view!!.findViewById(R.id.progress) as ProgressBar
-        recyclerView = view.findViewById(R.id.list) as RecyclerView?
+        recyclerView = view.findViewById(R.id.list) as RecyclerView
 
         recyclerView!!.layoutManager = LinearLayoutManager(application, LinearLayoutManager.VERTICAL, false)
         recyclerView!!.adapter = adapter
@@ -121,7 +121,7 @@ public class AppListFragment : Fragment(), AppListView {
         public fun newInstance(category: Category): AppListFragment {
             val appListFragment = AppListFragment()
             val args = Bundle()
-            args.putString("type", category.name())
+            args.putString("type", category.name)
             appListFragment.arguments = args
             return appListFragment
         }

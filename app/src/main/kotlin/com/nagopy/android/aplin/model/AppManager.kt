@@ -5,7 +5,6 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.UserHandle
-import com.nagopy.android.aplin.constants.VersionCode
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.converter.AppConverter
 import com.nagopy.android.aplin.model.converter.AppUsageStatsManager
@@ -38,7 +37,7 @@ class AppManager {
 
     fun getAll(): List<AppEntity> {
         val applicationInfo = getInstalledApplications()
-        val apps = ArrayList<AppEntity>(applicationInfo.size())
+        val apps = ArrayList<AppEntity>(applicationInfo.size)
         for (info in applicationInfo) {
             if (!info.enabled) {
                 // 無効になっていて、かつenabledSettingが3でないアプリは除外する
@@ -69,7 +68,7 @@ class AppManager {
                 PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
 
         val flags: Int
-        if (Build.VERSION.SDK_INT < VersionCode.MARSHMALLOW) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             val myUserIdMethod = UserHandle::class.java.getDeclaredMethod("myUserId")
             flags = if (myUserIdMethod.invoke(null) == 0) {
                 ownerRetrieveFlags
