@@ -3,4 +3,4 @@ Android, application manager
 
 ## Latest version
 
-%%version%%
+2.0.1
