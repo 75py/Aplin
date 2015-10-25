@@ -56,14 +56,8 @@ public class AppListAdapter(
             onListItemClicked(filteredData.get(holder.adapterPosition))
         }
         view.setOnLongClickListener { view ->
-            //            onListItemLongClicked(filteredData.get(holder.adapterPosition))
             return@setOnLongClickListener false
         }
-
-        //        val outValue = TypedValue();
-        //        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-        //        view.setBackgroundResource(outValue.resourceId);
-        view.setBackgroundResource(R.drawable.selectable_item_background)
 
         holder.icon.scaleType = ImageView.ScaleType.FIT_CENTER
         holder.icon.layoutParams.width = iconSize
