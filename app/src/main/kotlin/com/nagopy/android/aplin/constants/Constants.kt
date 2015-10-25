@@ -15,7 +15,6 @@
  */
 package com.nagopy.android.aplin.constants
 
-import android.app.ActivityManager
 import android.os.Build
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -45,25 +44,8 @@ public object Constants {
         }
     }
 
-    /**
-     * 実行ステータス
-     */
-    public val RUNNING_STATUS: Map<Int, String>
-
-    init {
-        val runningStatusMap = HashMap<Int, String>()
-        runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND, "Background")
-        runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND, "Foreground")
-        runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_PERCEPTIBLE, "Perceptible")
-        runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_SERVICE, "Service")
-        runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE, "Visible")
-        runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_EMPTY, "Empty")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            runningStatusMap.put(ActivityManager.RunningAppProcessInfo.IMPORTANCE_GONE, "Gone")
-        }
-        RUNNING_STATUS = Collections.unmodifiableMap(runningStatusMap)
-    }
-
     public val ALL_SDK_VERSION = IntRange(Build.VERSION_CODES.BASE, Int.MAX_VALUE)
 
+
+    const val MIME_TYPE_TEXT_PLAIN = "text/plain"
 }

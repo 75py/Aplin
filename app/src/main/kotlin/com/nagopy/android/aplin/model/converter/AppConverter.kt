@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.DevicePolicy
-import com.nagopy.android.aplin.model.FieldReflection
 import com.nagopy.android.aplin.model.IconProperties
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,12 +27,6 @@ public class AppConverter {
 
     @Inject
     lateinit var appUsageStatsManager: AppUsageStatsManager
-
-    val enabledSettingField: FieldReflection<Int>
-
-    init {
-        enabledSettingField = FieldReflection(ApplicationInfo::class.java, "enabledSetting")
-    }
 
     @Inject
     constructor() {

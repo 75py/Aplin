@@ -53,10 +53,11 @@ public class AppListAdapter(
         val holder = ViewHolder(view)
 
         view.setOnClickListener { view ->
-            onListItemClicked(filteredData.get(holder.adapterPosition))
+            onListItemClicked(filteredData[holder.adapterPosition])
         }
         view.setOnLongClickListener { view ->
-            return@setOnLongClickListener false
+            onListItemLongClicked(filteredData[holder.adapterPosition])
+            return@setOnLongClickListener true
         }
 
         holder.icon.scaleType = ImageView.ScaleType.FIT_CENTER

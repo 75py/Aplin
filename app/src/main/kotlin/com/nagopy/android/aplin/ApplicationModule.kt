@@ -32,16 +32,15 @@ open class ApplicationModule(val application: Application) {
     open fun provideActivityManager(application: Application): ActivityManager
             = application.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
-
-    @Provides
     @Singleton
+    @Provides
     fun provideDisplayItemSetting(application: Application): DisplayItemSetting = GenDisplayItemSetting(application)
 
-    @Provides
     @Singleton
+    @Provides
     fun provideCategorySetting(application: Application): CategorySetting = GenCategorySetting(application)
 
-    @Provides
     @Singleton
+    @Provides
     fun provideSortSetting(application: Application): SortSetting = GenSortSetting(application)
 }
