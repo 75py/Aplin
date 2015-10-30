@@ -19,7 +19,6 @@ import com.nagopy.android.aplin.presenter.AppListPresenter
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import com.nagopy.android.aplin.view.decoration.DividerItemDecoration
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 /**
  * カテゴリ毎のアプリ一覧を表示するフラグメント
@@ -38,9 +37,9 @@ public class AppListFragment : Fragment(), AppListView {
     @Inject
     lateinit var application: Application
 
-    var adapter: AppListAdapter by Delegates.notNull()
+    lateinit var adapter: AppListAdapter
 
-    var parentView: AppListViewParent by Delegates.notNull()
+    lateinit var parentView: AppListViewParent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

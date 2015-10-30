@@ -20,10 +20,12 @@ import rx.Subscriber
 import rx.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * メイン画面用プレゼンター
  */
+@Singleton
 public open class MainScreenPresenter
 @Inject
 constructor() : Presenter {

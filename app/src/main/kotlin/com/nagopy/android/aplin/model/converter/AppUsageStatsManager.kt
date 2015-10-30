@@ -47,7 +47,7 @@ constructor() {
                     && previous.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND
                     && current.eventType == UsageEvents.Event.MOVE_TO_BACKGROUND
                     && current.timeStamp - previous.timeStamp > 3000) {
-                val count = countMap.get(current.packageName) ?: 0
+                val count = countMap[current.packageName] ?: 0
                 countMap.put(current.packageName, count + 1)
             }
         })

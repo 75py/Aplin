@@ -24,16 +24,14 @@ import timber.log.Timber
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 public class DevicePolicy
 @Inject
 constructor(application: Application) {
 
-    val devicePolicyManager: DevicePolicyManagerWrapper
-
-    init {
-        devicePolicyManager = DevicePolicyManagerWrapper(application)
-    }
+    val devicePolicyManager: DevicePolicyManagerWrapper = DevicePolicyManagerWrapper(application)
 
     public fun isThisASystemPackage(packageInfo: PackageInfo): Boolean {
         return devicePolicyManager.isThisASystemPackage(packageInfo)
@@ -59,14 +57,12 @@ constructor(application: Application) {
                 packageHasActiveAdmins = null
             }
 
-
             try {
                 mSystemPackageInfo = context.packageManager.getPackageInfo("android", PackageManager.GET_SIGNATURES)
             } catch (e: PackageManager.NameNotFoundException) {
                 Timber.e(e, "システムのシグネチャ取得に失敗")
                 mSystemPackageInfo = null
             }
-
         }
 
         /**
@@ -99,7 +95,8 @@ constructor(application: Application) {
          * * エラーがあった場合はfalseを返す。
          */
         fun isThisASystemPackage(packageInfo: PackageInfo?): Boolean {
-            return (packageInfo != null && packageInfo.signatures != null
+            return (packageInfo != null
+                    && packageInfo.signatures != null
                     && mSystemPackageInfo != null
                     && mSystemPackageInfo.signatures[0] == packageInfo.signatures[0])
         }

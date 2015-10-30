@@ -26,11 +26,7 @@ class AppManager {
     @Inject
     lateinit var appUsageStatsManager: AppUsageStatsManager
 
-    val enabledSettingField: FieldReflection<Int>
-
-    init {
-        enabledSettingField = FieldReflection(ApplicationInfo::class.java, "enabledSetting")
-    }
+    val enabledSettingField: FieldReflection<Int> = FieldReflection(ApplicationInfo::class.java, "enabledSetting")
 
     @Inject
     constructor()
