@@ -16,6 +16,7 @@
 package com.nagopy.android.aplin.view
 
 import android.os.Bundle
+import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -25,16 +26,19 @@ import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.presenter.SettingsPresenter
 import javax.inject.Inject
 
-public class SettingsActivity : AppCompatActivity() {
+
+public class SettingsActivity : AppCompatActivity(), SettingsView, Preference.OnPreferenceClickListener {
 
     @Inject
     lateinit var settingsPresenter: SettingsPresenter
+
+    lateinit var settingsFragment: PreferenceFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Aplin.getApplicationComponent().inject(this)
-        settingsPresenter.initialize()
+        settingsPresenter.initialize(this)
 
         setContentView(R.layout.activity_settings)
 
@@ -42,17 +46,20 @@ public class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        fragmentManager.beginTransaction().replace(R.id.content, SettingsFragment()).commit()
+        settingsFragment = SettingsFragment()
+        fragmentManager.beginTransaction().replace(R.id.content, settingsFragment).commit()
     }
 
     override fun onResume() {
         super.onResume()
         settingsPresenter.resume()
+        findUsageStatsPreference().onPreferenceClickListener = this
     }
 
     override fun onPause() {
         super.onPause()
         settingsPresenter.pause()
+        findUsageStatsPreference().onPreferenceClickListener = null
     }
 
     override fun onDestroy() {
@@ -79,6 +86,25 @@ public class SettingsActivity : AppCompatActivity() {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.pref)
         }
+    }
+
+    fun findUsageStatsPreference() = settingsFragment.findPreference(getText(R.string.usage_stats_key))
+
+    override fun onPreferenceClick(preference: Preference): Boolean {
+        when (preference.key) {
+            getText(R.string.usage_stats_key) -> {
+                settingsPresenter.onUsageStatsPreferenceClicked()
+            }
+        }
+        return true
+    }
+
+    override fun setUsageStatsTitle(resId: Int) {
+        findUsageStatsPreference().setTitle(resId)
+    }
+
+    override fun setUsageStatsSummary(resId: Int) {
+        findUsageStatsPreference().setSummary(resId)
     }
 
 }

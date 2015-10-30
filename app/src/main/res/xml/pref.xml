@@ -1,6 +1,12 @@
-<PreferenceScreen>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.nagopy.android.aplin.model.preference.CategorySetting_MultiSelectionPreference />
+
+    <PreferenceCategory android:title="@string/usage_stats_title">
+        <Preference
+            android:key="@string/usage_stats_key"
+            android:title="@string/usage_stats_title" />
+    </PreferenceCategory>
 
     <com.nagopy.android.aplin.model.preference.DisplayItemSetting_MultiSelectionPreference />
 
