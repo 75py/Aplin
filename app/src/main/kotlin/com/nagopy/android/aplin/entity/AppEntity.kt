@@ -6,7 +6,7 @@ import kotlin.properties.Delegates
 /**
  * アプリケーションを表すエンティティ
  */
-data class AppEntity(val packageName: String) {
+data class AppEntity(var packageName: String) {
 
     var label: String by Delegates.notNull<String>()
 

@@ -13,8 +13,8 @@ class SortTest {
 
     @Before
     fun setup() {
-        app1 = AppEntity()
-        app2 = AppEntity()
+        app1 = AppEntity("a")
+        app2 = AppEntity("b")
     }
 
     @Test

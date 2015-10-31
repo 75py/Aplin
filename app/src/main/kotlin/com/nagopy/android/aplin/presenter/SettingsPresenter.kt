@@ -3,13 +3,16 @@ package com.nagopy.android.aplin.presenter
 import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.model.Apps
+import com.nagopy.android.aplin.model.UsageStatsHelper
 import com.nagopy.android.aplin.view.MainActivity
+import com.nagopy.android.aplin.view.SettingsView
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceChangeListener {
+open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject
     lateinit var application: Application
@@ -20,18 +23,35 @@ class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceChangeL
     @Inject
     lateinit var apps: Apps
 
+    @Inject
+    lateinit var usageStatsHelper: UsageStatsHelper
+
     var settingChanged: Boolean = false
+
+    lateinit var view: SettingsView
 
     @Inject
     constructor() {
     }
 
-    fun initialize() {
+    fun initialize(view: SettingsView) {
+        this.view = view
         settingChanged = false
     }
 
     override fun resume() {
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        view.setUsageStatsTitle(if (usageStatsHelper.isUsageStatsAllowed()) {
+            R.string.usage_stats_title_enabled
+        } else {
+            R.string.usage_stats_title_disabled
+        })
+        view.setUsageStatsSummary(if (usageStatsHelper.isUsageStatsAllowed()) {
+            R.string.usage_stats_summary_enabled
+        } else {
+            R.string.usage_stats_summary_disabled
+        })
     }
 
     override fun pause() {
@@ -59,5 +79,9 @@ class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceChangeL
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         settingChanged = true
+    }
+
+    open fun onUsageStatsPreferenceClicked() {
+        usageStatsHelper.startSettingActivity(application)
     }
 }

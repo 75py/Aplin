@@ -7,14 +7,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import com.nagopy.android.aplin.R
+import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.AppEntity
 import rx.Observable
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 public open class MenuHandler {
-
-    private val MINE_TYPE_TEXT_PLAIN = "text/plain"
 
     @Inject
     lateinit var application: Application
@@ -50,7 +50,7 @@ public open class MenuHandler {
     public fun share(subject: String?, text: String): Observable<Void> {
         return Observable.create(Observable.OnSubscribe<Void> { s ->
             val intent = Intent(Intent.ACTION_SEND)
-                    .setType(MINE_TYPE_TEXT_PLAIN)
+                    .setType(Constants.MIME_TYPE_TEXT_PLAIN)
                     .putExtra(Intent.EXTRA_SUBJECT, subject ?: application.getString(R.string.app_name))
                     .putExtra(Intent.EXTRA_TEXT, text)
             if (isLaunchable(intent)) {

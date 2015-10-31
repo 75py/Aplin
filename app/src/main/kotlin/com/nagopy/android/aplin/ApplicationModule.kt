@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin
 
 import android.app.ActivityManager
+import android.app.AppOpsManager
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -32,16 +33,20 @@ open class ApplicationModule(val application: Application) {
     open fun provideActivityManager(application: Application): ActivityManager
             = application.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
-
-    @Provides
     @Singleton
+    @Provides
+    open fun provideAppOpsManager(application: Application): AppOpsManager
+            = application.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+
+    @Singleton
+    @Provides
     fun provideDisplayItemSetting(application: Application): DisplayItemSetting = GenDisplayItemSetting(application)
 
-    @Provides
     @Singleton
+    @Provides
     fun provideCategorySetting(application: Application): CategorySetting = GenCategorySetting(application)
 
-    @Provides
     @Singleton
+    @Provides
     fun provideSortSetting(application: Application): SortSetting = GenSortSetting(application)
 }
