@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.support.test.runner.AndroidJUnit4
 import com.nagopy.android.aplin.model.Apps
+import com.nagopy.android.aplin.model.UsageStatsHelper
+import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -26,6 +28,10 @@ class SettingsPresenterTest {
     lateinit var sharedPreferences: SharedPreferences
     @Mock
     lateinit var apps: Apps
+    @Mock
+    lateinit var settingsView: SettingsView
+    @Mock
+    lateinit var usageStatsHelper: UsageStatsHelper
 
     @Before
     fun setup() {
@@ -34,12 +40,13 @@ class SettingsPresenterTest {
         target.application = application
         target.sharedPreferences = sharedPreferences
         target.apps = apps
+        target.usageStatsHelper = usageStatsHelper
     }
 
     @Test
     fun initialize() {
         target.settingChanged = true
-        target.initialize()
+        target.initialize(settingsView)
         Assert.assertThat(target.settingChanged, _is(false))
     }
 
@@ -48,6 +55,7 @@ class SettingsPresenterTest {
         Mockito.doNothing().`when`(sharedPreferences).registerOnSharedPreferenceChangeListener(
                 Matchers.any(SharedPreferences.OnSharedPreferenceChangeListener::class.java))
 
+        target.initialize(settingsView)
         target.resume()
 
         Mockito.verify(sharedPreferences, Mockito.times(1)).registerOnSharedPreferenceChangeListener(target)
