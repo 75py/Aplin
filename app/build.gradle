@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.android.databinding'
 apply plugin: 'kotlin-android'
-apply plugin: 'deploygate'
 apply plugin: 'io.fabric'
 
 
@@ -58,6 +57,7 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.google.android.gms:play-services-ads:8.1.0'
+    compile 'com.google.android.gms:play-services-analytics:8.1.0'
     compile 'com.cookpad.android.rxt4a:rxt4a:0.10.0'
     compile 'com.jakewharton.timber:timber:4.0.1'
     compile 'com.nagopy.android:easyprefs:0.2.1'
@@ -104,25 +104,6 @@ repositories {
 }
 kapt {
     generateStubs = true
-}
-
-deploygate {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-
-    userName = properties.getProperty("deploygate.userName")
-    token = properties.getProperty("deploygate.token")
-
-    apks {
-        release {
-            sourceFile = file("./build/outputs/apk/app-release.apk")
-        }
-
-        debug {
-            sourceFile = file("./build/outputs/apk/app-debug.apk")
-        }
-    }
 }
 
 // Fabric

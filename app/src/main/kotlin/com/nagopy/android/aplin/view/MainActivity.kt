@@ -3,6 +3,7 @@ package com.nagopy.android.aplin.view
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -116,5 +117,16 @@ public class MainActivity : AppCompatActivity(),
 
     override fun onListItemLongClick(app: AppEntity) {
         presenter.listItemLongClicked(app)
+    }
+
+    // GA =================================================================================================
+    override fun showAnalyticsConfirm() {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.ga_confirm_dialog_title)
+                .setMessage(R.string.ga_confirm_dialog_message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ga_confirm_dialog_agree, { dialog, i -> presenter.analytics.agree() })
+                .setNegativeButton(R.string.ga_confirm_dialog_disagree, { dialog, i -> presenter.analytics.disagree() })
+                .show();
     }
 }

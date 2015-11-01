@@ -12,4 +12,11 @@
 
     <com.nagopy.android.aplin.model.preference.SortSetting_SingleSelectionPreference />
 
+    <PreferenceCategory android:title="@string/ga_preference_category">
+        <CheckBoxPreference
+            android:key="@string/ga_preference_key"
+            android:summary="@string/ga_preference_summary"
+            android:title="@string/ga_preference_title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
