@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
+import com.nagopy.android.aplin.BuildConfig
 import com.nagopy.android.aplin.R
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +22,7 @@ import javax.inject.Singleton
 
     init {
         googleAnalytics.appOptOut = !isAgreed()
+        googleAnalytics.setDryRun(BuildConfig.DEBUG)
         tracker = googleAnalytics.newTracker(application.getString(R.string.ga_trackingId))
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
@@ -34,24 +36,52 @@ import javax.inject.Singleton
     open fun agree() = sharedPreferences.edit().putBoolean(key, true).commit()
     open fun disagree() = sharedPreferences.edit().putBoolean(key, false).commit()
 
-    open fun show(screen: String) {
-        tracker.send(
-                HitBuilders.EventBuilder()
-                        .setCategory("Aplin")
-                        .setAction("show")
-                        .setLabel(screen)
-                        .build()
-        )
+    open fun click(pkg: String) {
+        if (isAgreed()) {
+            tracker.send(
+                    HitBuilders.EventBuilder()
+                            .setCategory("UI")
+                            .setAction("click_pkg")
+                            .setLabel(pkg)
+                            .build()
+            )
+        }
     }
 
-    open fun click(pkg: String) {
-        tracker.send(
-                HitBuilders.EventBuilder()
-                        .setCategory("Aplin")
-                        .setAction("click_pkg")
-                        .setLabel(pkg)
-                        .build()
-        )
+    open fun longClick(pkg: String) {
+        if (isAgreed()) {
+            tracker.send(
+                    HitBuilders.EventBuilder()
+                            .setCategory("UI")
+                            .setAction("long_click_pkg")
+                            .setLabel(pkg)
+                            .build()
+            )
+        }
+    }
+
+    open fun menuClick(menuTitle: String) {
+        if (isAgreed()) {
+            tracker.send(
+                    HitBuilders.EventBuilder()
+                            .setCategory("UI")
+                            .setAction("menu_click")
+                            .setLabel(menuTitle)
+                            .build()
+            )
+        }
+    }
+
+    open fun settingChanged(key: String, newValue: Any?) {
+        if (isAgreed()) {
+            tracker.send(
+                    HitBuilders.EventBuilder()
+                            .setCategory("Settings")
+                            .setAction("setting_changed")
+                            .setLabel("$key=$newValue")
+                            .build()
+            )
+        }
     }
 
 }

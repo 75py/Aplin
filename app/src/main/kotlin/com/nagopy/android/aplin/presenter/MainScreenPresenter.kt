@@ -73,7 +73,7 @@ constructor() : Presenter {
                     }
                 })
 
-        if(!analytics.isConfirmed()) {
+        if (!analytics.isConfirmed()) {
             view.showAnalyticsConfirm()
         }
     }
@@ -92,6 +92,8 @@ constructor() : Presenter {
         val packageName = app.packageName.split(":")[0];
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + packageName))
         activity.startActivity(intent);
+
+        analytics.click(app.packageName)
     }
 
     fun listItemLongClicked(app: AppEntity) {
@@ -101,6 +103,8 @@ constructor() : Presenter {
                     Timber.e(e, "onError")
                     Toast.makeText(application, e.message, Toast.LENGTH_LONG).show()
                 })
+
+        analytics.longClick(app.packageName)
     }
 
     fun onMenuItemClicked(item: MenuItem, checkedItemList: List<AppEntity>) {
@@ -139,5 +143,7 @@ constructor() : Presenter {
                         .subscribe(onNext, onError)
             }
         }
+
+        analytics.menuClick(item.title.toString())
     }
 }
