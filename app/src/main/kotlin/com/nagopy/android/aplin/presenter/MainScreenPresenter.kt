@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.model.Apps
 import com.nagopy.android.aplin.model.MenuHandler
 import com.nagopy.android.aplin.model.SharingMethod
@@ -42,6 +43,9 @@ constructor() : Presenter {
     @Inject
     lateinit var application: Application
 
+    @Inject
+    lateinit var analytics: Analytics
+
     var view: MainScreenView? = null
 
     open fun initialize(view: MainScreenView) {
@@ -68,6 +72,10 @@ constructor() : Presenter {
                     override fun onNext(appEntity: AppEntity) {
                     }
                 })
+
+        if (!analytics.isConfirmed()) {
+            view.showAnalyticsConfirm()
+        }
     }
 
     override fun resume() {
@@ -84,6 +92,8 @@ constructor() : Presenter {
         val packageName = app.packageName.split(":")[0];
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + packageName))
         activity.startActivity(intent);
+
+        analytics.click(app.packageName)
     }
 
     fun listItemLongClicked(app: AppEntity) {
@@ -93,6 +103,8 @@ constructor() : Presenter {
                     Timber.e(e, "onError")
                     Toast.makeText(application, e.message, Toast.LENGTH_LONG).show()
                 })
+
+        analytics.longClick(app.packageName)
     }
 
     fun onMenuItemClicked(item: MenuItem, checkedItemList: List<AppEntity>) {
@@ -131,5 +143,7 @@ constructor() : Presenter {
                         .subscribe(onNext, onError)
             }
         }
+
+        analytics.menuClick(item.title.toString())
     }
 }

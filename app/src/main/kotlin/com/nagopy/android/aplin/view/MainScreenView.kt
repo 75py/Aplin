@@ -29,4 +29,6 @@ public interface MainScreenView {
      */
     public open fun hideAppList()
 
+    open fun showAnalyticsConfirm()
+
 }
