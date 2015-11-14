@@ -28,14 +28,14 @@ open class Applications
     val handler: Handler = Handler(Looper.getMainLooper())
 
     open fun initialize(func: () -> Unit) {
-        Thread().run {
+        Thread({
             if (!isLoaded()) {
                 refresh()
             }
             handler.post {
                 func()
             }
-        }
+        }).start()
     }
 
     open fun isLoaded(): Boolean {
