@@ -9,15 +9,16 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
+import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.presenter.AppListPresenter
-import com.nagopy.android.aplin.view.adapter.AppListAdapter
+import com.nagopy.android.aplin.view.adapter.RealmAppAdapter
 import com.nagopy.android.aplin.view.decoration.DividerItemDecoration
+import io.realm.RealmResults
 import javax.inject.Inject
 
 /**
@@ -26,9 +27,7 @@ import javax.inject.Inject
 public class AppListFragment : Fragment(), AppListView {
 
     // ButterKnifeのresetにあたるものがないので諦める
-    //    val progressBar: ProgressBar by bindView(R.id.progress)
     //    val recyclerView: RecyclerView by bindView(R.id.list)
-    var progressBar: ProgressBar? = null
     var recyclerView: RecyclerView? = null
 
     @Inject
@@ -37,9 +36,14 @@ public class AppListFragment : Fragment(), AppListView {
     @Inject
     lateinit var application: Application
 
-    lateinit var adapter: AppListAdapter
+    @Inject
+    lateinit var iconHelper: IconHelper
+
+    var adapter: RealmAppAdapter? = null
 
     lateinit var parentView: AppListViewParent
+
+    val category: Category by lazy { Category.valueOf(arguments.getString("type")) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +53,6 @@ public class AppListFragment : Fragment(), AppListView {
 
         Aplin.getApplicationComponent().inject(this)
 
-        val category = Category.valueOf(arguments.getString("type"))
-        adapter = AppListAdapter(application, category, { app ->
-            parentView.onListItemClick(app)
-        }, { app ->
-            parentView.onListItemLongClick(app)
-        })
         presenter.initialize(this, category)
     }
 
@@ -79,16 +77,11 @@ public class AppListFragment : Fragment(), AppListView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBar = view!!.findViewById(R.id.progress) as ProgressBar
-        recyclerView = view.findViewById(R.id.list) as RecyclerView
+        recyclerView = view!!.findViewById(R.id.list) as RecyclerView
 
         recyclerView!!.layoutManager = LinearLayoutManager(application, LinearLayoutManager.VERTICAL, false)
         recyclerView!!.adapter = adapter
         recyclerView!!.addItemDecoration(DividerItemDecoration(application, R.color.colorDivider, R.dimen.divider))
-
-        if (adapter.itemCount == 0) {
-            showIndicator()
-        }
     }
 
     override fun onDestroyView() {
@@ -96,23 +89,21 @@ public class AppListFragment : Fragment(), AppListView {
         recyclerView?.layoutManager = null
         recyclerView?.adapter = null
         recyclerView = null
-        progressBar = null
     }
 
-    override fun showIndicator() {
-        progressBar?.visibility = View.VISIBLE
-    }
-
-    override fun hideIndicator() {
-        progressBar?.visibility = View.GONE
-    }
-
-    override fun showList(apps: List<AppEntity>, displayItems: List<DisplayItem>) {
-        adapter.updateApplicationList(apps.toList(), displayItems)
+    override fun showList(apps: RealmResults<AppEntity>, displayItems: List<DisplayItem>) {
+        if (adapter == null) {
+            adapter = RealmAppAdapter(apps, application, category, iconHelper, { app ->
+                parentView.onListItemClick(app)
+            }, { app ->
+                parentView.onListItemLongClick(app)
+            })
+        }
+        adapter!!.displayItems = displayItems
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        parentView.onOptionsItemSelected(item, adapter.filteredData)
+        parentView.onOptionsItemSelected(item, adapter!!.realmResults)
         return super.onOptionsItemSelected(item);
     }
 

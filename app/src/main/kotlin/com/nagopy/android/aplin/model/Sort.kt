@@ -19,7 +19,11 @@ import android.content.Context
 import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.names.AppEntityNames
 import com.nagopy.android.easyprefs.SingleSelectionItem
+import com.nagopy.android.kotlinames.findAllSortedAsync
+import io.realm.RealmQuery
+import io.realm.RealmResults
 import java.util.*
 
 /**
@@ -33,7 +37,9 @@ public enum class Sort
  * *
  * @param summaryResourceId 設定画面で表示する説明文の文字列リソースID
  */
-(private val titleResourceId: Int, private val summaryResourceId: Int) : Comparator<AppEntity>, SingleSelectionItem {
+(private val titleResourceId: Int, private val summaryResourceId: Int) : SingleSelectionItem, Comparator<AppEntity> {
+
+    // TODO Comparator削除
 
     /**
      * デフォルトのソート順。
@@ -43,47 +49,30 @@ public enum class Sort
      *
      */
     DEFAULT(R.string.sort_default, R.string.sort_default_summary) {
-        override fun compare(lhs: AppEntity, rhs: AppEntity): Int {
-            if (lhs.isInstalled != rhs.isInstalled) {
-                // 「未インストール」は最後に
-                return if (lhs.isInstalled) -1 else 1
-            }
-
-            val label0 = lhs.label
-            val label1 = rhs.label
-
-            var ret = label0.compareTo(label1, ignoreCase = true)
-            // ラベルで並び替え、同じラベルがあったらパッケージ名で
-            if (ret == 0) {
-                val pkgName0 = lhs.packageName
-                val pkgName1 = rhs.packageName
-                ret = pkgName0.compareTo(pkgName1, ignoreCase = true)
-            }
-            return ret
+        override fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity> {
+            return realmQuery.findAllSortedAsync(AppEntityNames.isInstalled() to true,
+                    AppEntityNames.label() to true,
+                    AppEntityNames.packageName() to true)
         }
     },
     /**
      * パッケージ名の昇順
      */
     PACKAGE_NAME(R.string.sort_package_name, R.string.sort_package_name_summary) {
-        override fun compare(lhs: AppEntity, rhs: AppEntity): Int {
-            if (lhs.isInstalled != rhs.isInstalled) {
-                // 「未インストール」は最後に
-                return if (lhs.isInstalled) -1 else 1
-            }
-            return lhs.packageName.compareTo(rhs.packageName, ignoreCase = true)
+        override fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity> {
+            return realmQuery.findAllSortedAsync(AppEntityNames.isInstalled() to true,
+                    AppEntityNames.packageName() to true)
         }
     },
     /**
      * 最終更新日時の降順
      */
     UPDATE_DATE_DESC(R.string.sort_update_time_desc, R.string.sort_update_time_desc_summary) {
-        override fun compare(lhs: AppEntity, rhs: AppEntity): Int {
-            if (lhs.lastUpdateTime != rhs.lastUpdateTime) {
-                val l = lhs.lastUpdateTime - rhs.lastUpdateTime
-                return if (l > 0) -1 else 1
-            }
-            return DEFAULT.compare(lhs, rhs)
+        override fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity> {
+            return realmQuery.findAllSortedAsync(AppEntityNames.lastUpdateTime() to false,
+                    AppEntityNames.isInstalled() to true,
+                    AppEntityNames.label() to true,
+                    AppEntityNames.packageName() to true)
         }
     };
 
@@ -94,4 +83,8 @@ public enum class Sort
     override fun minSdkVersion(): Int = Build.VERSION_CODES.BASE
 
     override fun maxSdkVersion(): Int = Integer.MAX_VALUE
+
+    abstract fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity>
+
+    override fun compare(lhs: AppEntity, rhs: AppEntity): Int = 0
 }

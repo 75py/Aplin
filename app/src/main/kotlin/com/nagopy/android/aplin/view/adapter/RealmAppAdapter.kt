@@ -29,28 +29,40 @@ import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
 import com.nagopy.android.aplin.model.IconHelper
+import io.realm.RealmResults
 
-public class AppListAdapter(
-        val context: Context
+public class RealmAppAdapter(
+        val realmResults: RealmResults<AppEntity>
+        , val context: Context
         , val category: Category
         , val iconHelper: IconHelper
         , val onListItemClicked: (app: AppEntity) -> Unit
         , val onListItemLongClicked: (app: AppEntity) -> Unit
-) : RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
-
-    var filteredData: List<AppEntity> = emptyList()
+) : RecyclerView.Adapter<RealmAppAdapter.ViewHolder>() {
 
     var displayItems: List<DisplayItem> = emptyList()
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+        realmResults.addChangeListener {
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        realmResults.removeChangeListeners()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder? {
         val view = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
         val holder = ViewHolder(view)
 
         view.setOnClickListener { view ->
-            onListItemClicked(filteredData[holder.adapterPosition])
+            onListItemClicked(realmResults[holder.adapterPosition])
         }
         view.setOnLongClickListener { view ->
-            onListItemLongClicked(filteredData[holder.adapterPosition])
+            onListItemLongClicked(realmResults[holder.adapterPosition])
             return@setOnLongClickListener true
         }
 
@@ -62,7 +74,7 @@ public class AppListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entity = filteredData.get(position)
+        val entity = realmResults[position]
 
         val textColor = ContextCompat.getColor(context,
                 if (entity.isEnabled) R.color.text_color else R.color.textColorTertiary)
@@ -94,15 +106,7 @@ public class AppListAdapter(
         holder.icon.setImageDrawable(iconHelper.getIcon(entity))
     }
 
-    override fun getItemCount(): Int = filteredData.size
-
-
-    public fun updateApplicationList(data: List<AppEntity>, displayItems: List<DisplayItem>) {
-        this.displayItems = displayItems
-        this.filteredData = data
-        notifyDataSetChanged()
-    }
-
+    override fun getItemCount(): Int = realmResults.size
 
     class ViewHolder : RecyclerView.ViewHolder {
 

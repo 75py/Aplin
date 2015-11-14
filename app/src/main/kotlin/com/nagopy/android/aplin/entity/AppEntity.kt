@@ -1,36 +1,40 @@
 package com.nagopy.android.aplin.entity
 
-import android.graphics.drawable.Drawable
-import kotlin.properties.Delegates
+import io.realm.RealmObject
+import io.realm.annotations.Required
 
 /**
  * アプリケーションを表すエンティティ
  */
-data class AppEntity(var packageName: String) {
+open class AppEntity : RealmObject() {
 
-    var label: String by Delegates.notNull<String>()
+    @Required
+    open var packageName: String = ""
 
-    var isEnabled: Boolean  by Delegates.notNull<Boolean>()
+    @Required
+    open var label: String = ""
 
-    var isSystem: Boolean  by Delegates.notNull<Boolean>()
+    open var isEnabled: Boolean = false
 
-    var icon: Drawable by Delegates.notNull<Drawable>()
+    open var isSystem: Boolean = false
 
-    var isInstalled: Boolean = true // 実行ユーザーでインストールされているか、API17以上で使用するフラグ。
+    open var iconByteArray: ByteArray? = null
 
-    var isThisASystemPackage: Boolean = false
+    open var isInstalled: Boolean = true // 実行ユーザーでインストールされているか、API17以上で使用するフラグ。
 
-    var hasActiveAdmins: Boolean = false
+    open var isThisASystemPackage: Boolean = false
 
-    var isDefaultApp: Boolean = false
+    open var hasActiveAdmins: Boolean = false
 
-    var firstInstallTime: Long = 0
+    open var isDefaultApp: Boolean = false
 
-    var lastUpdateTime: Long = 0
+    open var firstInstallTime: Long = 0
+
+    open var lastUpdateTime: Long = 0
 
     /** UsageStatsManagerで取得 */
-    var launchTimes: Int = 0
+    open var launchTimes: Int = 0
 
-    var versionName: String? = null
+    open var versionName: String? = null
 
 }

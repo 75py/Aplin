@@ -68,6 +68,9 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
+    compile "io.realm:realm-android:$realm_version"
+    compile "com.nagopy.android:kotlinames:$kotliname_version"
+    kapt "com.nagopy.android:kotlinames-compiler:$kotliname_version"
 
     testCompile 'junit:junit:4.12'
     testCompile 'com.google.dexmaker:dexmaker:1.2'
@@ -86,6 +89,8 @@ dependencies {
 buildscript {
     ext.kotlin_version = '1.0.0-beta-1103'
     ext.dagger_version = '2.0.1'
+    ext.realm_version = '0.84.2'
+    ext.kotliname_version = '2.0.1'
     ext.target_sdk_version = 23
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
