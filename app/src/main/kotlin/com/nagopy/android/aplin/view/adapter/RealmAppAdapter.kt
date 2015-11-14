@@ -39,19 +39,27 @@ public class RealmAppAdapter(
         , val onListItemLongClicked: (app: AppEntity) -> Unit
 ) : RecyclerView.Adapter<RealmAppAdapter.ViewHolder>() {
 
-    lateinit var realmResults: RealmResults<AppEntity>
+    var realmResults: RealmResults<AppEntity>? = null
     var displayItems: List<DisplayItem> = emptyList()
+
+    fun updateRealmResult(realmResults: RealmResults<AppEntity>) {
+        this.realmResults?.removeChangeListeners()
+        this.realmResults = realmResults
+        realmResults.removeChangeListeners()
+        realmResults.addChangeListener { notifyDataSetChanged() }
+    }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
         super.onAttachedToRecyclerView(recyclerView)
-        realmResults.addChangeListener {
+        realmResults?.removeChangeListeners()
+        realmResults?.addChangeListener {
             notifyDataSetChanged()
         }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
         super.onDetachedFromRecyclerView(recyclerView)
-        realmResults.removeChangeListeners()
+        realmResults?.removeChangeListeners()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder? {
@@ -59,10 +67,10 @@ public class RealmAppAdapter(
         val holder = ViewHolder(view)
 
         view.setOnClickListener { view ->
-            onListItemClicked(realmResults[holder.adapterPosition])
+            onListItemClicked(realmResults!![holder.adapterPosition])
         }
         view.setOnLongClickListener { view ->
-            onListItemLongClicked(realmResults[holder.adapterPosition])
+            onListItemLongClicked(realmResults!![holder.adapterPosition])
             return@setOnLongClickListener true
         }
 
@@ -74,7 +82,7 @@ public class RealmAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entity = realmResults[position]
+        val entity = realmResults!![position]
 
         val textColor = ContextCompat.getColor(context,
                 if (entity.isEnabled) R.color.text_color else R.color.textColorTertiary)
@@ -106,7 +114,7 @@ public class RealmAppAdapter(
         holder.icon.setImageDrawable(iconHelper.getIcon(entity))
     }
 
-    override fun getItemCount(): Int = realmResults.size
+    override fun getItemCount(): Int = realmResults?.size ?: 0
 
     class ViewHolder : RecyclerView.ViewHolder {
 

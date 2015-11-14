@@ -19,7 +19,6 @@ import com.nagopy.android.aplin.presenter.AppListPresenter
 import com.nagopy.android.aplin.view.adapter.RealmAppAdapter
 import com.nagopy.android.aplin.view.decoration.DividerItemDecoration
 import io.realm.RealmResults
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -100,13 +99,13 @@ public class AppListFragment : Fragment(), AppListView {
                 parentView.onListItemLongClick(app)
             })
         }
-        adapter!!.realmResults = apps
         adapter!!.displayItems = displayItems
+        adapter!!.updateRealmResult(apps)
         adapter!!.notifyDataSetChanged()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        parentView.onOptionsItemSelected(item, adapter!!.realmResults)
+        parentView.onOptionsItemSelected(item, adapter!!.realmResults!!)
         return super.onOptionsItemSelected(item);
     }
 

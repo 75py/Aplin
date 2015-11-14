@@ -24,7 +24,6 @@ import com.nagopy.android.easyprefs.SingleSelectionItem
 import com.nagopy.android.kotlinames.findAllSortedAsync
 import io.realm.RealmQuery
 import io.realm.RealmResults
-import java.util.*
 
 /**
  * ソート順の定義クラス
@@ -37,7 +36,7 @@ public enum class Sort
  * *
  * @param summaryResourceId 設定画面で表示する説明文の文字列リソースID
  */
-(private val titleResourceId: Int, private val summaryResourceId: Int) : SingleSelectionItem, Comparator<AppEntity> {
+(private val titleResourceId: Int, private val summaryResourceId: Int) : SingleSelectionItem {
 
     // TODO Comparator削除
 
@@ -85,6 +84,4 @@ public enum class Sort
     override fun maxSdkVersion(): Int = Integer.MAX_VALUE
 
     abstract fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity>
-
-    override fun compare(lhs: AppEntity, rhs: AppEntity): Int = 0
 }
