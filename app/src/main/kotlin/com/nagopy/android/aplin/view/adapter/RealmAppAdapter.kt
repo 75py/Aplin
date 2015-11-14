@@ -32,14 +32,14 @@ import com.nagopy.android.aplin.model.IconHelper
 import io.realm.RealmResults
 
 public class RealmAppAdapter(
-        val realmResults: RealmResults<AppEntity>
-        , val context: Context
+        val context: Context
         , val category: Category
         , val iconHelper: IconHelper
         , val onListItemClicked: (app: AppEntity) -> Unit
         , val onListItemLongClicked: (app: AppEntity) -> Unit
 ) : RecyclerView.Adapter<RealmAppAdapter.ViewHolder>() {
 
+    lateinit var realmResults: RealmResults<AppEntity>
     var displayItems: List<DisplayItem> = emptyList()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {

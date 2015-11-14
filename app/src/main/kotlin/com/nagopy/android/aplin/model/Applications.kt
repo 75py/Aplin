@@ -15,6 +15,7 @@ import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
 import io.realm.RealmResults
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -126,11 +127,13 @@ open class Applications
     open fun insert(pkg: String) {
         Timber.d("insert $pkg")
         upsert(pkg)
+        listeners.forEach { it.onPackageChanged() }
     }
 
     open fun update(pkg: String) {
         Timber.d("update $pkg")
         upsert(pkg)
+        listeners.forEach { it.onPackageChanged() }
     }
 
     private fun upsert(pkg: String) {
@@ -158,5 +161,19 @@ open class Applications
                 entity.clear()
             }
         }
+        listeners.forEach { it.onPackageChanged() }
+    }
+
+    var listeners: List<PackageChangedListener> = ArrayList()
+    open fun addPackageChangedListener(listener: PackageChangedListener) {
+        listeners = listeners.plus(listener)
+    }
+
+    open fun removePackageChangedListener(listener: PackageChangedListener) {
+        listeners = listeners.minus(listener)
+    }
+
+    interface PackageChangedListener {
+        fun onPackageChanged()
     }
 }

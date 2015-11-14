@@ -19,6 +19,7 @@ import com.nagopy.android.aplin.presenter.AppListPresenter
 import com.nagopy.android.aplin.view.adapter.RealmAppAdapter
 import com.nagopy.android.aplin.view.decoration.DividerItemDecoration
 import io.realm.RealmResults
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -93,13 +94,15 @@ public class AppListFragment : Fragment(), AppListView {
 
     override fun showList(apps: RealmResults<AppEntity>, displayItems: List<DisplayItem>) {
         if (adapter == null) {
-            adapter = RealmAppAdapter(apps, application, category, iconHelper, { app ->
+            adapter = RealmAppAdapter(application, category, iconHelper, { app ->
                 parentView.onListItemClick(app)
             }, { app ->
                 parentView.onListItemLongClick(app)
             })
         }
+        adapter!!.realmResults = apps
         adapter!!.displayItems = displayItems
+        adapter!!.notifyDataSetChanged()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
