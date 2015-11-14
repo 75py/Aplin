@@ -8,8 +8,10 @@ import android.os.Handler
 import android.os.Looper
 import android.os.UserHandle
 import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.names.AppEntityNames
 import com.nagopy.android.aplin.model.converter.AppConverter
 import com.nagopy.android.aplin.model.preference.SortSetting
+import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
 import io.realm.RealmResults
 import timber.log.Timber
@@ -26,6 +28,7 @@ open class Applications
 ) {
 
     val handler: Handler = Handler(Looper.getMainLooper())
+    val enabledSettingField: FieldReflection<Int> = FieldReflection(ApplicationInfo::class.java, "enabledSetting")
 
     open fun initialize(func: () -> Unit) {
         Thread({
@@ -45,20 +48,15 @@ open class Applications
     }
 
     open fun refresh() {
-        val enabledSettingField: FieldReflection<Int> = FieldReflection(ApplicationInfo::class.java, "enabledSetting")
         val realm = Realm.getInstance(application)
         realm.use {
             realm.executeTransaction {
                 realm.where(AppEntity::class.java).findAll().clear()
                 val allApps = getInstalledApplications()
                 allApps.forEach {
-                    if (!it.enabled) {
-                        // 無効になっていて、かつenabledSettingが3でないアプリは除外する
-                        val enabledSetting = enabledSettingField.get(it)
-                        if (enabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER) {
-                            Timber.d("skip:" + it.packageName)
-                            return@forEach
-                        }
+                    if (shouldSkip(it)) {
+                        Timber.d("skip:" + it.packageName)
+                        return@forEach
                     }
 
                     val entity = realm.createObject(AppEntity::class.java)
@@ -83,6 +81,10 @@ open class Applications
      * /packages/apps/Settings/src/com/android/settings/applications/ApplicationsState.java
      */
     fun getInstalledApplications(): List<ApplicationInfo> {
+        return packageManager.getInstalledApplications(getFlags())
+    }
+
+    open fun getFlags(): Int {
         val ownerRetrieveFlags = PackageManager.GET_UNINSTALLED_PACKAGES or
                 PackageManager.GET_DISABLED_COMPONENTS or
                 PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
@@ -107,7 +109,54 @@ open class Applications
                 retrieveFlags
             }
         }
-        return packageManager.getInstalledApplications(flags or PackageManager.GET_SIGNATURES)
+        return flags or PackageManager.GET_SIGNATURES
     }
 
+    open fun shouldSkip(applicationInfo: ApplicationInfo): Boolean {
+        if (!applicationInfo.enabled) {
+            // 無効になっていて、かつenabledSettingが3でないアプリは除外する
+            val enabledSetting = enabledSettingField.get(applicationInfo)
+            if (enabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER) {
+                return true
+            }
+        }
+        return false
+    }
+
+    open fun insert(pkg: String) {
+        Timber.d("insert $pkg")
+        upsert(pkg)
+    }
+
+    open fun update(pkg: String) {
+        Timber.d("update $pkg")
+        upsert(pkg)
+    }
+
+    private fun upsert(pkg: String) {
+        val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
+        if (!shouldSkip(applicationInfo)) {
+            val realm = Realm.getInstance(application)
+            realm.use {
+                realm.executeTransaction {
+                    var entity = realm.where(AppEntity::class.java).equalTo(AppEntityNames.packageName(), pkg).findFirst()
+                    if(entity == null) {
+                        entity = realm.createObject(AppEntity::class.java)
+                    }
+                    appConverter.setValues(entity, applicationInfo)
+                }
+            }
+        }
+    }
+
+    open fun delete(pkg: String) {
+        Timber.d("delete $pkg")
+        val realm = Realm.getInstance(application)
+        realm.use {
+            realm.executeTransaction {
+                val entity = realm.where(AppEntity::class.java).equalTo(AppEntityNames.packageName(), pkg).findAll()
+                entity.clear()
+            }
+        }
+    }
 }
