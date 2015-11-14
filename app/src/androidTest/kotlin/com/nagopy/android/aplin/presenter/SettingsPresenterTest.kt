@@ -3,7 +3,6 @@ package com.nagopy.android.aplin.presenter
 import android.app.Application
 import android.content.SharedPreferences
 import android.support.test.runner.AndroidJUnit4
-import com.nagopy.android.aplin.model.Apps
 import com.nagopy.android.aplin.model.UsageStatsHelper
 import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Assert
@@ -27,8 +26,6 @@ class SettingsPresenterTest {
     @Mock
     lateinit var sharedPreferences: SharedPreferences
     @Mock
-    lateinit var apps: Apps
-    @Mock
     lateinit var settingsView: SettingsView
     @Mock
     lateinit var usageStatsHelper: UsageStatsHelper
@@ -39,7 +36,6 @@ class SettingsPresenterTest {
         MockitoAnnotations.initMocks(this)
         target.application = application
         target.sharedPreferences = sharedPreferences
-        target.apps = apps
         target.usageStatsHelper = usageStatsHelper
     }
 
@@ -88,10 +84,8 @@ class SettingsPresenterTest {
     fun finish() {
         target.settingChanged = false
         Assert.assertThat(target.finish(), _is(false))
-        Mockito.verify(apps, Mockito.times(0)).invalidateCache()
 
         target.settingChanged = true
         Assert.assertThat(target.finish(), _is(true))
-        Mockito.verify(apps, Mockito.times(1)).invalidateCache()
     }
 }
