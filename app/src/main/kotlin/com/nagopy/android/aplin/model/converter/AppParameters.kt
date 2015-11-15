@@ -11,6 +11,11 @@ import timber.log.Timber
 import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
+    packageName(Constants.ALL_SDK_VERSION) {
+        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+            entity.packageName = applicationInfo.packageName
+        }
+    },
     label(Constants.ALL_SDK_VERSION) {
         override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.label = applicationInfo.loadLabel(appConverter.packageManager).toString()
@@ -77,9 +82,9 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
         override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             if (applicationInfo.icon == 0) {
                 Timber.v(applicationInfo.packageName + ", icon=0x0")
-                entity.icon = appConverter.iconProperties.defaultIcon
+                entity.iconByteArray = appConverter.iconHelper.defaultIconByteArray
             } else {
-                entity.icon = applicationInfo.loadIcon(appConverter.packageManager)
+                entity.iconByteArray = appConverter.iconHelper.toByteArray(applicationInfo.loadIcon(appConverter.packageManager))
             }
         }
     },

@@ -6,12 +6,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.DevicePolicy
-import com.nagopy.android.aplin.model.IconProperties
+import com.nagopy.android.aplin.model.IconHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-public class AppConverter {
+open class AppConverter {
 
     @Inject
     lateinit var application: Application
@@ -20,7 +20,7 @@ public class AppConverter {
     lateinit var packageManager: PackageManager
 
     @Inject
-    lateinit var iconProperties: IconProperties
+    lateinit var iconHelper: IconHelper
 
     @Inject
     lateinit var devicePolicy: DevicePolicy
@@ -32,8 +32,18 @@ public class AppConverter {
     constructor() {
     }
 
+    open fun setValues(appEntity: AppEntity, applicationInfo: ApplicationInfo) {
+        AppParameters.values
+                .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+                .forEach { param ->
+                    param.setValue(appEntity, applicationInfo, this)
+                }
+    }
+
+    @Deprecated("あとで消す")
     public fun convertToEntity(applicationInfo: ApplicationInfo): AppEntity {
-        val entity: AppEntity = AppEntity(applicationInfo.packageName)
+        val entity: AppEntity = AppEntity()
+        entity.packageName = applicationInfo.packageName
 
         AppParameters.values
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }

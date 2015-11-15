@@ -2,11 +2,11 @@ package com.nagopy.android.aplin
 
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import com.nagopy.android.aplin.model.Apps
 import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
 import com.nagopy.android.aplin.view.AppListFragment
 import com.nagopy.android.aplin.view.MainActivity
+import com.nagopy.android.aplin.view.PackageChangedReceiver
 import com.nagopy.android.aplin.view.SettingsActivity
 import org.assertj.android.api.Assertions
 import org.hamcrest.CoreMatchers.notNullValue
@@ -33,8 +33,6 @@ class MainActivityTest {
             mainActivity.adPresenter = mock(AdPresenter::class.java, Mockito.RETURNS_DEEP_STUBS)
             mainActivity.presenter = mock(MainScreenPresenter::class.java, Mockito.RETURNS_DEEP_STUBS)
 
-            mainActivity.presenter.apps = mock(Apps::class.java)
-
             Mockito.doNothing().`when`(mainActivity.presenter).initialize(Tests.anyObj())
             Mockito.doNothing().`when`(mainActivity.adPresenter).initialize(Tests.anyObj())
         }
@@ -44,6 +42,10 @@ class MainActivityTest {
         }
 
         override fun inject(settingsActivity: SettingsActivity) {
+            throw UnsupportedOperationException()
+        }
+
+        override fun inject(packageChangedReceiver: PackageChangedReceiver) {
             throw UnsupportedOperationException()
         }
     }

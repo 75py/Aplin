@@ -15,7 +15,6 @@
  */
 package com.nagopy.android.aplin.view.adapter
 
-import android.app.ActivityManager
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -29,23 +28,38 @@ import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
+import com.nagopy.android.aplin.model.IconHelper
+import io.realm.RealmResults
 
-public class AppListAdapter(
+public class RealmAppAdapter(
         val context: Context
         , val category: Category
+        , val iconHelper: IconHelper
         , val onListItemClicked: (app: AppEntity) -> Unit
         , val onListItemLongClicked: (app: AppEntity) -> Unit
-) : RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RealmAppAdapter.ViewHolder>() {
 
-    var filteredData: List<AppEntity> = emptyList()
-
+    var realmResults: RealmResults<AppEntity>? = null
     var displayItems: List<DisplayItem> = emptyList()
 
-    val iconSize: Int
+    fun updateRealmResult(realmResults: RealmResults<AppEntity>) {
+        this.realmResults?.removeChangeListeners()
+        this.realmResults = realmResults
+        realmResults.removeChangeListeners()
+        realmResults.addChangeListener { notifyDataSetChanged() }
+    }
 
-    init {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        iconSize = activityManager.launcherLargeIconSize * 4 / 3
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+        realmResults?.removeChangeListeners()
+        realmResults?.addChangeListener {
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        realmResults?.removeChangeListeners()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder? {
@@ -53,22 +67,22 @@ public class AppListAdapter(
         val holder = ViewHolder(view)
 
         view.setOnClickListener { view ->
-            onListItemClicked(filteredData[holder.adapterPosition])
+            onListItemClicked(realmResults!![holder.adapterPosition])
         }
         view.setOnLongClickListener { view ->
-            onListItemLongClicked(filteredData[holder.adapterPosition])
+            onListItemLongClicked(realmResults!![holder.adapterPosition])
             return@setOnLongClickListener true
         }
 
         holder.icon.scaleType = ImageView.ScaleType.FIT_CENTER
-        holder.icon.layoutParams.width = iconSize
-        holder.icon.layoutParams.height = iconSize
+        holder.icon.layoutParams.width = iconHelper.iconSize
+        holder.icon.layoutParams.height = iconHelper.iconSize
 
         return holder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entity = filteredData.get(position)
+        val entity = realmResults!![position]
 
         val textColor = ContextCompat.getColor(context,
                 if (entity.isEnabled) R.color.text_color else R.color.textColorTertiary)
@@ -97,18 +111,10 @@ public class AppListAdapter(
         }
         holder.status.setTextColor(textColor)
 
-        holder.icon.setImageDrawable(entity.icon)
+        holder.icon.setImageDrawable(iconHelper.getIcon(entity))
     }
 
-    override fun getItemCount(): Int = filteredData.size
-
-
-    public fun updateApplicationList(data: List<AppEntity>, displayItems: List<DisplayItem>) {
-        this.displayItems = displayItems
-        this.filteredData = data
-        notifyDataSetChanged()
-    }
-
+    override fun getItemCount(): Int = realmResults?.size ?: 0
 
     class ViewHolder : RecyclerView.ViewHolder {
 
