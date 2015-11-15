@@ -38,8 +38,6 @@ public enum class Sort
  */
 (private val titleResourceId: Int, private val summaryResourceId: Int) : SingleSelectionItem {
 
-    // TODO Comparator削除
-
     /**
      * デフォルトのソート順。
      *
