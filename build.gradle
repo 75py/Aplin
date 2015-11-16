@@ -18,8 +18,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    PUBLISH_VERSION_NAME = versionName()
-    PUBLISH_VERSION_CODE = versionCode()
+    publish_version_name = versionName()
+    publish_version_code = versionCode()
 }
 
 task bumpMajor << {

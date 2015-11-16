@@ -11,8 +11,14 @@ android:
 jdk:
   - oraclejdk8
 
+branches:
+  only:
+    - develop
+
 before_script:
     - chmod +x gradlew
+    - echo "sdk.dir=$ANDROID_HOME" > local.properties
+    - echo "travis.job=$TRAVIS_JOB_NUMBER" >> local.properties
 
 script:
     - ./gradlew clean assembleDebug

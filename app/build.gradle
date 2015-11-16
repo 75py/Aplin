@@ -13,8 +13,8 @@ android {
         applicationId "com.nagopy.android.aplin"
         minSdkVersion 21
         targetSdkVersion "$target_sdk_version"
-        versionCode PUBLISH_VERSION_CODE
-        versionName PUBLISH_VERSION_NAME
+        versionCode publish_version_code
+        versionName publish_version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         multiDexKeepProguard file('multi-dex-keep.txt')
@@ -95,6 +95,9 @@ buildscript {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     ext.sdk_dir = properties.getProperty("sdk.dir")
+    if(properties.containsKey("travis.job")) {
+        ext.publish_version_name = "$publish_version_name-${properties.getProperty("travis.job")}"
+    }
     repositories {
         mavenCentral()
     }
