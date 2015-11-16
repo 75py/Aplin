@@ -19,6 +19,8 @@ before_script:
     - chmod +x gradlew
     - echo "sdk.dir=$ANDROID_HOME" > local.properties
     - echo "travis.job=$TRAVIS_JOB_NUMBER" >> local.properties
+    - mkdir app/signingConfigs
+    - echo 'signingConfigs{ release {} }' > app/signingConfigs/local.properties
 
 script:
     - ./gradlew clean assembleDebug
