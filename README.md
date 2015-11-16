@@ -3,4 +3,4 @@ Android, application manager
 
 ## Latest version
 
-2.2.0
+2.2.1
