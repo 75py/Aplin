@@ -40,20 +40,6 @@ open class AppConverter {
                 }
     }
 
-    @Deprecated("あとで消す")
-    public fun convertToEntity(applicationInfo: ApplicationInfo): AppEntity {
-        val entity: AppEntity = AppEntity()
-        entity.packageName = applicationInfo.packageName
-
-        AppParameters.values
-                .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
-                .forEach { param ->
-                    param.setValue(entity, applicationInfo, this)
-                }
-
-        return entity
-    }
-
     interface Converter {
         fun targetSdkVersion(): IntRange
         fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter)
