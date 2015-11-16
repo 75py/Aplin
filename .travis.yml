@@ -1,0 +1,22 @@
+language: android
+
+android:
+  components:
+    - build-tools-23.0.1
+    - android-23
+    - extra-android-m2repository
+  licenses:
+    - android-sdk-license-5be876d5
+
+jdk:
+  - oraclejdk8
+
+before_script:
+    - chmod +x gradlew
+
+script:
+    - ./gradlew clean assembleDebug
+
+after_success:
+  - ./gradlew crashlyticsUploadDistributionDebug
+
