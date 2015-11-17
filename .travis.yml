@@ -3,6 +3,8 @@ language: android
 android:
   components:
     - tools
+    - platform-tools
+    - extra
     - build-tools-23.0.2
     - android-23
     - extra-android-m2repository
@@ -12,7 +14,7 @@ android:
     - android-sdk-license-5be876d5
 
 jdk:
-  - oraclejdk8
+  - oraclejdk7
 
 branches:
   only:
@@ -26,7 +28,7 @@ before_script:
     - echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
 
 script:
-    - ./gradlew assembleDebug
+    - ./gradlew assembleDebug --stacktrace --info
 
 after_success:
   - ./gradlew crashlyticsUploadDistributionDebug
