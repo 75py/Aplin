@@ -26,7 +26,7 @@ before_script:
     - echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
 
 script:
-    - ./gradlew clean assembleDebug
+    - ./gradlew assembleDebug
 
 after_success:
   - ./gradlew crashlyticsUploadDistributionDebug
