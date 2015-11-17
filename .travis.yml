@@ -26,6 +26,7 @@ before_script:
     - echo "travis.job=$TRAVIS_JOB_NUMBER" >> local.properties
     - mkdir app/signingConfigs
     - echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
+    - echo "MAVEN_OPTS='-Xmx2g -XX:MaxPermSize=512m'" > ~/.mavenrc
 
 script:
     - ./gradlew assembleDebug --stacktrace --info
