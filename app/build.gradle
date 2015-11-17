@@ -7,7 +7,7 @@ apply from: 'signingConfigs/release.gradle', to: android
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
