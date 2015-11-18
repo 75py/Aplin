@@ -10,7 +10,6 @@ import android.os.UserHandle
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.entity.names.AppEntityNames
 import com.nagopy.android.aplin.model.converter.AppConverter
-import com.nagopy.android.aplin.model.preference.SortSetting
 import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
 import io.realm.RealmResults
@@ -25,7 +24,7 @@ open class Applications
         var application: Application
         , val packageManager: PackageManager
         , val appConverter: AppConverter
-        , val sortSetting: SortSetting
+        , val userSettings: UserSettings
 ) {
 
     val handler: Handler = Handler(Looper.getMainLooper())
@@ -71,7 +70,7 @@ open class Applications
         Realm.getInstance(application).use {
             Timber.d("getApplicationList " + category)
             val query = it.where(AppEntity::class.java)
-            val result = sortSetting.value.findAllSortedAsync(category.where(query))
+            val result = userSettings.sort.findAllSortedAsync(category.where(query))
             return result
         }
     }

@@ -20,7 +20,7 @@ import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.entity.names.AppEntityNames
-import com.nagopy.android.easyprefs.MultiSelectionItem
+import com.nagopy.android.aplin.view.preference.MultiSelectionItem
 import com.nagopy.android.kotlinames.equalTo
 import com.nagopy.android.kotlinames.greaterThan
 import io.realm.RealmQuery

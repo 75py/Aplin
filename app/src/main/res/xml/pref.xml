@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.nagopy.android.aplin.model.preference.CategorySetting_MultiSelectionPreference />
+    <com.nagopy.android.aplin.view.preference.CategoryPreference />
 
     <PreferenceCategory android:title="@string/usage_stats_title">
         <Preference
@@ -8,9 +8,9 @@
             android:title="@string/usage_stats_title" />
     </PreferenceCategory>
 
-    <com.nagopy.android.aplin.model.preference.DisplayItemSetting_MultiSelectionPreference />
+    <com.nagopy.android.aplin.view.preference.DisplayItemPreference />
 
-    <com.nagopy.android.aplin.model.preference.SortSetting_SingleSelectionPreference />
+    <com.nagopy.android.aplin.view.preference.SortPreference />
 
     <PreferenceCategory android:title="@string/ga_preference_category">
         <CheckBoxPreference

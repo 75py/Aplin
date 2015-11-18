@@ -3,7 +3,7 @@ package com.nagopy.android.aplin.presenter
 import android.app.Application
 import com.nagopy.android.aplin.model.Applications
 import com.nagopy.android.aplin.model.Category
-import com.nagopy.android.aplin.model.preference.DisplayItemSetting
+import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import io.realm.Realm
 import timber.log.Timber
@@ -22,7 +22,7 @@ public class AppListPresenter : Presenter, Applications.PackageChangedListener {
     lateinit var application: Application
 
     @Inject
-    lateinit var displayItemSetting: DisplayItemSetting
+    lateinit var userSettings: UserSettings
 
     @Inject
     lateinit var applications: Applications
@@ -40,7 +40,7 @@ public class AppListPresenter : Presenter, Applications.PackageChangedListener {
 
         val appEntities = applications.getApplicationList(category)
         Timber.d("appEntities " + appEntities)
-        view.showList(appEntities, displayItemSetting.value.toList())
+        view.showList(appEntities, userSettings.displayItems)
         applications.addPackageChangedListener(this)
     }
 
@@ -59,7 +59,7 @@ public class AppListPresenter : Presenter, Applications.PackageChangedListener {
 
     override fun onPackageChanged() {
         val appEntities = applications.getApplicationList(category)
-        view?.showList(appEntities, displayItemSetting.value.toList())
+        view?.showList(appEntities, userSettings.displayItems)
     }
 
 }

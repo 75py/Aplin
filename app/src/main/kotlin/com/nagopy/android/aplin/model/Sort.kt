@@ -20,7 +20,7 @@ import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.entity.names.AppEntityNames
-import com.nagopy.android.easyprefs.SingleSelectionItem
+import com.nagopy.android.aplin.view.preference.SingleSelectionItem
 import com.nagopy.android.kotlinames.findAllSortedAsync
 import io.realm.RealmQuery
 import io.realm.RealmResults
