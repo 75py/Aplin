@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.preference.PreferenceManager
-import com.nagopy.android.aplin.model.preference.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -37,16 +36,4 @@ open class ApplicationModule(val application: Application) {
     @Provides
     open fun provideAppOpsManager(application: Application): AppOpsManager
             = application.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-
-    @Singleton
-    @Provides
-    fun provideDisplayItemSetting(application: Application): DisplayItemSetting = GenDisplayItemSetting(application)
-
-    @Singleton
-    @Provides
-    fun provideCategorySetting(application: Application): CategorySetting = GenCategorySetting(application)
-
-    @Singleton
-    @Provides
-    fun provideSortSetting(application: Application): SortSetting = GenSortSetting(application)
 }
