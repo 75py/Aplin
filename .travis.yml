@@ -10,7 +10,7 @@ android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    - platform-tools
+    #- platform-tools
     - tools
 
     # The BuildTools version used by your project
@@ -25,8 +25,8 @@ android:
     - extra-android-m2repository
 
     # Others
-    - extra-google-admob_ads_sdk
-    - extra-google-analytics_sdk_v2
+    #- extra-google-admob_ads_sdk
+    #- extra-google-analytics_sdk_v2
   licenses:
     - 'android-sdk-license-.+'
 
@@ -43,7 +43,7 @@ before_script:
     - echo "travis.job=$TRAVIS_JOB_NUMBER" >> local.properties
     - mkdir app/signingConfigs
     - echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
-    - echo "MAVEN_OPTS='-Xmx2g -XX:MaxPermSize=512m'" > ~/.mavenrc
+#    - echo "MAVEN_OPTS='-Xmx2g -XX:MaxPermSize=512m'" > ~/.mavenrc
 
 script:
     - ./gradlew assembleDebug --stacktrace --info
