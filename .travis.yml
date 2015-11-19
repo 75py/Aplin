@@ -1,5 +1,11 @@
 language: android
 
+sudo: required
+
+env:
+  global:
+    - MALLOC_ARENA_MAX=2
+
 android:
   components:
     # Uncomment the lines below if you want to
