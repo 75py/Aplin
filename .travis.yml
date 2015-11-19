@@ -46,7 +46,7 @@ before_script:
 #    - echo "MAVEN_OPTS='-Xmx2g -XX:MaxPermSize=512m'" > ~/.mavenrc
 
 script:
-    - ./gradlew assembleDebug --stacktrace --info
+    - ./gradlew assembleDebug -PdisablePreDex --stacktrace --info
 
 after_success:
-  - ./gradlew crashlyticsUploadDistributionDebug
+  - ./gradlew crashlyticsUploadDistributionDebug -PdisablePreDex
