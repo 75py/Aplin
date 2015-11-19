@@ -21,7 +21,6 @@ android:
     # Others
     - extra-google-admob_ads_sdk
     - extra-google-analytics_sdk_v2
-    - extra-google-google_play_services
   licenses:
     - 'android-sdk-license-.+'
 
@@ -41,7 +40,7 @@ before_script:
     - echo "MAVEN_OPTS='-Xmx2g -XX:MaxPermSize=512m'" > ~/.mavenrc
 
 script:
-    - ./gradlew assembleDebug --stacktrace --debug
+    - ./gradlew assembleDebug --stacktrace --info
 
 after_success:
   - ./gradlew crashlyticsUploadDistributionDebug
