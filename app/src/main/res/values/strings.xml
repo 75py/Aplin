@@ -73,4 +73,8 @@
     <string name="ga_preference_key">ga_confirm</string>
     <string name="ga_preference_title">Allow analytics</string>
     <string name="ga_preference_summary">匿名の情報収集を行います。収集した情報は、今後のアプリ開発に使用させていただきます。</string>
+
+    <!-- about -->
+    <string name="about">About</string>
+    <string name="version_title">Version</string>
 </resources>
