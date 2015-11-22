@@ -48,6 +48,9 @@ android {
         abortOnError false
         disable 'PrivateResource'
     }
+    dexOptions {
+        javaMaxHeapSize "1024M"
+    }
 }
 
 //noinspection GroovyAssignabilityCheck
