@@ -1,6 +1,6 @@
 language: android
 
-sudo: false
+sudo: required
 
 env:
   global:
@@ -43,7 +43,7 @@ before_script:
     - echo "apiSecret=$FABRIC_API_SECRET" > app/fabric.properties
 
 script:
-    - ./gradlew assembleDebug -PdisablePreDex --stacktrace
+    - ./gradlew assembleDebug -PdisablePreDex --stacktrace --info
 
 after_success:
-  - ./gradlew crashlyticsUploadDistributionDebug -PdisablePreDex
+  - ./gradlew crashlyticsUploadDistributionDebug -PdisablePreDex --stacktrace --info
