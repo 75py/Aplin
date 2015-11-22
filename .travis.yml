@@ -37,6 +37,7 @@ branches:
 
 before_script:
     - chmod +x gradlew
+    - chmod +x .buildscript/deploy_beta.sh
     - echo "sdk.dir=$ANDROID_HOME" > local.properties
     - echo "travis.job=$TRAVIS_JOB_NUMBER" >> local.properties
     - mkdir app/signingConfigs
@@ -62,4 +63,4 @@ script:
     - ./gradlew assembleDebug -PdisablePreDex --stacktrace --info
 
 after_success:
-  - ./gradlew crashlyticsUploadDistributionDebug -PdisablePreDex --stacktrace --info
+  - .buildscript/deploy_beta.sh
