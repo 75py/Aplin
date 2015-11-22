@@ -1,6 +1,6 @@
 language: android
 
-#sudo: required
+sudo: false
 
 env:
   global:
@@ -59,7 +59,6 @@ before_script:
     - sudo service x11-common stop || true
 
 script:
-    - df -h
     - ./gradlew assembleDebug -PdisablePreDex --stacktrace --info
 
 after_success:
