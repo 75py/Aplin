@@ -20,7 +20,7 @@ import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.easyprefs.MultiSelectionItem
+import com.nagopy.android.aplin.view.preference.MultiSelectionItem
 import java.text.DateFormat
 import java.util.*
 

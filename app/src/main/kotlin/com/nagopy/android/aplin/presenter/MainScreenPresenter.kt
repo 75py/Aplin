@@ -10,11 +10,7 @@ import android.widget.Toast
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.aplin.model.Analytics
-import com.nagopy.android.aplin.model.Applications
-import com.nagopy.android.aplin.model.MenuHandler
-import com.nagopy.android.aplin.model.SharingMethod
-import com.nagopy.android.aplin.model.preference.CategorySetting
+import com.nagopy.android.aplin.model.*
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
 import timber.log.Timber
@@ -30,7 +26,7 @@ public open class MainScreenPresenter
 constructor() : Presenter {
 
     @Inject
-    lateinit var categorySetting: CategorySetting
+    lateinit var userSettings: UserSettings
 
     @Inject
     lateinit var menuHandler: MenuHandler
@@ -53,7 +49,7 @@ constructor() : Presenter {
 
         applications.initialize {
             view.hideIndicator()
-            view.showAppList(categorySetting.value.toList())
+            view.showAppList(userSettings.categories)
         }
 
         if (!analytics.isConfirmed()) {

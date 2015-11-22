@@ -1,14 +1,31 @@
 language: android
 
+sudo: required
+
+env:
+  global:
+    - MALLOC_ARENA_MAX=2
+    - secure: "q/69aeHW6eoEc4FbR/6Zc9N0E0M+i5ZMlWigymNld5N7wqHI73UEq8VFIdTHD57R6UHN7mCrIex+5pn65tZWw6XV1KchCeel+B2T61QvoSxhvnzbG+XUiKhSnO0lyRhBzAC4IhIztXpKYWzhgx+PmPRB7rhLCUiSUgGTdBCg64L316vOqEXb+8KREcKaAwW+1s2AJo+mWyZ9iQvIvuRNPWHNurT/7alr5Ol1WRJvSUl/sVhPIkiT3atGy++F0KjGgNdRFONlol/I8Z72F2eeqvSCrEs9sPdrNKO+Is2kXf+EUI+8hxXLgdKQIW2i2Ova/H/Xb4B+YTOlHcwXN8StZJYJ7nlkaa70K/HljkrTP48jmjJgjxvgad6EEEG2k/MefgTv+5IpwXZ30zOdbrxzs5Sgn/bRwiLjUK167l9Hgl+mD8JIXPn+Nyk6uczS7WLv7zSsUVMqzPhdBwLpuREOu185wKgpPfaohPXm5uZN6Zdew/d8ES/D4QqJ07jQaA7AzzSaZsYNPcUc5EWTolTfDHZVRyygusV/NRO/LL67trNd+G5QlUiKmoTGKY3GWr1exM7ks9WDCvjXl6BoNofxk4p7rqa/YmeZHgGc2fN8cZfp5xiuWm6vOJrXvFEp2dFFCpN4oUimAOQJg/UsnJZ9/G8ri/Us+pPYPuDXtd+nLFw="
+
 android:
   components:
+    # Uncomment the lines below if you want to
+    # use the latest revision of Android SDK Tools
+    #- platform-tools
+    #- tools
+
+    # The BuildTools version used by your project
     - build-tools-23.0.1
+
+    # The SDK version used to compile your project
     - android-23
-    - extra-android-m2repository
+
+    # Additional components
+    - extra-google-google_play_services
     - extra-google-m2repository
-    - extra-android-support
+    - extra-android-m2repository
   licenses:
-    - android-sdk-license-5be876d5
+    - 'android-sdk-license-.+'
 
 jdk:
   - oraclejdk8
@@ -17,16 +34,21 @@ branches:
   only:
     - develop
 
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
+
 before_script:
     - chmod +x gradlew
     - echo "sdk.dir=$ANDROID_HOME" > local.properties
     - echo "travis.job=$TRAVIS_JOB_NUMBER" >> local.properties
     - mkdir app/signingConfigs
     - echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
+    - echo "apiSecret=$FABRIC_API_SECRET" > app/fabric.properties
 
 script:
-    - ./gradlew clean assembleDebug
+    - ./gradlew assembleDebug -PdisablePreDex --stacktrace --info
 
 after_success:
-  - ./gradlew crashlyticsUploadDistributionDebug
-
+  - ./gradlew crashlyticsUploadDistributionDebug -PdisablePreDex --stacktrace --info
