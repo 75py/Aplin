@@ -21,7 +21,6 @@
 
     <PreferenceCategory android:title="@string/about">
         <Preference
-            android:selectable="false"
             android:summary="@string/version_name"
             android:title="@string/version_title" />
 
