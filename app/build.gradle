@@ -17,7 +17,6 @@ android {
         versionName publish_version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        multiDexKeepProguard file('multi-dex-keep.txt')
     }
     buildTypes {
         release {
