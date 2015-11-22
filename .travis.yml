@@ -47,7 +47,7 @@ before_script:
     - ulimit -t 514029
 
 script:
-    - ./gradlew assembleDebug -PdisablePreDex --stacktrace --info
+    - ./gradlew assembleProductionDebug -PdisablePreDex --stacktrace --info
 
 after_success:
   - ./deploy_beta.sh

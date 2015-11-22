@@ -19,7 +19,9 @@ open class Aplin : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        } else {
+        }
+
+        if (BuildConfig.PRODUCTION) {
             Fabric.with(this, Crashlytics())
         }
     }
