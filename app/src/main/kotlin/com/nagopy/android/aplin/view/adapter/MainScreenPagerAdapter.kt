@@ -21,5 +21,5 @@ public class MainScreenPagerAdapter(
 
     override fun getCount(): Int = categories.size
 
-    override fun getPageTitle(position: Int): CharSequence = categories.get(position).getTitle(context)
+    override fun getPageTitle(position: Int): CharSequence = context.getString(categories.get(position).titleResourceId)
 }

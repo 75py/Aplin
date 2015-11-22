@@ -74,12 +74,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
     compile 'com.cookpad.android.rxt4a:rxt4a:0.10.0'
     compile 'com.jakewharton.timber:timber:4.0.1'
-    compile 'com.nagopy.android:easyprefs:0.2.1'
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    kapt files("${sdk_dir}/platforms/android-${target_sdk_version}/android.jar")
-    kapt 'com.nagopy.android:easyprefs-processor:0.2.1'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
