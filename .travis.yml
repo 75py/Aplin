@@ -45,6 +45,8 @@ before_script:
     - mkdir app/signingConfigs
     - echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
     - echo "apiSecret=$FABRIC_API_SECRET" > app/fabric.properties
+    # see https://github.com/travis-ci/travis-ci/issues/2496
+    - ulimit -t 514029
 
 script:
     - ./gradlew clean assembleDebug -PdisablePreDex --stacktrace --info
