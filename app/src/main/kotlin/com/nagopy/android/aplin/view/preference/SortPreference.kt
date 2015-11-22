@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin.view.preference
 
 import android.content.Context
+import android.os.Build
 import android.preference.CheckBoxPreference
 import android.preference.Preference
 import android.preference.PreferenceCategory
@@ -35,9 +36,10 @@ class SortPreference : PreferenceCategory, Preference.OnPreferenceChangeListener
         Sort.values.forEach {
             val preference = CheckBoxPreference(context)
             preference.widgetLayoutResource = R.layout.preference_widget_checkbox_single
-            preference.title = it.getTitle(context)
-            preference.summary = it.getSummary(context)
-            preference.key = it.javaClass.name + "_" + it.name
+            preference.setTitle(it.titleResourceId)
+            preference.setSummary(it.summaryResourceId)
+            preference.key = it.key
+            preference.setDefaultValue(it.defaultValue)
             addPreference(preference)
             preference.onPreferenceChangeListener = this
         }
@@ -48,14 +50,16 @@ class SortPreference : PreferenceCategory, Preference.OnPreferenceChangeListener
             return false
         }
 
-        Sort.values.forEach {
-            val p = findPreference(it.javaClass.name + "_" + it.name) as CheckBoxPreference
-            val isChecked = p === preference
-            p.isChecked = isChecked
-            if (isChecked) {
-                sharedPreferences.edit().putString(key, it.name).apply()
-            }
-        }
+        Sort.values
+                .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+                .forEach {
+                    val p = findPreference(it.key) as CheckBoxPreference
+                    val isChecked = p === preference
+                    p.isChecked = isChecked
+                    if (isChecked) {
+                        sharedPreferences.edit().putString(key, it.name).apply()
+                    }
+                }
         return false
     }
 

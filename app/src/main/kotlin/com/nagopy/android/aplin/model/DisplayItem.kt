@@ -16,29 +16,27 @@
 package com.nagopy.android.aplin.model
 
 import android.content.Context
-import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.aplin.view.preference.MultiSelectionItem
 import java.text.DateFormat
 import java.util.*
 
 /**
  * アプリ毎に表示する詳細情報の定義クラス
  */
-public enum class DisplayItem
-/**
- * コンストラクタ
- * @param titleResourceId   設定画面で表示するタイトルの文字列リソースID
- * @param summaryResourceId 設定画面で表示する説明文の文字列リソースID
- */
-(private val titleResourceId: Int, private val summaryResourceId: Int) : MultiSelectionItem {
+enum class DisplayItem(
+        val titleResourceId: Int
+        , val summaryResourceId: Int
+        , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION
+        , val defaultValue: Boolean = false) {
 
     /**
      * インストール状態
      */
-    NOT_INSTALLED(R.string.display_item_not_installed, R.string.display_item_not_installed_summary) {
+    NOT_INSTALLED(
+            titleResourceId = R.string.display_item_not_installed
+            , summaryResourceId = R.string.display_item_not_installed_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean {
             if (!appData.isInstalled) {
                 sb.append(context.getString(R.string.display_item_not_installed_format))
@@ -50,7 +48,9 @@ public enum class DisplayItem
     /**
      * 初回インストール日時
      */
-    FIRST_INSTALL_TIME(R.string.display_item_first_install_time, R.string.display_item_first_install_time_summary) {
+    FIRST_INSTALL_TIME(
+            titleResourceId = R.string.display_item_first_install_time
+            , summaryResourceId = R.string.display_item_first_install_time_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean {
             if (appData.firstInstallTime < Constants.Y2K) {
                 return false
@@ -63,7 +63,9 @@ public enum class DisplayItem
     /**
      * 最終更新日時
      */
-    LAST_UPDATE_TIME(R.string.display_item_last_update_time, R.string.display_item_last_update_time_summary) {
+    LAST_UPDATE_TIME(
+            titleResourceId = R.string.display_item_last_update_time
+            , summaryResourceId = R.string.display_item_last_update_time_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean {
             if (appData.lastUpdateTime < Constants.Y2K) {
                 return false
@@ -76,7 +78,9 @@ public enum class DisplayItem
     /**
      * 最近使用した回数（Lollipop以降）
      */
-    RECENTLY_USED_COUNT(R.string.display_item_recently_used_count, R.string.display_item_recently_used_count_summary) {
+    RECENTLY_USED_COUNT(
+            titleResourceId = R.string.display_item_recently_used_count
+            , summaryResourceId = R.string.display_item_recently_used_count_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean {
             if (appData.launchTimes <= 0) {
                 return false
@@ -84,14 +88,13 @@ public enum class DisplayItem
             sb.append(context.getString(R.string.display_item_recently_used_count_format, appData.launchTimes))
             return true
         }
-
-        override fun minSdkVersion(): Int = Build.VERSION_CODES.LOLLIPOP
-
     },
     /**
      * バージョン情報
      */
-    VERSION_NAME(R.string.display_item_version_name, R.string.display_item_version_name_summary) {
+    VERSION_NAME(
+            titleResourceId = R.string.display_item_version_name
+            , summaryResourceId = R.string.display_item_version_name_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean {
             if (appData.versionName != null) {
                 sb.append(context.getString(R.string.display_item_version_name_format, appData.versionName))
@@ -100,14 +103,6 @@ public enum class DisplayItem
         }
     }
     ;
-
-    override fun getTitle(context: Context): String = context.getString(titleResourceId)
-
-    override fun getSummary(context: Context): String = context.getString(summaryResourceId)
-
-    override fun minSdkVersion(): Int = Build.VERSION_CODES.BASE
-
-    override fun maxSdkVersion(): Int = Integer.MAX_VALUE
 
     /**
      * 定義された情報をStringBuilderに追加する。
@@ -122,4 +117,5 @@ public enum class DisplayItem
      */
     public abstract fun append(context: Context, sb: StringBuilder, appData: AppEntity): Boolean
 
+    val key: String = "${javaClass.name}_$name"
 }

@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin.model
 
 import android.content.SharedPreferences
+import android.os.Build
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,17 +19,19 @@ import kotlin.reflect.KProperty
 
     class categoryProperty : ReadOnlyProperty<UserSettings, List<Category>> {
         override fun getValue(thisRef: UserSettings, property: KProperty<*>): List<Category> {
-            val v = ArrayList<Category>()
+            val selectedValues = ArrayList<Category>()
             Category.values.forEach {
-                val checked = thisRef.sharedPreferences.getBoolean(it.javaClass.name + "_" + it.name, false)
+                val checked = thisRef.sharedPreferences.getBoolean(it.key, it.defaultValue)
                 if (checked) {
-                    v.add(it)
+                    selectedValues.add(it)
                 }
             }
-            return if (v.isEmpty()) {
-                listOf(Category.ALL)
+            return if (selectedValues.isEmpty()) {
+                Category.values
+                        .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+                        .filter { it.defaultValue }
             } else {
-                v
+                selectedValues
             }
         }
     }
@@ -37,7 +40,7 @@ import kotlin.reflect.KProperty
         override fun getValue(thisRef: UserSettings, property: KProperty<*>): List<DisplayItem> {
             val v = ArrayList<DisplayItem>()
             DisplayItem.values.forEach {
-                val checked = thisRef.sharedPreferences.getBoolean(it.javaClass.name + "_" + it.name, false)
+                val checked = thisRef.sharedPreferences.getBoolean(it.key, it.defaultValue)
                 if (checked) {
                     v.add(it)
                 }

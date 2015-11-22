@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin.view.preference
 
 import android.content.Context
+import android.os.Build
 import android.preference.CheckBoxPreference
 import android.preference.PreferenceCategory
 import android.preference.PreferenceManager
@@ -30,12 +31,15 @@ class DisplayItemPreference : PreferenceCategory {
         super.onAttachedToHierarchy(preferenceManager)
 
         setTitle(R.string.display_item)
-        DisplayItem.values.forEach {
-            val preference = CheckBoxPreference(context)
-            preference.title = it.getTitle(context)
-            preference.summary = it.getSummary(context)
-            preference.key = it.javaClass.name + "_" + it.name
-            addPreference(preference)
-        }
+        DisplayItem.values
+                .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+                .forEach {
+                    val preference = CheckBoxPreference(context)
+                    preference.setTitle(it.titleResourceId)
+                    preference.setSummary(it.summaryResourceId)
+                    preference.key = it.key
+                    preference.setDefaultValue(it.defaultValue)
+                    addPreference(preference)
+                }
     }
 }
