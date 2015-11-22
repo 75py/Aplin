@@ -1,6 +1,6 @@
 language: android
 
-sudo: false
+sudo: required
 
 env:
   global:
@@ -12,7 +12,7 @@ android:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
     #- platform-tools
-    - tools
+    #- tools
 
     # The BuildTools version used by your project
     - build-tools-23.0.1
@@ -33,6 +33,11 @@ jdk:
 branches:
   only:
     - develop
+
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
 
 before_script:
     - chmod +x gradlew
