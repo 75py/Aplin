@@ -39,6 +39,10 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".view.LicenseActivity"
+            android:label="@string/open_source_license" />
+
         <!-- AdMob -->
         <meta-data
             android:name="com.google.android.gms.version"

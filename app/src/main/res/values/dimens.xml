@@ -2,9 +2,12 @@
 <resources>
 
     <dimen name="activity_horizontal_margin">@dimen/unit_4</dimen>
+    <dimen name="activity_vertical_margin">@dimen/unit_4</dimen>
 
     <dimen name="list_item_vertical_margin">@dimen/unit_4</dimen>
     <dimen name="toolbar_text_size">@dimen/abc_text_size_subtitle_material_toolbar</dimen>
+
+    <dimen name="licence_margin">@dimen/unit_4</dimen>
 
     <dimen name="divider">1dp</dimen>
 

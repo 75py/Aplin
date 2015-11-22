@@ -79,4 +79,5 @@
     <string name="version_title">Version</string>
     <string name="source_code_title">Source code</string>
     <string name="source_code_url">https://github.com/75py/Aplin</string>
+    <string name="open_source_license">Open source license</string>
 </resources>
