@@ -2,8 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
-
 apply from: 'signingConfigs/release.gradle', to: android
+
+def preDexLibs = !project.hasProperty('disablePreDex')
 
 android {
     compileSdkVersion 23
@@ -61,6 +62,7 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "1024M"
+        preDexLibraries = preDexLibs
     }
 }
 
@@ -148,18 +150,4 @@ buildscript {
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
-}
-
-// -PdisablePreDex が指定された場合、preDexをスキップする
-project.ext {
-    preDexLibs = !project.hasProperty('disablePreDex')
-}
-subprojects {
-    project.plugins.whenPluginAdded { plugin ->
-        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        }
-    }
 }
