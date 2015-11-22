@@ -28,6 +28,14 @@ android {
             keyPassword 'android'
         }
     }
+    productFlavors {
+        internal {
+            buildConfigField "boolean", "PRODUCTION", "false"
+        }
+        production {
+            buildConfigField "boolean", "PRODUCTION", "true"
+        }
+    }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -90,7 +98,7 @@ dependencies {
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
         transitive = true;
     }
     compile "io.realm:realm-android:$realm_version"
