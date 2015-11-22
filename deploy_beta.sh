@@ -8,4 +8,3 @@ if [ $DEPLOY_BETA = 1 ]; then
 else
   echo "DEPLOY_BETA is not 1"
 fi
-
