@@ -24,5 +24,14 @@
             android:selectable="false"
             android:summary="@string/version_name"
             android:title="@string/version_title" />
+
+        <Preference
+            android:summary="@string/source_code_url"
+            android:title="@string/source_code_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/source_code_url" />
+        </Preference>
     </PreferenceCategory>
+
 </PreferenceScreen>
