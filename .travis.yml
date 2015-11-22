@@ -1,6 +1,6 @@
 language: android
 
-sudo: required
+#sudo: required
 
 env:
   global:
@@ -23,7 +23,7 @@ android:
 
     # Additional components
     - extra-google-google_play_services
-    - extra-google-m2repository
+    #- extra-google-m2repository
     - extra-android-m2repository
   licenses:
     - 'android-sdk-license-.+'
@@ -34,11 +34,6 @@ jdk:
 branches:
   only:
     - develop
-
-cache:
-  directories:
-  - $HOME/.m2
-  - $HOME/.gradle
 
 before_script:
     - chmod +x gradlew
@@ -51,7 +46,7 @@ before_script:
     - ulimit -t 514029
 
 script:
-    - ./gradlew clean assembleDebug -PdisablePreDex --stacktrace --info
+    - ./gradlew assembleDebug -PdisablePreDex --stacktrace --info
 
 after_success:
   - ./gradlew crashlyticsUploadDistributionDebug -PdisablePreDex --stacktrace --info
