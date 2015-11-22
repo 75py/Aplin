@@ -19,4 +19,25 @@
             android:title="@string/ga_preference_title" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/about">
+        <Preference
+            android:summary="@string/version_name"
+            android:title="@string/version_title" />
+
+        <Preference
+            android:summary="@string/source_code_url"
+            android:title="@string/source_code_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/source_code_url" />
+        </Preference>
+
+        <Preference android:title="@string/open_source_license">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.nagopy.android.aplin.view.LicenseActivity"
+                android:targetPackage="com.nagopy.android.aplin" />
+        </Preference>
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -116,11 +116,6 @@ constructor() : Presenter {
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .subscribe(onNext, onError)
             }
-            R.id.action_search -> {
-                menuHandler.search(checkedItemList.first())
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .subscribe(onNext, onError)
-            }
         }
 
         analytics.menuClick(item.title.toString())

@@ -15,9 +15,9 @@ android {
         targetSdkVersion "$target_sdk_version"
         versionCode publish_version_code
         versionName publish_version_name
+        resValue "string", "version_name", "$publish_version_name ($publish_version_code)"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        multiDexKeepProguard file('multi-dex-keep.txt')
     }
     buildTypes {
         release {

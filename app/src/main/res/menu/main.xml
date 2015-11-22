@@ -27,9 +27,4 @@
         android:icon="@drawable/ic_action_settings"
         android:title="@string/action_preference"
         app:showAsAction="withText|ifRoom" />
-    <item
-        android:id="@+id/action_about"
-        android:icon="@drawable/ic_action_help"
-        android:title="@string/action_about"
-        app:showAsAction="withText|ifRoom" />
 </menu>
