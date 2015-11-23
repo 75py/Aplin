@@ -39,15 +39,3 @@ open class Aplin : Application() {
         }
     }
 }
-
-fun <T> Iterable<T>.forEachX(first: (first: T) -> Unit, each: (current: T, previous: T) -> Unit) {
-    var prev: T
-    this.forEachIndexed { i, t ->
-        if (i == 0) {
-            first(t)
-        } else {
-            each(t, prev)
-        }
-        prev = t
-    }
-}
