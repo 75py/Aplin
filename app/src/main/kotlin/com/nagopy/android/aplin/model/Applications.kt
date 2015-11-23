@@ -7,8 +7,8 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.UserHandle
-import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.aplin.entity.names.AppEntityNames
+import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.entity.names.AppNames.packageName
 import com.nagopy.android.aplin.model.converter.AppConverter
 import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
@@ -47,7 +47,7 @@ open class Applications
 
     open fun isLoaded(): Boolean {
         Realm.getInstance(application).use {
-            return it.where(AppEntity::class.java).count() > 0
+            return it.where(App::class.java).count() > 0
         }
     }
 
@@ -55,7 +55,7 @@ open class Applications
         val realm = Realm.getInstance(application)
         realm.use {
             realm.executeTransaction {
-                realm.where(AppEntity::class.java).findAll().clear()
+                realm.where(App::class.java).findAll().clear()
                 val allApps = getInstalledApplications()
                 allApps.forEach {
                     if (shouldSkip(it)) {
@@ -63,17 +63,17 @@ open class Applications
                         return@forEach
                     }
 
-                    val entity = realm.createObject(AppEntity::class.java)
+                    val entity = realm.createObject(App::class.java)
                     appConverter.setValues(entity, it)
                 }
             }
         }
     }
 
-    open fun getApplicationList(category: Category): RealmResults<AppEntity> {
+    open fun getApplicationList(category: Category): RealmResults<App> {
         Realm.getInstance(application).use {
             Timber.d("getApplicationList " + category)
-            val query = it.where(AppEntity::class.java)
+            val query = it.where(App::class.java)
             val result = userSettings.sort.findAllSortedAsync(category.where(query))
             return result
         }
@@ -145,9 +145,9 @@ open class Applications
             val realm = Realm.getInstance(application)
             realm.use {
                 realm.executeTransaction {
-                    var entity = realm.where(AppEntity::class.java).equalTo(AppEntityNames.packageName(), pkg).findFirst()
+                    var entity = realm.where(App::class.java).equalTo(packageName(), pkg).findFirst()
                     if (entity == null) {
-                        entity = realm.createObject(AppEntity::class.java)
+                        entity = realm.createObject(App::class.java)
                     }
                     appConverter.setValues(entity, applicationInfo)
                 }
@@ -160,7 +160,7 @@ open class Applications
         val realm = Realm.getInstance(application)
         realm.use {
             realm.executeTransaction {
-                val entity = realm.where(AppEntity::class.java).equalTo(AppEntityNames.packageName(), pkg).findAll()
+                val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
                 entity.clear()
             }
         }

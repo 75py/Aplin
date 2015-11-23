@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
 import com.nagopy.android.aplin.model.IconHelper
@@ -91,7 +91,7 @@ public class AppListFragment : Fragment(), AppListView {
         recyclerView = null
     }
 
-    override fun showList(apps: RealmResults<AppEntity>, displayItems: List<DisplayItem>) {
+    override fun showList(apps: RealmResults<App>, displayItems: List<DisplayItem>) {
         if (adapter == null) {
             adapter = RealmAppAdapter(application, category, iconHelper, { app ->
                 parentView.onListItemClick(app)

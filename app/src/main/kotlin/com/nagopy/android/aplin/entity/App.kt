@@ -6,7 +6,7 @@ import io.realm.annotations.Required
 /**
  * アプリケーションを表すエンティティ
  */
-open class AppEntity : RealmObject() {
+open class App : RealmObject() {
 
     @Required
     open var packageName: String = ""

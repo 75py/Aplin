@@ -6,35 +6,35 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import timber.log.Timber
 import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
     packageName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.packageName = applicationInfo.packageName
         }
     },
     label(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.label = applicationInfo.loadLabel(appConverter.packageManager).toString()
         }
     },
     isEnabled(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.isEnabled = applicationInfo.enabled
         }
     },
     isSystem(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.isSystem =
                     (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
                             || (applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
         }
     },
     isThisASystemPackage(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             val packageInfo = appConverter.packageManager.getPackageInfo(
                     applicationInfo.packageName,
                     PackageManager.GET_DISABLED_COMPONENTS or PackageManager.GET_UNINSTALLED_PACKAGES or PackageManager.GET_SIGNATURES
@@ -43,7 +43,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
         }
     },
     firstInstallTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             val packageInfo = appConverter.packageManager.getPackageInfo(
                     applicationInfo.packageName,
                     PackageManager.GET_META_DATA
@@ -52,7 +52,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
         }
     },
     lastUpdateTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             val packageInfo = appConverter.packageManager.getPackageInfo(
                     applicationInfo.packageName,
                     PackageManager.GET_META_DATA
@@ -61,17 +61,17 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
         }
     },
     hasActiveAdmins(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.hasActiveAdmins = appConverter.devicePolicy.packageHasActiveAdmins(applicationInfo.packageName)
         }
     },
     isInstalled(IntRange(Build.VERSION_CODES.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             entity.isInstalled = (applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
         }
     },
     isDefaultApp(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             val outFilters = ArrayList<IntentFilter>()
             val outActivities = ArrayList<ComponentName>()
             appConverter.packageManager.getPreferredActivities(outFilters, outActivities, applicationInfo.packageName)
@@ -79,7 +79,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
         }
     },
     icon(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             if (applicationInfo.icon == 0) {
                 Timber.v(applicationInfo.packageName + ", icon=0x0")
                 entity.iconByteArray = appConverter.iconHelper.defaultIconByteArray
@@ -89,7 +89,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
         }
     },
     lastTimeUsed(Build.VERSION_CODES.LOLLIPOP..Int.MAX_VALUE) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             val times = appConverter.appUsageStatsManager.getLaunchTimes().get(applicationInfo.packageName)
             if (times != null) {
                 entity.launchTimes = times
@@ -97,7 +97,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
         }
     },
     versionName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(entity: AppEntity, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
             val packageInfo = appConverter.packageManager.getPackageInfo(
                     applicationInfo.packageName,
                     PackageManager.GET_META_DATA

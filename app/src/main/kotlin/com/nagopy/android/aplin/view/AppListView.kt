@@ -1,6 +1,6 @@
 package com.nagopy.android.aplin.view
 
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.DisplayItem
 import io.realm.RealmResults
 
@@ -16,6 +16,6 @@ public interface AppListView {
      * *
      * @param displayItems 表示項目
      */
-    public fun showList(apps: RealmResults<AppEntity>, displayItems: List<DisplayItem>)
+    public fun showList(apps: RealmResults<App>, displayItems: List<DisplayItem>)
 
 }

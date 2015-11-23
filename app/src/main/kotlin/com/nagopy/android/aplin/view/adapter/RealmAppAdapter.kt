@@ -25,7 +25,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.gone
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
@@ -37,14 +37,14 @@ public class RealmAppAdapter(
         val context: Context
         , val category: Category
         , val iconHelper: IconHelper
-        , val onListItemClicked: (app: AppEntity) -> Unit
-        , val onListItemLongClicked: (app: AppEntity) -> Unit
+        , val onListItemClicked: (app: App) -> Unit
+        , val onListItemLongClicked: (app: App) -> Unit
 ) : RecyclerView.Adapter<RealmAppAdapter.ViewHolder>() {
 
-    var realmResults: RealmResults<AppEntity>? = null
+    var realmResults: RealmResults<App>? = null
     var displayItems: List<DisplayItem> = emptyList()
 
-    fun updateRealmResult(realmResults: RealmResults<AppEntity>) {
+    fun updateRealmResult(realmResults: RealmResults<App>) {
         this.realmResults?.removeChangeListeners()
         this.realmResults = realmResults
         realmResults.removeChangeListeners()

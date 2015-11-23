@@ -2,15 +2,15 @@ package com.nagopy.android.aplin
 
 import android.view.View
 
-fun <E : View> E.visible(): Unit {
+fun <E : View> E.visible() {
     visibility = View.VISIBLE
 }
 
-fun <E : View> E.invisible(): Unit {
+fun <E : View> E.invisible() {
     visibility = View.INVISIBLE
 }
 
-fun <E : View> E.gone(): Unit {
+fun <E : View> E.gone() {
     visibility = View.GONE
 }
 

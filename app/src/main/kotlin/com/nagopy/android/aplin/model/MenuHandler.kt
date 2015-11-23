@@ -8,7 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,7 +25,7 @@ public open class MenuHandler {
     @Inject
     constructor()
 
-    public fun search(app: AppEntity): Observable<Void> {
+    public fun search(app: App): Observable<Void> {
         return Observable.create { s ->
             val actionWebSearch = Intent(Intent.ACTION_WEB_SEARCH)
                     .putExtra(SearchManager.QUERY, "${app.label} ${app.packageName}")

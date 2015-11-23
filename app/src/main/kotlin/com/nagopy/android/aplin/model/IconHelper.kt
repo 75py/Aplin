@@ -8,7 +8,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
@@ -64,11 +64,11 @@ constructor(var application: Application, var activityManager: ActivityManager) 
     }
 
     @Synchronized
-    open fun getIcon(appEntity: AppEntity): Drawable {
-        var icon = cache[appEntity.packageName]
+    open fun getIcon(app: App): Drawable {
+        var icon = cache[app.packageName]
         if (icon == null) {
-            icon = toDrawable(appEntity.iconByteArray!!)
-            cache.plus(Pair(appEntity.packageName, icon))
+            icon = toDrawable(app.iconByteArray!!)
+            cache.plus(Pair(app.packageName, icon))
         }
         return icon
     }

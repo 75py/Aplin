@@ -8,7 +8,7 @@ import android.provider.Settings
 import android.view.MenuItem
 import android.widget.Toast
 import com.nagopy.android.aplin.R
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.*
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
@@ -44,6 +44,7 @@ constructor() : Presenter {
 
     open fun initialize(view: MainScreenView) {
         this.view = view
+
         view.hideAppList()
         view.showIndicator()
 
@@ -67,7 +68,7 @@ constructor() : Presenter {
         view = null
     }
 
-    fun listItemClicked(activity: Activity, app: AppEntity) {
+    fun listItemClicked(activity: Activity, app: App) {
         val packageName = app.packageName.split(":")[0];
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + packageName))
         activity.startActivity(intent);
@@ -75,7 +76,7 @@ constructor() : Presenter {
         analytics.click(app.packageName)
     }
 
-    fun listItemLongClicked(app: AppEntity) {
+    fun listItemLongClicked(app: App) {
         menuHandler.search(app)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({}, { e ->
@@ -86,7 +87,7 @@ constructor() : Presenter {
         analytics.longClick(app.packageName)
     }
 
-    fun onMenuItemClicked(item: MenuItem, checkedItemList: List<AppEntity>) {
+    fun onMenuItemClicked(item: MenuItem, checkedItemList: List<App>) {
         val onNext: (Void) -> Unit = {}
         val onError: (Throwable) -> Unit = { e ->
             Timber.e(e, "onError")

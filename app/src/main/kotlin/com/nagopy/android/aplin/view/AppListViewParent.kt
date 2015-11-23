@@ -1,17 +1,17 @@
 package com.nagopy.android.aplin.view
 
 import android.view.MenuItem
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 
 /**
  * AppListViewの親Viewのインターフェース<br>
  * 主にメニュー操作などの処理を移譲するために使用。
  */
 public interface AppListViewParent {
-    fun onListItemClick(app: AppEntity)
+    fun onListItemClick(app: App)
 
-    fun onListItemLongClick(app: AppEntity)
+    fun onListItemLongClick(app: App)
 
-    fun onOptionsItemSelected(item: MenuItem, appList: List<AppEntity>)
+    fun onOptionsItemSelected(item: MenuItem, appList: List<App>)
 
 }

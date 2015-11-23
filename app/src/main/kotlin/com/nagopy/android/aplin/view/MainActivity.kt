@@ -11,7 +11,7 @@ import android.view.MenuItem
 import android.widget.ProgressBar
 import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.*
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
@@ -106,16 +106,16 @@ public class MainActivity : AppCompatActivity(),
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem, appList: List<AppEntity>) {
+    override fun onOptionsItemSelected(item: MenuItem, appList: List<App>) {
         presenter.onMenuItemClicked(item, appList)
     }
 
 
-    override fun onListItemClick(app: AppEntity) {
+    override fun onListItemClick(app: App) {
         presenter.listItemClicked(this, app)
     }
 
-    override fun onListItemLongClick(app: AppEntity) {
+    override fun onListItemLongClick(app: App) {
         presenter.listItemLongClicked(app)
     }
 
