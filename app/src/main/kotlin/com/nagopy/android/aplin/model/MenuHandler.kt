@@ -26,7 +26,7 @@ public open class MenuHandler {
     constructor()
 
     public fun search(app: AppEntity): Observable<Void> {
-        return Observable.create(Observable.OnSubscribe { s ->
+        return Observable.create { s ->
             val actionWebSearch = Intent(Intent.ACTION_WEB_SEARCH)
                     .putExtra(SearchManager.QUERY, "${app.label} ${app.packageName}")
 
@@ -44,11 +44,11 @@ public open class MenuHandler {
                     s.onError(ActivityNotFoundException("Searchable application is not found."))
                 }
             }
-        })
+        }
     }
 
     public fun share(subject: String?, text: String): Observable<Void> {
-        return Observable.create(Observable.OnSubscribe<Void> { s ->
+        return Observable.create { s ->
             val intent = Intent(Intent.ACTION_SEND)
                     .setType(Constants.MIME_TYPE_TEXT_PLAIN)
                     .putExtra(Intent.EXTRA_SUBJECT, subject ?: application.getString(R.string.app_name))
@@ -59,7 +59,7 @@ public open class MenuHandler {
             } else {
                 s.onError(ActivityNotFoundException("Shareable application is not found."))
             }
-        })
+        }
     }
 
     private fun isLaunchable(intent: Intent): Boolean {
