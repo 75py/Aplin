@@ -50,7 +50,7 @@ public class AppListPresenter : Presenter, Applications.PackageChangedListener {
     lateinit var category: Category
 
     fun initialize(view: AppListView, category: Category) {
-        realm = Realm.getInstance(application)
+        realm = Realm.getDefaultInstance()
         this.view = view
         this.category = category
 

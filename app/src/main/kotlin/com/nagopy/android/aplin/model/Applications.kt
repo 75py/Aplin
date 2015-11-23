@@ -16,7 +16,6 @@
 
 package com.nagopy.android.aplin.model
 
-import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -37,8 +36,7 @@ import javax.inject.Singleton
 @Singleton
 open class Applications
 @Inject constructor(
-        var application: Application
-        , val packageManager: PackageManager
+        val packageManager: PackageManager
         , val appConverter: AppConverter
         , val userSettings: UserSettings
 ) {
@@ -62,13 +60,13 @@ open class Applications
     }
 
     open fun isLoaded(): Boolean {
-        Realm.getInstance(application).use {
+        Realm.getDefaultInstance().use {
             return it.where(App::class.java).count() > 0
         }
     }
 
     open fun refresh() {
-        val realm = Realm.getInstance(application)
+        val realm = Realm.getDefaultInstance()
         realm.use {
             realm.executeTransaction {
                 realm.where(App::class.java).findAll().clear()
@@ -87,7 +85,7 @@ open class Applications
     }
 
     open fun getApplicationList(category: Category): RealmResults<App> {
-        Realm.getInstance(application).use {
+        Realm.getDefaultInstance().use {
             Timber.d("getApplicationList " + category)
             val query = it.where(App::class.java)
             val result = userSettings.sort.findAllSortedAsync(category.where(query))
@@ -158,7 +156,7 @@ open class Applications
     private fun upsert(pkg: String) {
         val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
         if (!shouldSkip(applicationInfo)) {
-            val realm = Realm.getInstance(application)
+            val realm = Realm.getDefaultInstance()
             realm.use {
                 realm.executeTransaction {
                     var entity = realm.where(App::class.java).equalTo(packageName(), pkg).findFirst()
@@ -173,7 +171,7 @@ open class Applications
 
     open fun delete(pkg: String) {
         Timber.d("delete $pkg")
-        val realm = Realm.getInstance(application)
+        val realm = Realm.getDefaultInstance()
         realm.use {
             realm.executeTransaction {
                 val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
