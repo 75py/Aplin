@@ -28,7 +28,11 @@ open class Applications
 ) {
 
     val handler: Handler = Handler(Looper.getMainLooper())
-    val enabledSettingField: FieldReflection<Int> = FieldReflection(ApplicationInfo::class.java, "enabledSetting")
+    val enabledSettingField = ApplicationInfo::class.java.getDeclaredField("enabledSetting")
+
+    init {
+        enabledSettingField.isAccessible = true
+    }
 
     open fun initialize(func: () -> Unit) {
         Thread({
@@ -142,7 +146,7 @@ open class Applications
             realm.use {
                 realm.executeTransaction {
                     var entity = realm.where(AppEntity::class.java).equalTo(AppEntityNames.packageName(), pkg).findFirst()
-                    if(entity == null) {
+                    if (entity == null) {
                         entity = realm.createObject(AppEntity::class.java)
                     }
                     appConverter.setValues(entity, applicationInfo)
