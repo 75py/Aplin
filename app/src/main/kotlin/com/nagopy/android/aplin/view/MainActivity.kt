@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ProgressBar
 import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.*
@@ -91,18 +92,18 @@ public class MainActivity : AppCompatActivity(),
     }
 
     override fun showIndicator() {
-        progressBar.visible()
-        tabLayout.gone()
+        progressBar.visibility = View.VISIBLE
+        tabLayout.visibility = View.GONE
     }
 
     override fun hideIndicator() {
-        progressBar.gone()
-        tabLayout.visible()
+        progressBar.visibility = View.GONE
+        tabLayout.visibility = View.VISIBLE
     }
 
     override fun showAppList(categories: List<Category>) {
-        viewPager.visible()
-        tabLayout.visible()
+        viewPager.visibility = View.VISIBLE
+        tabLayout.visibility = View.VISIBLE
 
         val adapter = MainScreenPagerAdapter(applicationContext, supportFragmentManager, categories)
         viewPager.adapter = adapter
@@ -110,8 +111,8 @@ public class MainActivity : AppCompatActivity(),
     }
 
     override fun hideAppList() {
-        viewPager.invisible()
-        tabLayout.invisible()
+        viewPager.visibility = View.INVISIBLE
+        tabLayout.visibility = View.INVISIBLE
     }
 
     // menu ===============================================================================================
