@@ -7,12 +7,12 @@ import android.net.Uri
 import android.provider.Settings
 import android.view.MenuItem
 import android.widget.Toast
-import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.*
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
+import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
