@@ -76,20 +76,6 @@ enum class DisplayItem(
         }
     },
     /**
-     * 最近使用した回数（Lollipop以降）
-     */
-    RECENTLY_USED_COUNT(
-            titleResourceId = R.string.display_item_recently_used_count
-            , summaryResourceId = R.string.display_item_recently_used_count_summary) {
-        override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
-            if (appData.launchTimes <= 0) {
-                return false
-            }
-            sb.append(context.getString(R.string.display_item_recently_used_count_format, appData.launchTimes))
-            return true
-        }
-    },
-    /**
      * バージョン情報
      */
     VERSION_NAME(

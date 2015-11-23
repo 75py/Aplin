@@ -19,7 +19,6 @@ package com.nagopy.android.aplin.presenter
 import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
-import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.model.UsageStatsHelper
 import com.nagopy.android.aplin.view.MainActivity
@@ -57,17 +56,6 @@ open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceCh
 
     override fun resume() {
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-
-        view.setUsageStatsTitle(if (usageStatsHelper.isUsageStatsAllowed()) {
-            R.string.usage_stats_title_enabled
-        } else {
-            R.string.usage_stats_title_disabled
-        })
-        view.setUsageStatsSummary(if (usageStatsHelper.isUsageStatsAllowed()) {
-            R.string.usage_stats_summary_enabled
-        } else {
-            R.string.usage_stats_summary_disabled
-        })
     }
 
     override fun pause() {
@@ -95,9 +83,5 @@ open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceCh
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         settingChanged = true
         analytics.settingChanged(key!!, sharedPreferences!!.all[key])
-    }
-
-    open fun onUsageStatsPreferenceClicked() {
-        usageStatsHelper.startSettingActivity(application)
     }
 }

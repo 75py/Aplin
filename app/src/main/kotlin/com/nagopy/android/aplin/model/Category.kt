@@ -20,7 +20,6 @@ import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.names.AppNames.*
 import com.nagopy.android.kotlinames.equalTo
-import com.nagopy.android.kotlinames.greaterThan
 import io.realm.RealmQuery
 
 public enum class Category(
@@ -89,12 +88,6 @@ public enum class Category(
         }
     }
     ,
-    RECENTLY_USED(titleResourceId = R.string.category_recently_used
-            , summaryResourceId = R.string.category_recently_used_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.greaterThan(launchTimes(), 0)
-        }
-    }
     ;
 
     open fun where(realmQuery: RealmQuery<App>): RealmQuery<App> = realmQuery

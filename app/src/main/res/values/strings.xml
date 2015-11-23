@@ -72,13 +72,6 @@
     <string name="display_item_version_name_summary" />
     <string name="display_item_version_name_format">Version: %1$s</string>
 
-    <string name="usage_stats_title">Usage stats</string>
-    <string name="usage_stats_key">UsageStats</string>
-    <string name="usage_stats_title_enabled">Usage stats access is enabled</string>
-    <string name="usage_stats_title_disabled">Usage stats access is disabled</string>
-    <string name="usage_stats_summary_enabled">Aplin is already allowed to access usage stats.</string>
-    <string name="usage_stats_summary_disabled">Aplin is not allowed to access usage stats. Please tap me and allow it.</string>
-
     <!-- GA -->
     <string name="ga_trackingId">UA-9578951-16</string>
     <string name="ga_confirm_dialog_title">Google Analytics</string>

@@ -18,12 +18,6 @@
 
     <com.nagopy.android.aplin.view.preference.CategoryPreference />
 
-    <PreferenceCategory android:title="@string/usage_stats_title">
-        <Preference
-            android:key="@string/usage_stats_key"
-            android:title="@string/usage_stats_title" />
-    </PreferenceCategory>
-
     <com.nagopy.android.aplin.view.preference.DisplayItemPreference />
 
     <com.nagopy.android.aplin.view.preference.SortPreference />
