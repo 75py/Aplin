@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2015 75py
+ * Copyright 2015 75py
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,24 +25,26 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.gone
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
 import com.nagopy.android.aplin.model.IconHelper
+import com.nagopy.android.aplin.visible
 import io.realm.RealmResults
 
 public class RealmAppAdapter(
         val context: Context
         , val category: Category
         , val iconHelper: IconHelper
-        , val onListItemClicked: (app: AppEntity) -> Unit
-        , val onListItemLongClicked: (app: AppEntity) -> Unit
+        , val onListItemClicked: (app: App) -> Unit
+        , val onListItemLongClicked: (app: App) -> Unit
 ) : RecyclerView.Adapter<RealmAppAdapter.ViewHolder>() {
 
-    var realmResults: RealmResults<AppEntity>? = null
+    var realmResults: RealmResults<App>? = null
     var displayItems: List<DisplayItem> = emptyList()
 
-    fun updateRealmResult(realmResults: RealmResults<AppEntity>) {
+    fun updateRealmResult(realmResults: RealmResults<App>) {
         this.realmResults?.removeChangeListeners()
         this.realmResults = realmResults
         realmResults.removeChangeListeners()
@@ -104,10 +106,10 @@ public class RealmAppAdapter(
             var infoString = sb.toString().trim()
             infoString = infoString.replace((Constants.LINE_SEPARATOR + "+").toRegex(), Constants.LINE_SEPARATOR)
             holder.status.text = infoString
-            holder.status.visibility = View.VISIBLE
+            holder.status.visible()
         } else {
             holder.status.text = ""
-            holder.status.visibility = View.GONE
+            holder.status.gone()
         }
         holder.status.setTextColor(textColor)
 

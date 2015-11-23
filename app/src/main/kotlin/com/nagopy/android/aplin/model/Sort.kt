@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2015 75py
+ * Copyright 2015 75py
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +17,8 @@ package com.nagopy.android.aplin.model
 
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.aplin.entity.names.AppEntityNames
+import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.entity.names.AppNames.*
 import com.nagopy.android.kotlinames.findAllSortedAsync
 import io.realm.RealmQuery
 import io.realm.RealmResults
@@ -42,10 +42,10 @@ enum class Sort(
     DEFAULT(titleResourceId = R.string.sort_default,
             summaryResourceId = R.string.sort_default_summary,
             defaultValue = true) {
-        override fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity> {
-            return realmQuery.findAllSortedAsync(AppEntityNames.isInstalled() to true,
-                    AppEntityNames.label() to true,
-                    AppEntityNames.packageName() to true)
+        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
+            return realmQuery.findAllSortedAsync(isInstalled() to true,
+                    label() to true,
+                    packageName() to true)
         }
     },
     /**
@@ -53,9 +53,9 @@ enum class Sort(
      */
     PACKAGE_NAME(titleResourceId = R.string.sort_package_name
             , summaryResourceId = R.string.sort_package_name_summary) {
-        override fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity> {
-            return realmQuery.findAllSortedAsync(AppEntityNames.isInstalled() to true,
-                    AppEntityNames.packageName() to true)
+        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
+            return realmQuery.findAllSortedAsync(isInstalled() to true,
+                    packageName() to true)
         }
     },
     /**
@@ -63,15 +63,15 @@ enum class Sort(
      */
     UPDATE_DATE_DESC(titleResourceId = R.string.sort_update_time_desc
             , summaryResourceId = R.string.sort_update_time_desc_summary) {
-        override fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity> {
-            return realmQuery.findAllSortedAsync(AppEntityNames.lastUpdateTime() to false,
-                    AppEntityNames.isInstalled() to true,
-                    AppEntityNames.label() to true,
-                    AppEntityNames.packageName() to true)
+        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
+            return realmQuery.findAllSortedAsync(lastUpdateTime() to false,
+                    isInstalled() to true,
+                    label() to true,
+                    packageName() to true)
         }
     };
 
-    abstract fun findAllSortedAsync(realmQuery: RealmQuery<AppEntity>): RealmResults<AppEntity>
+    abstract fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App>
 
     val key: String = "${javaClass.name}_$name"
 }

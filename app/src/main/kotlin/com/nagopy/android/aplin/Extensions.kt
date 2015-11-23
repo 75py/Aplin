@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
-package com.nagopy.android.aplin.view
+package com.nagopy.android.aplin
 
-import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.model.DisplayItem
-import io.realm.RealmResults
+import android.view.View
 
-/**
- * アプリ一覧のビューを表すインターフェース
- */
-public interface AppListView {
+fun <E : View> E.visible() {
+    visibility = View.VISIBLE
+}
 
-    /**
-     * アプリ一覧を表示する
+fun <E : View> E.invisible() {
+    visibility = View.INVISIBLE
+}
 
-     * @param apps    アプリケーション
-     * *
-     * @param displayItems 表示項目
-     */
-    public fun showList(apps: RealmResults<App>, displayItems: List<DisplayItem>)
+fun <E : View> E.gone() {
+    visibility = View.GONE
+}
 
+inline fun <T> Iterable<T>.forEachX(first: (first: T) -> Unit, each: (current: T, previous: T) -> Unit) {
+    var prev: T
+    this.forEachIndexed { i, t ->
+        if (i == 0) {
+            first(t)
+        } else {
+            each(t, prev)
+        }
+        prev = t
+    }
 }

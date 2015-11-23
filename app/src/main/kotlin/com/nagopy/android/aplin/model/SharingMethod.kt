@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2015 75py
+ * Copyright 2015 75py
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 package com.nagopy.android.aplin.model
 
 import com.nagopy.android.aplin.constants.Constants
-import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.entity.App
 
 /**
  * 共有方法の定義クラス
@@ -26,7 +26,7 @@ public enum class SharingMethod {
      * アプリ名共有
      */
     LABEL {
-        override fun makeShareString(appList: List<AppEntity>): String {
+        override fun makeShareString(appList: List<App>): String {
             val sb = StringBuilder()
             for (app in appList) {
                 sb.append(makeShareString(app))
@@ -35,7 +35,7 @@ public enum class SharingMethod {
             return sb.toString()
         }
 
-        override fun makeShareString(appData: AppEntity): String {
+        override fun makeShareString(appData: App): String {
             return appData.label
         }
     },
@@ -43,7 +43,7 @@ public enum class SharingMethod {
      * パッケージ名
      */
     PACKAGE {
-        override fun makeShareString(appList: List<AppEntity>): String {
+        override fun makeShareString(appList: List<App>): String {
             val sb = StringBuilder()
             for (app in appList) {
                 sb.append(makeShareString(app))
@@ -52,7 +52,7 @@ public enum class SharingMethod {
             return sb.toString()
         }
 
-        override fun makeShareString(appData: AppEntity): String {
+        override fun makeShareString(appData: App): String {
             return appData.packageName
         }
     },
@@ -60,7 +60,7 @@ public enum class SharingMethod {
      * アプリ名とパッケージ名
      */
     LABEL_AND_PACKAGE {
-        override fun makeShareString(appList: List<AppEntity>): String {
+        override fun makeShareString(appList: List<App>): String {
             val sb = StringBuilder()
             for (app in appList) {
                 sb.append(makeShareString(app))
@@ -70,7 +70,7 @@ public enum class SharingMethod {
             return sb.toString()
         }
 
-        override fun makeShareString(appData: AppEntity): String {
+        override fun makeShareString(appData: App): String {
             return appData.label + Constants.LINE_SEPARATOR + appData.packageName
         }
     };
@@ -82,7 +82,7 @@ public enum class SharingMethod {
      * *
      * @return 共有用の文字列
      */
-    public abstract fun makeShareString(appList: List<AppEntity>): String
+    public abstract fun makeShareString(appList: List<App>): String
 
     /**
      * 共有用の文字列を作成する
@@ -91,6 +91,6 @@ public enum class SharingMethod {
      * *
      * @return 共有用の文字列
      */
-    public abstract fun makeShareString(appData: AppEntity): String
+    public abstract fun makeShareString(appData: App): String
 
 }
