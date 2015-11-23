@@ -16,6 +16,7 @@
 
 package com.nagopy.android.aplin.entity
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.Required
 
@@ -53,4 +54,5 @@ open class App : RealmObject() {
 
     open var versionName: String? = null
 
+    open var permissions: RealmList<AppPermission> = RealmList()
 }

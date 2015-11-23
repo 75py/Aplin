@@ -46,6 +46,10 @@
     <string name="category_default_summary">Applications that are default for some action. Ex: launcher app</string>
     <string name="category_recently_used">Recently used</string>
     <string name="category_recently_used_summary">Please allow usage access</string>
+    <string name="category_internet_permissions">Internet permissions</string>
+    <string name="category_internet_permissions_summary" />
+    <string name="category_runtime_permissions">Runtime permissions</string>
+    <string name="category_runtime_permissions_summary" />
 
     <string name="sort">Sort</string>
     <string name="sort_default">Default</string>
@@ -71,6 +75,13 @@
     <string name="display_item_version_name">Version name</string>
     <string name="display_item_version_name_summary" />
     <string name="display_item_version_name_format">Version: %1$s</string>
+    <string name="display_item_internet_permission">Internet Permission</string>
+    <string name="display_item_internet_permission_summary" />
+    <string name="display_item_internet_permission_label">[Internet]</string>
+    <string name="display_item_deniable_permissions">Deniable Permissions</string>
+    <string name="display_item_deniable_permissions_summary" />
+    <string name="display_item_deniable_permissions_separator">/</string>
+
 
     <!-- GA -->
     <string name="ga_trackingId">UA-9578951-16</string>

@@ -15,11 +15,14 @@
  */
 package com.nagopy.android.aplin.model
 
+import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.names.AppNames.*
+import com.nagopy.android.kotlinames.contains
 import com.nagopy.android.kotlinames.equalTo
+import com.nagopy.android.kotlinames.isNotNull
 import io.realm.RealmQuery
 
 public enum class Category(
@@ -85,6 +88,26 @@ public enum class Category(
             , defaultValue = true) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), false)
+        }
+    }
+    ,
+    INTERNET_PERMISSIONS(titleResourceId = R.string.category_internet_permissions
+            , summaryResourceId = R.string.category_internet_permissions_summary) {
+        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
+            return realmQuery.contains(permissions().name(), "android.permission.INTERNET")
+        }
+    }
+    ,
+    RUNTIME_PERMISSIONS(titleResourceId = R.string.category_runtime_permissions
+            , summaryResourceId = R.string.category_runtime_permissions_summary
+            , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
+        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
+            return realmQuery.equalTo(isSystem(), false)
+                    .or().not().beginGroup()
+                    .equalTo(isThisASystemPackage(), true)
+                    .or().equalTo(hasActiveAdmins(), true)
+                    .endGroup()
+                    .isNotNull(permissions().groupLabel())
         }
     }
     ,

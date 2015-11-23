@@ -16,6 +16,7 @@
 package com.nagopy.android.aplin.model
 
 import android.content.Context
+import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
@@ -84,6 +85,43 @@ enum class DisplayItem(
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             if (appData.versionName != null) {
                 sb.append(context.getString(R.string.display_item_version_name_format, appData.versionName))
+            }
+            return true
+        }
+    },
+    /**
+     * パーミッション（インターネット）
+     */
+    INTERNET_PERMISSION(
+            titleResourceId = R.string.display_item_internet_permission
+            , summaryResourceId = R.string.display_item_internet_permission_summary) {
+        override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
+            if (appData.permissions.isNotEmpty()) {
+                val internet = appData.permissions.map { it.name }.contains("android.permission.INTERNET")
+                if (internet) {
+                    sb.append(context.getString(R.string.display_item_internet_permission_label))
+                }
+            }
+            return true
+        }
+    },
+    /**
+     * パーミッション（拒否可能、6.0以降）
+     */
+    DENIABLE_PERMISSIONS(
+            titleResourceId = R.string.display_item_deniable_permissions
+            , summaryResourceId = R.string.display_item_deniable_permissions_summary
+            , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
+        override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
+            if (appData.permissions.isNotEmpty()) {
+                val core = appData.isThisASystemPackage or appData.hasActiveAdmins
+                if (!appData.isSystem or !core) {
+                    sb.append(appData.permissions.map { it.groupLabel }
+                            .filterNotNull()
+                            .distinct()
+                            .joinToString(context.getString(R.string.display_item_deniable_permissions_separator))
+                    )
+                }
             }
             return true
         }

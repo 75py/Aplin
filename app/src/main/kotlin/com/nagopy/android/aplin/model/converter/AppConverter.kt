@@ -19,10 +19,12 @@ package com.nagopy.android.aplin.model.converter
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.pm.PermissionGroupInfo
 import android.os.Build
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.DevicePolicy
 import com.nagopy.android.aplin.model.IconHelper
+import io.realm.Realm
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,21 +46,24 @@ open class AppConverter {
     @Inject
     lateinit var appUsageStatsManager: AppUsageStatsManager
 
+    lateinit var allPermissionGroups: List<PermissionGroupInfo>
+
     @Inject
     constructor() {
     }
 
-    open fun setValues(app: App, applicationInfo: ApplicationInfo) {
+    open fun setValues(realm: Realm, app: App, applicationInfo: ApplicationInfo) {
+        allPermissionGroups = packageManager.getAllPermissionGroups(0)
         AppParameters.values
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                 .forEach { param ->
-                    param.setValue(app, applicationInfo, this)
+                    param.setValue(realm, app, applicationInfo, this)
                 }
     }
 
     interface Converter {
         fun targetSdkVersion(): IntRange
-        fun setValue(entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter)
+        fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter)
     }
 
 }

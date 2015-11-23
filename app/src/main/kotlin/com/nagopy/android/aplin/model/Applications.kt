@@ -78,7 +78,7 @@ open class Applications
                     }
 
                     val entity = realm.createObject(App::class.java)
-                    appConverter.setValues(entity, it)
+                    appConverter.setValues(realm, entity, it)
                 }
             }
         }
@@ -163,7 +163,7 @@ open class Applications
                     if (entity == null) {
                         entity = realm.createObject(App::class.java)
                     }
-                    appConverter.setValues(entity, applicationInfo)
+                    appConverter.setValues(realm, entity, applicationInfo)
                 }
             }
         }
