@@ -2,10 +2,8 @@ package com.nagopy.android.aplin.model
 
 import android.app.ActivityManager
 import android.app.Application
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
