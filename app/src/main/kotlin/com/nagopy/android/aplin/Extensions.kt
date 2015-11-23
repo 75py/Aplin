@@ -6,6 +6,10 @@ fun <E : View> E.visible(): Unit {
     visibility = View.VISIBLE
 }
 
+fun <E : View> E.invisible(): Unit {
+    visibility = View.INVISIBLE
+}
+
 fun <E : View> E.gone(): Unit {
     visibility = View.GONE
 }

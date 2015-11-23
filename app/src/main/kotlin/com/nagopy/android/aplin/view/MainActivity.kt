@@ -8,18 +8,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ProgressBar
 import com.google.android.gms.ads.AdView
-import com.nagopy.android.aplin.Aplin
-import com.nagopy.android.aplin.R
+import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.aplin.gone
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
 import com.nagopy.android.aplin.view.adapter.MainScreenPagerAdapter
-import com.nagopy.android.aplin.visible
 import javax.inject.Inject
 
 /**
@@ -98,8 +94,8 @@ public class MainActivity : AppCompatActivity(),
     }
 
     override fun hideAppList() {
-        viewPager.visibility = View.INVISIBLE
-        tabLayout.visibility = View.INVISIBLE
+        viewPager.invisible()
+        tabLayout.invisible()
     }
 
     // menu ===============================================================================================
