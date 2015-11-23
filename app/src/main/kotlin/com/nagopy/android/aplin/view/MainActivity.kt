@@ -14,10 +14,12 @@ import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.gone
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
 import com.nagopy.android.aplin.view.adapter.MainScreenPagerAdapter
+import com.nagopy.android.aplin.visible
 import javax.inject.Inject
 
 /**
@@ -77,18 +79,18 @@ public class MainActivity : AppCompatActivity(),
     }
 
     override fun showIndicator() {
-        progressBar.visibility = View.VISIBLE
-        tabLayout.visibility = View.GONE
+        progressBar.visible()
+        tabLayout.gone()
     }
 
     override fun hideIndicator() {
-        progressBar.visibility = View.GONE
-        tabLayout.visibility = View.VISIBLE
+        progressBar.gone()
+        tabLayout.visible()
     }
 
     override fun showAppList(categories: List<Category>) {
-        viewPager.visibility = View.VISIBLE
-        tabLayout.visibility = View.VISIBLE
+        viewPager.visible()
+        tabLayout.visible()
 
         val adapter = MainScreenPagerAdapter(applicationContext, supportFragmentManager, categories)
         viewPager.adapter = adapter

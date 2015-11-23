@@ -26,9 +26,11 @@ import android.widget.TextView
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.AppEntity
+import com.nagopy.android.aplin.gone
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
 import com.nagopy.android.aplin.model.IconHelper
+import com.nagopy.android.aplin.visible
 import io.realm.RealmResults
 
 public class RealmAppAdapter(
@@ -104,10 +106,10 @@ public class RealmAppAdapter(
             var infoString = sb.toString().trim()
             infoString = infoString.replace((Constants.LINE_SEPARATOR + "+").toRegex(), Constants.LINE_SEPARATOR)
             holder.status.text = infoString
-            holder.status.visibility = View.VISIBLE
+            holder.status.visible()
         } else {
             holder.status.text = ""
-            holder.status.visibility = View.GONE
+            holder.status.gone()
         }
         holder.status.setTextColor(textColor)
 
