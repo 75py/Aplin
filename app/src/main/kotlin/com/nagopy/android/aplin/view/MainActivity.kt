@@ -78,10 +78,12 @@ public class MainActivity : AppCompatActivity(),
 
     override fun showIndicator() {
         progressBar.visibility = View.VISIBLE
+        tabLayout.visibility = View.GONE
     }
 
     override fun hideIndicator() {
         progressBar.visibility = View.GONE
+        tabLayout.visibility = View.VISIBLE
     }
 
     override fun showAppList(categories: List<Category>) {
