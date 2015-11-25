@@ -30,36 +30,33 @@ import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.DisplayItem
 import com.nagopy.android.aplin.model.IconHelper
 import io.realm.RealmResults
+import timber.log.Timber
 
 public class RealmAppAdapter(
-        val context: Context
+        val realmResults: RealmResults<App>
+        , val context: Context
         , val category: Category
         , val iconHelper: IconHelper
         , val onListItemClicked: (app: App) -> Unit
         , val onListItemLongClicked: (app: App) -> Unit
 ) : RecyclerView.Adapter<RealmAppAdapter.ViewHolder>() {
 
-    var realmResults: RealmResults<App>? = null
     var displayItems: List<DisplayItem> = emptyList()
 
-    fun updateRealmResult(realmResults: RealmResults<App>) {
-        this.realmResults?.removeChangeListeners()
-        this.realmResults = realmResults
-        realmResults.removeChangeListeners()
-        realmResults.addChangeListener { notifyDataSetChanged() }
-    }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
         super.onAttachedToRecyclerView(recyclerView)
-        realmResults?.removeChangeListeners()
-        realmResults?.addChangeListener {
+        realmResults.removeChangeListeners()
+        Timber.v("addChangeListener category=$category")
+        realmResults.addChangeListener {
             notifyDataSetChanged()
         }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
         super.onDetachedFromRecyclerView(recyclerView)
-        realmResults?.removeChangeListeners()
+        Timber.v("removeChangeListeners category=$category")
+        realmResults.removeChangeListeners()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder? {
@@ -67,10 +64,10 @@ public class RealmAppAdapter(
         val holder = ViewHolder(view)
 
         view.setOnClickListener { view ->
-            onListItemClicked(realmResults!![holder.adapterPosition])
+            onListItemClicked(realmResults[holder.adapterPosition])
         }
         view.setOnLongClickListener { view ->
-            onListItemLongClicked(realmResults!![holder.adapterPosition])
+            onListItemLongClicked(realmResults[holder.adapterPosition])
             return@setOnLongClickListener true
         }
 
@@ -82,7 +79,7 @@ public class RealmAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entity = realmResults!![position]
+        val entity = realmResults[position]
 
         val textColor = ContextCompat.getColor(context,
                 if (entity.isEnabled) R.color.text_color else R.color.textColorTertiary)
@@ -114,7 +111,7 @@ public class RealmAppAdapter(
         holder.icon.setImageDrawable(iconHelper.getIcon(entity))
     }
 
-    override fun getItemCount(): Int = realmResults?.size ?: 0
+    override fun getItemCount(): Int = realmResults.size
 
     class ViewHolder : RecyclerView.ViewHolder {
 
