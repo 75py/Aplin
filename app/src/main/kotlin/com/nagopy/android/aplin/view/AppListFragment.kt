@@ -108,20 +108,17 @@ public class AppListFragment : Fragment(), AppListView {
     }
 
     override fun showList(apps: RealmResults<App>, displayItems: List<DisplayItem>) {
-        if (adapter == null) {
-            adapter = RealmAppAdapter(application, category, iconHelper, { app ->
-                parentView.onListItemClick(app)
-            }, { app ->
-                parentView.onListItemLongClick(app)
-            })
-        }
+        adapter = RealmAppAdapter(apps, application, category, iconHelper, { app ->
+            parentView.onListItemClick(app)
+        }, { app ->
+            parentView.onListItemLongClick(app)
+        })
         adapter!!.displayItems = displayItems
-        adapter!!.updateRealmResult(apps)
-        adapter!!.notifyDataSetChanged()
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        parentView.onOptionsItemSelected(item, adapter!!.realmResults!!)
+        parentView.onOptionsItemSelected(item, adapter!!.realmResults)
         return super.onOptionsItemSelected(item);
     }
 

@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.model.Applications
+import rx.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -33,7 +34,6 @@ class PackageChangedReceiver : BroadcastReceiver() {
         Aplin.getApplicationComponent().inject(this)
 
         val uid = intent.getIntExtra(Intent.EXTRA_UID, Integer.MIN_VALUE)
-        //        val pkg = context.packageManager.getNameForUid(uid);
         val pkg = intent.data.schemeSpecificPart
 
         Timber.i("action=${intent.action}, uid=$uid, pkg=$pkg, ${intent.extras}")
@@ -44,7 +44,15 @@ class PackageChangedReceiver : BroadcastReceiver() {
                 Intent.ACTION_PACKAGE_REPLACED -> applications.update(pkg)
                 Intent.ACTION_PACKAGE_REMOVED -> applications.delete(pkg)
                 Intent.ACTION_PACKAGE_FULLY_REMOVED -> applications.delete(pkg)
-            }
+                else -> throw IllegalAccessException("Unknown action: ${intent.action}")
+            }.subscribeOn(Schedulers.newThread())
+                    .subscribe({
+                        // do nothing
+                    }, { t ->
+                        Timber.e(t, "Receiver error")
+                        // ignore
+                    })
+
         }
     }
 }

@@ -28,8 +28,8 @@ import com.nagopy.android.aplin.model.converter.AppConverter
 import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
 import io.realm.RealmResults
+import rx.Observable
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -141,56 +141,46 @@ open class Applications
         return false
     }
 
-    open fun insert(pkg: String) {
+    open fun insert(pkg: String): Observable<Void> {
         Timber.d("insert $pkg")
-        upsert(pkg)
-        listeners.forEach { it.onPackageChanged() }
+        return upsert(pkg)
     }
 
-    open fun update(pkg: String) {
+    open fun update(pkg: String): Observable<Void> {
         Timber.d("update $pkg")
-        upsert(pkg)
-        listeners.forEach { it.onPackageChanged() }
+        return upsert(pkg)
     }
 
-    private fun upsert(pkg: String) {
-        val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
-        if (!shouldSkip(applicationInfo)) {
+    private fun upsert(pkg: String): Observable<Void> {
+        return Observable.create {
+            val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
+            if (!shouldSkip(applicationInfo)) {
+                val realm = Realm.getDefaultInstance()
+                realm.use {
+                    realm.executeTransaction {
+                        var entity = realm.where(App::class.java).equalTo(packageName(), pkg).findFirst()
+                        if (entity == null) {
+                            entity = realm.createObject(App::class.java)
+                        }
+                        appConverter.setValues(realm, entity, applicationInfo)
+                    }
+                }
+            }
+            it.onCompleted()
+        }
+    }
+
+    open fun delete(pkg: String): Observable<Void> {
+        Timber.d("delete $pkg")
+        return Observable.create {
             val realm = Realm.getDefaultInstance()
             realm.use {
                 realm.executeTransaction {
-                    var entity = realm.where(App::class.java).equalTo(packageName(), pkg).findFirst()
-                    if (entity == null) {
-                        entity = realm.createObject(App::class.java)
-                    }
-                    appConverter.setValues(realm, entity, applicationInfo)
+                    val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
+                    entity.clear()
                 }
             }
+            it.onCompleted()
         }
-    }
-
-    open fun delete(pkg: String) {
-        Timber.d("delete $pkg")
-        val realm = Realm.getDefaultInstance()
-        realm.use {
-            realm.executeTransaction {
-                val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
-                entity.clear()
-            }
-        }
-        listeners.forEach { it.onPackageChanged() }
-    }
-
-    var listeners: List<PackageChangedListener> = ArrayList()
-    open fun addPackageChangedListener(listener: PackageChangedListener) {
-        listeners = listeners.plus(listener)
-    }
-
-    open fun removePackageChangedListener(listener: PackageChangedListener) {
-        listeners = listeners.minus(listener)
-    }
-
-    interface PackageChangedListener {
-        fun onPackageChanged()
     }
 }

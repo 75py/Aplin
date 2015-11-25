@@ -28,7 +28,7 @@ import javax.inject.Inject
 /**
  * カテゴリ毎アプリ一覧のプレゼンター
  */
-public class AppListPresenter : Presenter, Applications.PackageChangedListener {
+public class AppListPresenter : Presenter {
 
     @Inject
     constructor() {
@@ -57,7 +57,6 @@ public class AppListPresenter : Presenter, Applications.PackageChangedListener {
         val appEntities = applications.getApplicationList(category)
         Timber.d("appEntities " + appEntities)
         view.showList(appEntities, userSettings.displayItems)
-        applications.addPackageChangedListener(this)
     }
 
     override fun resume() {
@@ -67,15 +66,8 @@ public class AppListPresenter : Presenter, Applications.PackageChangedListener {
     }
 
     override fun destroy() {
-        applications.removePackageChangedListener(this)
         view = null
         realm.close()
-    }
-
-
-    override fun onPackageChanged() {
-        val appEntities = applications.getApplicationList(category)
-        view?.showList(appEntities, userSettings.displayItems)
     }
 
 }
