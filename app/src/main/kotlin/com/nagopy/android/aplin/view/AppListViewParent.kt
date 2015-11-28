@@ -24,9 +24,9 @@ import com.nagopy.android.aplin.entity.App
  * 主にメニュー操作などの処理を移譲するために使用。
  */
 public interface AppListViewParent {
-    fun onListItemClick(app: App)
+    fun onListItemClicked(app: App)
 
-    fun onListItemLongClick(app: App)
+    fun onListItemLongClicked(app: App)
 
     fun onOptionsItemSelected(item: MenuItem, appList: List<App>)
 
