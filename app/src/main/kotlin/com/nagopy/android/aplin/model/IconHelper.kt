@@ -50,7 +50,7 @@ constructor(var application: Application, var activityManager: ActivityManager) 
     /**
      * アイコン画像の大きさ（PX)
      */
-    val iconSize: Int
+    open val iconSize: Int
 
     val cache: Map<String, Drawable> = HashMap()
 

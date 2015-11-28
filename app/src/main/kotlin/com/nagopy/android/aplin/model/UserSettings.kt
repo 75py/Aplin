@@ -24,7 +24,7 @@ import javax.inject.Singleton
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-@Singleton class UserSettings
+@Singleton open class UserSettings
 @Inject constructor(var sharedPreferences: SharedPreferences) {
 
     val sort: Sort by sortProperty()

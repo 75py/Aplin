@@ -128,11 +128,11 @@ public class MainActivity : AppCompatActivity(),
     }
 
 
-    override fun onListItemClick(app: App) {
+    override fun onListItemClicked(app: App) {
         presenter.listItemClicked(this, app)
     }
 
-    override fun onListItemLongClick(app: App) {
+    override fun onListItemLongClicked(app: App) {
         presenter.listItemLongClicked(app)
     }
 
