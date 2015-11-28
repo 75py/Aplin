@@ -24,7 +24,7 @@ def preDexLibs = !project.hasProperty('disablePreDex')
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
