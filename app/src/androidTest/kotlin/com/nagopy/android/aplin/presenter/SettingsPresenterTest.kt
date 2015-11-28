@@ -3,9 +3,9 @@ package com.nagopy.android.aplin.presenter
 import android.app.Application
 import android.content.SharedPreferences
 import android.support.test.runner.AndroidJUnit4
+import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.model.UsageStatsHelper
 import com.nagopy.android.aplin.view.SettingsView
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,6 +13,8 @@ import org.mockito.Matchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import org.hamcrest.CoreMatchers.`is` as _is
 
 
@@ -29,6 +31,8 @@ class SettingsPresenterTest {
     lateinit var settingsView: SettingsView
     @Mock
     lateinit var usageStatsHelper: UsageStatsHelper
+    @Mock
+    lateinit var analytics: Analytics
 
     @Before
     fun setup() {
@@ -37,13 +41,14 @@ class SettingsPresenterTest {
         target.application = application
         target.sharedPreferences = sharedPreferences
         target.usageStatsHelper = usageStatsHelper
+        target.analytics = analytics
     }
 
     @Test
     fun initialize() {
         target.settingChanged = true
         target.initialize(settingsView)
-        Assert.assertThat(target.settingChanged, _is(false))
+        assertFalse(target.settingChanged)
     }
 
     @Test
@@ -69,9 +74,9 @@ class SettingsPresenterTest {
 
     @Test
     fun flag() {
-        Assert.assertThat(target.settingChanged, _is(false))
-        target.onSharedPreferenceChanged(null, null)
-        Assert.assertThat(target.settingChanged, _is(true))
+        assertFalse(target.settingChanged)
+        target.onSharedPreferenceChanged(sharedPreferences, "test")
+        assertTrue(target.settingChanged)
     }
 
 
@@ -83,9 +88,9 @@ class SettingsPresenterTest {
     @Test
     fun finish() {
         target.settingChanged = false
-        Assert.assertThat(target.finish(), _is(false))
+        assertFalse(target.finish())
 
         target.settingChanged = true
-        Assert.assertThat(target.finish(), _is(true))
+        assertTrue(target.finish())
     }
 }

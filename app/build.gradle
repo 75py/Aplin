@@ -24,7 +24,7 @@ def preDexLibs = !project.hasProperty('disablePreDex')
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
@@ -122,16 +122,14 @@ dependencies {
     compile "com.nagopy.android:kotlinames:$kotliname_version"
     kapt "com.nagopy.android:kotlinames-compiler:$kotliname_version"
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.google.dexmaker:dexmaker:1.2'
-    testCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
-    testCompile 'org.mockito:mockito-core:1.9.5'
+//    testCompile 'junit:junit:4.12'
 
+    androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support:support-annotations:23.0.1'
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.1.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
