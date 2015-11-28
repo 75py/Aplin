@@ -24,129 +24,109 @@ import android.os.Build
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.AppPermission
-import io.realm.Realm
 import io.realm.RealmList
 import timber.log.Timber
 import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
     packageName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.packageName = applicationInfo.packageName
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.packageName = appInfo.applicationInfo.packageName
         }
     },
     label(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.label = applicationInfo.loadLabel(appConverter.packageManager).toString()
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.label = appInfo.applicationInfo.loadLabel(envInfo.appConverter.packageManager).toString()
         }
     },
     isEnabled(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.isEnabled = applicationInfo.enabled
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.isEnabled = appInfo.applicationInfo.enabled
         }
     },
     isSystem(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.isSystem =
-                    (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                            || (applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.isSystem =
+                    (appInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                            || (appInfo.applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
         }
     },
     isThisASystemPackage(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            val packageInfo = appConverter.packageManager.getPackageInfo(
-                    applicationInfo.packageName,
-                    PackageManager.GET_DISABLED_COMPONENTS or PackageManager.GET_UNINSTALLED_PACKAGES or PackageManager.GET_SIGNATURES
-            )
-            entity.isThisASystemPackage = appConverter.devicePolicy.isThisASystemPackage(packageInfo)
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.isThisASystemPackage = envInfo.appConverter.devicePolicy.isThisASystemPackage(appInfo.packageInfo)
         }
     },
     firstInstallTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            val packageInfo = appConverter.packageManager.getPackageInfo(
-                    applicationInfo.packageName,
-                    PackageManager.GET_META_DATA
-            )
-            entity.firstInstallTime = packageInfo.firstInstallTime
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.firstInstallTime = appInfo.packageInfo.firstInstallTime
         }
     },
     lastUpdateTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            val packageInfo = appConverter.packageManager.getPackageInfo(
-                    applicationInfo.packageName,
-                    PackageManager.GET_META_DATA
-            )
-            entity.lastUpdateTime = packageInfo.lastUpdateTime
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.lastUpdateTime = appInfo.packageInfo.lastUpdateTime
         }
     },
     hasActiveAdmins(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.hasActiveAdmins = appConverter.devicePolicy.packageHasActiveAdmins(applicationInfo.packageName)
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.hasActiveAdmins = envInfo.appConverter.devicePolicy.packageHasActiveAdmins(appInfo.applicationInfo.packageName)
         }
     },
     isInstalled(IntRange(Build.VERSION_CODES.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            entity.isInstalled = (applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.isInstalled = (appInfo.applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
         }
     },
     isDefaultApp(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
             val outFilters = ArrayList<IntentFilter>()
             val outActivities = ArrayList<ComponentName>()
-            appConverter.packageManager.getPreferredActivities(outFilters, outActivities, applicationInfo.packageName)
-            entity.isDefaultApp = !outActivities.isEmpty()
+            envInfo.appConverter.packageManager.getPreferredActivities(outFilters, outActivities, appInfo.applicationInfo.packageName)
+            app.isDefaultApp = !outActivities.isEmpty()
         }
     },
     icon(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            if (applicationInfo.icon == 0) {
-                Timber.v(applicationInfo.packageName + ", icon=0x0")
-                entity.iconByteArray = appConverter.iconHelper.defaultIconByteArray
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            if (appInfo.applicationInfo.icon == 0) {
+                Timber.v(appInfo.applicationInfo.packageName + ", icon=0x0")
+                app.iconByteArray = envInfo.appConverter.iconHelper.defaultIconByteArray
             } else {
-                entity.iconByteArray = appConverter.iconHelper.toByteArray(applicationInfo.loadIcon(appConverter.packageManager))
+                app.iconByteArray = envInfo.appConverter.iconHelper.toByteArray(appInfo.applicationInfo.loadIcon(
+                        envInfo.appConverter.packageManager))
             }
         }
     },
     lastTimeUsed(Build.VERSION_CODES.LOLLIPOP..Int.MAX_VALUE) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            val times = appConverter.appUsageStatsManager.getLaunchTimes().get(applicationInfo.packageName)
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            val times = envInfo.appConverter.appUsageStatsManager.getLaunchTimes().get(appInfo.applicationInfo.packageName)
             if (times != null) {
-                entity.launchTimes = times
+                app.launchTimes = times
             }
         }
     },
     versionName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            val packageInfo = appConverter.packageManager.getPackageInfo(
-                    applicationInfo.packageName,
-                    PackageManager.GET_META_DATA
-            )
-            entity.versionName = packageInfo.versionName
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.versionName = appInfo.packageInfo.versionName
         }
     },
     permissions(Constants.ALL_SDK_VERSION) {
-        override fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter) {
-            val packageInfo = appConverter.packageManager.getPackageInfo(
-                    applicationInfo.packageName,
-                    PackageManager.GET_PERMISSIONS
-            )
-            entity.permissions = RealmList()
-            packageInfo.requestedPermissions?.forEach {
-                val permission = realm.createObject(AppPermission::class.java)
+        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+            app.permissions = RealmList()
+            appInfo.packageInfo.requestedPermissions?.forEach {
+                val permission = envInfo.realm.createObject(AppPermission::class.java)
                 permission.name = it
                 try {
-                    val pi = appConverter.packageManager.getPermissionInfo(it, 0)
-                    permission.label = pi.loadLabel(appConverter.packageManager).toString()
+                    val pi = envInfo.appConverter.packageManager.getPermissionInfo(it, 0)
+                    permission.label = pi.loadLabel(envInfo.appConverter.packageManager).toString()
                     permission.group = pi.group
-                    appConverter.allPermissionGroups.forEach {
+                    envInfo.allPermissionGroups.forEach {
                         if (it.name.equals(pi.group)) {
-                            permission.groupLabel = it.loadLabel(appConverter.packageManager).toString()
+                            permission.groupLabel = it.loadLabel(envInfo.appConverter.packageManager).toString()
                         }
                     }
                 } catch(e: PackageManager.NameNotFoundException) {
                     Timber.d("ignore ${e.message}")
                 }
-                entity.permissions.add(permission)
+                app.permissions.add(permission)
             }
         }
     }
