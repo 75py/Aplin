@@ -18,6 +18,7 @@ package com.nagopy.android.aplin.model.converter
 
 import android.app.Application
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.PermissionGroupInfo
 import android.os.Build
@@ -32,38 +33,49 @@ import javax.inject.Singleton
 open class AppConverter {
 
     @Inject
-    lateinit var application: Application
+    open lateinit var application: Application
 
     @Inject
-    lateinit var packageManager: PackageManager
+    open lateinit var packageManager: PackageManager
 
     @Inject
-    lateinit var iconHelper: IconHelper
+    open lateinit var iconHelper: IconHelper
 
     @Inject
-    lateinit var devicePolicy: DevicePolicy
-
-    @Inject
-    lateinit var appUsageStatsManager: AppUsageStatsManager
-
-    lateinit var allPermissionGroups: List<PermissionGroupInfo>
+    open lateinit var devicePolicy: DevicePolicy
 
     @Inject
     constructor() {
     }
 
     open fun setValues(realm: Realm, app: App, applicationInfo: ApplicationInfo) {
-        allPermissionGroups = packageManager.getAllPermissionGroups(0)
+        val allPermissionGroups = packageManager.getAllPermissionGroups(0)
+        val packageInfo = packageManager.getPackageInfo(
+                applicationInfo.packageName,
+                PackageManager.GET_PERMISSIONS
+                        or PackageManager.GET_META_DATA
+                        or PackageManager.GET_DISABLED_COMPONENTS
+                        or PackageManager.GET_UNINSTALLED_PACKAGES
+                        or PackageManager.GET_SIGNATURES
+        )
+        val params = Params(applicationInfo, packageInfo, realm, allPermissionGroups, this)
         AppParameters.values
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                 .forEach { param ->
-                    param.setValue(realm, app, applicationInfo, this)
+                    param.setValue(app, params)
                 }
     }
 
     interface Converter {
         fun targetSdkVersion(): IntRange
-        fun setValue(realm: Realm, entity: App, applicationInfo: ApplicationInfo, appConverter: AppConverter)
+        fun setValue(app: App, params: Params)
     }
+
+    open class Params(open var applicationInfo: ApplicationInfo
+                      , open var packageInfo: PackageInfo
+                      , open var realm: Realm
+                      , open var allPermissionGroups: List<PermissionGroupInfo>
+                      , open var appConverter: AppConverter
+    )
 
 }

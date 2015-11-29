@@ -27,17 +27,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-public class DevicePolicy
+open class DevicePolicy
 @Inject
 constructor(application: Application) {
 
     val devicePolicyManager: DevicePolicyManagerWrapper = DevicePolicyManagerWrapper(application)
 
-    public fun isThisASystemPackage(packageInfo: PackageInfo): Boolean {
+    open fun isThisASystemPackage(packageInfo: PackageInfo): Boolean {
         return devicePolicyManager.isThisASystemPackage(packageInfo)
     }
 
-    public fun packageHasActiveAdmins(packageName: String): Boolean {
+    open fun packageHasActiveAdmins(packageName: String): Boolean {
         return devicePolicyManager.packageHasActiveAdmins(packageName)
     }
 

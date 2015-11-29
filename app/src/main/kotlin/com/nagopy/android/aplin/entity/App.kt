@@ -49,9 +49,6 @@ open class App : RealmObject() {
 
     open var lastUpdateTime: Long = 0
 
-    /** UsageStatsManagerで取得 */
-    open var launchTimes: Int = 0
-
     open var versionName: String? = null
 
     open var permissions: RealmList<AppPermission> = RealmList()
