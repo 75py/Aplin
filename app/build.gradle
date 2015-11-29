@@ -21,6 +21,8 @@ apply plugin: 'io.fabric'
 apply from: 'signingConfigs/release.gradle', to: android
 
 def preDexLibs = !project.hasProperty('disablePreDex')
+def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
 
 android {
     compileSdkVersion 23
@@ -31,8 +33,8 @@ android {
         minSdkVersion 21
         targetSdkVersion "$target_sdk_version"
         versionCode publish_version_code
-        versionName publish_version_name
-        resValue "string", "version_name", "$publish_version_name ($publish_version_code)"
+        versionName "$publish_version_name-$gitSha"
+        resValue "string", "version_name", "$publish_version_name ($publish_version_code, $gitSha, $buildTime)"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
