@@ -1,25 +1,63 @@
+/*
+ * Copyright 2015 75py
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
-
 apply from: 'signingConfigs/release.gradle', to: android
+
+def preDexLibs = !project.hasProperty('disablePreDex')
+def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
         minSdkVersion 21
         targetSdkVersion "$target_sdk_version"
-        versionCode PUBLISH_VERSION_CODE
-        versionName PUBLISH_VERSION_NAME
+        versionCode publish_version_code
+        versionName "$publish_version_name-$gitSha"
+        resValue "string", "version_name", "$publish_version_name ($publish_version_code, $gitSha, $buildTime)"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        multiDexKeepProguard file('multi-dex-keep.txt')
+    }
+    signingConfigs {
+        debug {
+            storeFile file('aplin_beta.keystore')
+            storePassword 'android'
+            keyAlias 'android'
+            keyPassword 'android'
+        }
+    }
+    productFlavors {
+        internal {
+            buildConfigField "boolean", "PRODUCTION", "false"
+        }
+        production {
+            buildConfigField "boolean", "PRODUCTION", "true"
+        }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -48,24 +86,42 @@ android {
         abortOnError false
         disable 'PrivateResource'
     }
+    dexOptions {
+        javaMaxHeapSize "1024M"
+        preDexLibraries = preDexLibs
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+//noinspection GroovyAssignabilityCheck
+configurations.all {
+    resolutionStrategy {
+        failOnVersionConflict()
+        force 'com.android.support:support-v4:23.0.1'
+        force 'com.android.support:support-annotations:23.0.1'
+        force 'org.hamcrest:hamcrest-core:1.1' // or 1.3 ?
+        force 'com.google.dagger:dagger:2.0.1' // or 2.0 ?
+        force 'io.reactivex:rxjava:1.0.16'
+        force 'junit:junit:4.12'
+    }
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.google.android.gms:play-services-ads:8.3.0'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
-    compile 'com.cookpad.android.rxt4a:rxt4a:0.10.0'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'io.reactivex:rxjava:1.0.16'
     compile 'com.jakewharton.timber:timber:4.0.1'
-    compile 'com.nagopy.android:easyprefs:0.2.1'
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    kapt files("${sdk_dir}/platforms/android-${target_sdk_version}/android.jar")
-    kapt 'com.nagopy.android:easyprefs-processor:0.2.1'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
         transitive = true;
     }
     compile "io.realm:realm-android:$realm_version"
@@ -73,21 +129,22 @@ dependencies {
     kapt "com.nagopy.android:kotlinames-compiler:$kotliname_version"
 
     testCompile 'junit:junit:4.12'
-    testCompile 'com.google.dexmaker:dexmaker:1.2'
-    testCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.2'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.2'
 
-    androidTestCompile 'com.android.support:support-annotations:23.1.1'
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.1.0'
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support:support-annotations:23.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
-    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'org.mockito:mockito-core:1.9.5'
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 }
 buildscript {
-    ext.kotlin_version = '1.0.0-beta-1103'
+    ext.kotlin_version = '1.0.0-beta-2422'
     ext.dagger_version = '2.0.1'
     ext.realm_version = '0.84.2'
     ext.kotliname_version = '2.1.1'
@@ -95,6 +152,9 @@ buildscript {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     ext.sdk_dir = properties.getProperty("sdk.dir")
+    if(properties.containsKey("travis.job")) {
+        ext.publish_version_name = "$publish_version_name-${properties.getProperty("travis.job")}"
+    }
     repositories {
         mavenCentral()
     }

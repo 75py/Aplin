@@ -1,22 +1,53 @@
+<!--
+  ~ Copyright 2015 75py
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.nagopy.android.aplin.model.preference.CategorySetting_MultiSelectionPreference />
+    <com.nagopy.android.aplin.view.preference.CategoryPreference />
 
-    <PreferenceCategory android:title="@string/usage_stats_title">
-        <Preference
-            android:key="@string/usage_stats_key"
-            android:title="@string/usage_stats_title" />
-    </PreferenceCategory>
+    <com.nagopy.android.aplin.view.preference.DisplayItemPreference />
 
-    <com.nagopy.android.aplin.model.preference.DisplayItemSetting_MultiSelectionPreference />
-
-    <com.nagopy.android.aplin.model.preference.SortSetting_SingleSelectionPreference />
+    <com.nagopy.android.aplin.view.preference.SortPreference />
 
     <PreferenceCategory android:title="@string/ga_preference_category">
         <CheckBoxPreference
             android:key="@string/ga_preference_key"
             android:summary="@string/ga_preference_summary"
             android:title="@string/ga_preference_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/about">
+        <Preference
+            android:summary="@string/version_name"
+            android:title="@string/version_title" />
+
+        <Preference
+            android:summary="@string/source_code_url"
+            android:title="@string/source_code_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/source_code_url" />
+        </Preference>
+
+        <Preference android:title="@string/open_source_license">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.nagopy.android.aplin.view.LicenseActivity"
+                android:targetPackage="com.nagopy.android.aplin" />
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

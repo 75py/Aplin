@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 75py
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.nagopy.android.aplin.view
 
 import android.app.Application
@@ -11,14 +27,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
-import com.nagopy.android.aplin.entity.AppEntity
 import com.nagopy.android.aplin.model.Category
-import com.nagopy.android.aplin.model.DisplayItem
-import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.presenter.AppListPresenter
-import com.nagopy.android.aplin.view.adapter.RealmAppAdapter
+import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import com.nagopy.android.aplin.view.decoration.DividerItemDecoration
-import io.realm.RealmResults
 import javax.inject.Inject
 
 /**
@@ -36,24 +48,21 @@ public class AppListFragment : Fragment(), AppListView {
     @Inject
     lateinit var application: Application
 
-    @Inject
-    lateinit var iconHelper: IconHelper
-
-    var adapter: RealmAppAdapter? = null
-
-    lateinit var parentView: AppListViewParent
+    lateinit var adapter: AppListAdapter
 
     val category: Category by lazy { Category.valueOf(arguments.getString("type")) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parentView = activity as AppListViewParent
         retainInstance = true
         setHasOptionsMenu(true)
 
         Aplin.getApplicationComponent().inject(this)
 
-        presenter.initialize(this, category)
+        adapter = AppListAdapter(presenter)
+
+        val parentView = activity as AppListViewParent
+        presenter.initialize(this, parentView, category)
     }
 
     override fun onResume() {
@@ -91,22 +100,13 @@ public class AppListFragment : Fragment(), AppListView {
         recyclerView = null
     }
 
-    override fun showList(apps: RealmResults<AppEntity>, displayItems: List<DisplayItem>) {
-        if (adapter == null) {
-            adapter = RealmAppAdapter(application, category, iconHelper, { app ->
-                parentView.onListItemClick(app)
-            }, { app ->
-                parentView.onListItemLongClick(app)
-            })
-        }
-        adapter!!.displayItems = displayItems
-        adapter!!.updateRealmResult(apps)
-        adapter!!.notifyDataSetChanged()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        presenter.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        parentView.onOptionsItemSelected(item, adapter!!.realmResults!!)
-        return super.onOptionsItemSelected(item);
+    override fun notifyDataSetChanged() {
+        adapter.notifyDataSetChanged()
     }
 
     companion object {

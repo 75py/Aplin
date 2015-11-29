@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 75py
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.nagopy.android.aplin.presenter
 
 import android.app.Activity
@@ -7,16 +23,12 @@ import android.net.Uri
 import android.provider.Settings
 import android.view.MenuItem
 import android.widget.Toast
-import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers
 import com.nagopy.android.aplin.R
-import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.aplin.model.Analytics
-import com.nagopy.android.aplin.model.Applications
-import com.nagopy.android.aplin.model.MenuHandler
-import com.nagopy.android.aplin.model.SharingMethod
-import com.nagopy.android.aplin.model.preference.CategorySetting
+import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.model.*
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
+import rx.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +42,7 @@ public open class MainScreenPresenter
 constructor() : Presenter {
 
     @Inject
-    lateinit var categorySetting: CategorySetting
+    lateinit var userSettings: UserSettings
 
     @Inject
     lateinit var menuHandler: MenuHandler
@@ -48,12 +60,13 @@ constructor() : Presenter {
 
     open fun initialize(view: MainScreenView) {
         this.view = view
+
         view.hideAppList()
         view.showIndicator()
 
         applications.initialize {
             view.hideIndicator()
-            view.showAppList(categorySetting.value.toList())
+            view.showAppList(userSettings.categories)
         }
 
         if (!analytics.isConfirmed()) {
@@ -71,7 +84,7 @@ constructor() : Presenter {
         view = null
     }
 
-    fun listItemClicked(activity: Activity, app: AppEntity) {
+    fun listItemClicked(activity: Activity, app: App) {
         val packageName = app.packageName.split(":")[0];
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + packageName))
         activity.startActivity(intent);
@@ -79,7 +92,7 @@ constructor() : Presenter {
         analytics.click(app.packageName)
     }
 
-    fun listItemLongClicked(app: AppEntity) {
+    fun listItemLongClicked(app: App) {
         menuHandler.search(app)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({}, { e ->
@@ -90,7 +103,7 @@ constructor() : Presenter {
         analytics.longClick(app.packageName)
     }
 
-    fun onMenuItemClicked(item: MenuItem, checkedItemList: List<AppEntity>) {
+    fun onMenuItemClicked(item: MenuItem, checkedItemList: List<App>) {
         val onNext: (Void) -> Unit = {}
         val onError: (Throwable) -> Unit = { e ->
             Timber.e(e, "onError")
@@ -117,11 +130,6 @@ constructor() : Presenter {
             R.id.action_share_label_and_package_name -> {
                 val text = SharingMethod.LABEL_AND_PACKAGE.makeShareString(checkedItemList)
                 menuHandler.share(item.title?.toString(), text)
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .subscribe(onNext, onError)
-            }
-            R.id.action_search -> {
-                menuHandler.search(checkedItemList.first())
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .subscribe(onNext, onError)
             }

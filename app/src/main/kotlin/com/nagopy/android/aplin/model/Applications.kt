@@ -1,35 +1,52 @@
+/*
+ * Copyright 2015 75py
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.nagopy.android.aplin.model
 
-import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.UserHandle
-import com.nagopy.android.aplin.entity.AppEntity
-import com.nagopy.android.aplin.entity.names.AppEntityNames
+import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.entity.names.AppNames.packageName
 import com.nagopy.android.aplin.model.converter.AppConverter
-import com.nagopy.android.aplin.model.preference.SortSetting
 import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
 import io.realm.RealmResults
+import rx.Observable
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 open class Applications
 @Inject constructor(
-        var application: Application
-        , val packageManager: PackageManager
+        val packageManager: PackageManager
         , val appConverter: AppConverter
-        , val sortSetting: SortSetting
+        , val userSettings: UserSettings
 ) {
 
     val handler: Handler = Handler(Looper.getMainLooper())
-    val enabledSettingField: FieldReflection<Int> = FieldReflection(ApplicationInfo::class.java, "enabledSetting")
+    val enabledSettingField = ApplicationInfo::class.java.getDeclaredField("enabledSetting")
+
+    init {
+        enabledSettingField.isAccessible = true
+    }
 
     open fun initialize(func: () -> Unit) {
         Thread({
@@ -43,16 +60,16 @@ open class Applications
     }
 
     open fun isLoaded(): Boolean {
-        Realm.getInstance(application).use {
-            return it.where(AppEntity::class.java).count() > 0
+        Realm.getDefaultInstance().use {
+            return it.where(App::class.java).count() > 0
         }
     }
 
     open fun refresh() {
-        val realm = Realm.getInstance(application)
+        val realm = Realm.getDefaultInstance()
         realm.use {
             realm.executeTransaction {
-                realm.where(AppEntity::class.java).findAll().clear()
+                realm.where(App::class.java).findAll().clear()
                 val allApps = getInstalledApplications()
                 allApps.forEach {
                     if (shouldSkip(it)) {
@@ -60,18 +77,18 @@ open class Applications
                         return@forEach
                     }
 
-                    val entity = realm.createObject(AppEntity::class.java)
-                    appConverter.setValues(entity, it)
+                    val entity = realm.createObject(App::class.java)
+                    appConverter.setValues(realm, entity, it)
                 }
             }
         }
     }
 
-    open fun getApplicationList(category: Category): RealmResults<AppEntity> {
-        Realm.getInstance(application).use {
+    open fun getApplicationList(category: Category): RealmResults<App> {
+        Realm.getDefaultInstance().use {
             Timber.d("getApplicationList " + category)
-            val query = it.where(AppEntity::class.java)
-            val result = sortSetting.value.findAllSortedAsync(category.where(query))
+            val query = it.where(App::class.java)
+            val result = userSettings.sort.findAllSortedAsync(category.where(query))
             return result
         }
     }
@@ -124,56 +141,46 @@ open class Applications
         return false
     }
 
-    open fun insert(pkg: String) {
+    open fun insert(pkg: String): Observable<Void> {
         Timber.d("insert $pkg")
-        upsert(pkg)
-        listeners.forEach { it.onPackageChanged() }
+        return upsert(pkg)
     }
 
-    open fun update(pkg: String) {
+    open fun update(pkg: String): Observable<Void> {
         Timber.d("update $pkg")
-        upsert(pkg)
-        listeners.forEach { it.onPackageChanged() }
+        return upsert(pkg)
     }
 
-    private fun upsert(pkg: String) {
-        val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
-        if (!shouldSkip(applicationInfo)) {
-            val realm = Realm.getInstance(application)
-            realm.use {
-                realm.executeTransaction {
-                    var entity = realm.where(AppEntity::class.java).equalTo(AppEntityNames.packageName(), pkg).findFirst()
-                    if(entity == null) {
-                        entity = realm.createObject(AppEntity::class.java)
+    private fun upsert(pkg: String): Observable<Void> {
+        return Observable.create {
+            val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
+            if (!shouldSkip(applicationInfo)) {
+                val realm = Realm.getDefaultInstance()
+                realm.use {
+                    realm.executeTransaction {
+                        var entity = realm.where(App::class.java).equalTo(packageName(), pkg).findFirst()
+                        if (entity == null) {
+                            entity = realm.createObject(App::class.java)
+                        }
+                        appConverter.setValues(realm, entity, applicationInfo)
                     }
-                    appConverter.setValues(entity, applicationInfo)
                 }
             }
+            it.onCompleted()
         }
     }
 
-    open fun delete(pkg: String) {
+    open fun delete(pkg: String): Observable<Void> {
         Timber.d("delete $pkg")
-        val realm = Realm.getInstance(application)
-        realm.use {
-            realm.executeTransaction {
-                val entity = realm.where(AppEntity::class.java).equalTo(AppEntityNames.packageName(), pkg).findAll()
-                entity.clear()
+        return Observable.create {
+            val realm = Realm.getDefaultInstance()
+            realm.use {
+                realm.executeTransaction {
+                    val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
+                    entity.clear()
+                }
             }
+            it.onCompleted()
         }
-        listeners.forEach { it.onPackageChanged() }
-    }
-
-    var listeners: List<PackageChangedListener> = ArrayList()
-    open fun addPackageChangedListener(listener: PackageChangedListener) {
-        listeners = listeners.plus(listener)
-    }
-
-    open fun removePackageChangedListener(listener: PackageChangedListener) {
-        listeners = listeners.minus(listener)
-    }
-
-    interface PackageChangedListener {
-        fun onPackageChanged()
     }
 }

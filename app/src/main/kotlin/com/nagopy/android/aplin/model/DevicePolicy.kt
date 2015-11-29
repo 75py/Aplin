@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2015 75py
+ * Copyright 2015 75py
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,17 +27,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-public class DevicePolicy
+open class DevicePolicy
 @Inject
 constructor(application: Application) {
 
     val devicePolicyManager: DevicePolicyManagerWrapper = DevicePolicyManagerWrapper(application)
 
-    public fun isThisASystemPackage(packageInfo: PackageInfo): Boolean {
+    open fun isThisASystemPackage(packageInfo: PackageInfo): Boolean {
         return devicePolicyManager.isThisASystemPackage(packageInfo)
     }
 
-    public fun packageHasActiveAdmins(packageName: String): Boolean {
+    open fun packageHasActiveAdmins(packageName: String): Boolean {
         return devicePolicyManager.packageHasActiveAdmins(packageName)
     }
 
