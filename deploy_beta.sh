@@ -1,10 +1,11 @@
 #!/bin/bash
 
-echo ${DEPLOY_BETA}
+echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
 
-if [ ${DEPLOY_BETA} = 1 ]; then
+if [ ${TRAVIS_BRANCH} = "master" -a ${TRAVIS_PULL_REQUEST} = "false" ]; then
   echo "Deploy Beta"
   ./gradlew crashlyticsUploadDistributionProductionDebug -PdisablePreDex --stacktrace --info
 else
-  echo "DEPLOY_BETA is not 1"
+  echo "Skip deployment"
 fi
