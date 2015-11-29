@@ -19,9 +19,7 @@ package com.nagopy.android.aplin.model.converter
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.support.test.InstrumentationRegistry
-import com.nagopy.android.aplin.Aplin
-import com.nagopy.android.aplin.BuildConfig
-import com.nagopy.android.aplin.R
+import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.App
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -32,7 +30,7 @@ import javax.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class AppParametersTest {
+class AppConverterTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
 
@@ -47,11 +45,11 @@ class AppParametersTest {
 
     @Before
     fun setup() {
-        Aplin.component = DaggerAppParametersMockComponent.builder()
-                .appParametersMockModule(AppParametersMockModule(application))
+        Aplin.component = DaggerApplicationMockComponent.builder()
+                .applicationMockModule(ApplicationMockModule(application))
                 .build()
 
-        (Aplin.getApplicationComponent() as AppParametersMockComponent).inject(this)
+        (Aplin.getApplicationComponent() as ApplicationMockComponent).inject(this)
         realm = Realm.getInstance(RealmConfiguration.Builder(application)
                 .name(javaClass.name)
                 .inMemory()

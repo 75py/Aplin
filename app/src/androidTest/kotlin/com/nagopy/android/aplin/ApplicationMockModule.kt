@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.nagopy.android.aplin.model.converter
+package com.nagopy.android.aplin
 
 import android.app.Application
-import com.nagopy.android.aplin.ApplicationModule
 import dagger.Module
 
 @Module
-open class AppParametersMockModule(val a: Application) : ApplicationModule(a) {
+open class ApplicationMockModule(val a: Application) : ApplicationModule(a) {
 
 }

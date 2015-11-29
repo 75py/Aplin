@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.nagopy.android.aplin.model.converter
+package com.nagopy.android.aplin
 
-import com.nagopy.android.aplin.ApplicationComponent
+import com.nagopy.android.aplin.model.converter.AppConverterTest
 import dagger.Component
 import javax.inject.Singleton
 
 
 @Singleton
-@Component(modules = arrayOf(AppParametersMockModule::class))
-interface AppParametersMockComponent : ApplicationComponent {
-    fun inject(appParametersTest: AppParametersTest)
+@Component(modules = arrayOf(ApplicationMockModule::class))
+interface ApplicationMockComponent : ApplicationComponent {
+    fun inject(appParametersTest: AppConverterTest)
 }
