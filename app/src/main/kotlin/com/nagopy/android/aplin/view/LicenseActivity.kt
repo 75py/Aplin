@@ -32,6 +32,7 @@ class LicenseActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_license)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
