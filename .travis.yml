@@ -37,7 +37,7 @@ jdk:
 
 branches:
   only:
-    - develop
+    - master
 
 before_script:
     - chmod +x gradlew
