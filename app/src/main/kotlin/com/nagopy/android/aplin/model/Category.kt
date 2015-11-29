@@ -111,6 +111,16 @@ public enum class Category(
         }
     }
     ,
+    SYSTEM_ALERT_WINDOW_PERMISSION(titleResourceId = R.string.category_system_alert_window_permission
+            , summaryResourceId = R.string.category_system_alert_window_permission_summary
+            , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
+        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
+            return realmQuery
+                    .equalTo(isThisASystemPackage(), false)
+                    .contains(permissions().name(), android.Manifest.permission.SYSTEM_ALERT_WINDOW)
+        }
+    }
+    ,
     ;
 
     open fun where(realmQuery: RealmQuery<App>): RealmQuery<App> = realmQuery
