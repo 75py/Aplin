@@ -30,97 +30,89 @@ import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
     packageName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.packageName = appInfo.applicationInfo.packageName
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.packageName = params.applicationInfo.packageName
         }
     },
     label(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.label = appInfo.applicationInfo.loadLabel(envInfo.appConverter.packageManager).toString()
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.label = params.applicationInfo.loadLabel(params.appConverter.packageManager).toString()
         }
     },
     isEnabled(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.isEnabled = appInfo.applicationInfo.enabled
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isEnabled = params.applicationInfo.enabled
         }
     },
     isSystem(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+        override fun setValue(app: App, params: AppConverter.Params) {
             app.isSystem =
-                    (appInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                            || (appInfo.applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+                    (params.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                            || (params.applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
         }
     },
     isThisASystemPackage(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.isThisASystemPackage = envInfo.appConverter.devicePolicy.isThisASystemPackage(appInfo.packageInfo)
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isThisASystemPackage = params.appConverter.devicePolicy.isThisASystemPackage(params.packageInfo)
         }
     },
     firstInstallTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.firstInstallTime = appInfo.packageInfo.firstInstallTime
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.firstInstallTime = params.packageInfo.firstInstallTime
         }
     },
     lastUpdateTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.lastUpdateTime = appInfo.packageInfo.lastUpdateTime
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.lastUpdateTime = params.packageInfo.lastUpdateTime
         }
     },
     hasActiveAdmins(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.hasActiveAdmins = envInfo.appConverter.devicePolicy.packageHasActiveAdmins(appInfo.applicationInfo.packageName)
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.hasActiveAdmins = params.appConverter.devicePolicy.packageHasActiveAdmins(params.applicationInfo.packageName)
         }
     },
     isInstalled(IntRange(Build.VERSION_CODES.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.isInstalled = (appInfo.applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isInstalled = (params.applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
         }
     },
     isDefaultApp(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+        override fun setValue(app: App, params: AppConverter.Params) {
             val outFilters = ArrayList<IntentFilter>()
             val outActivities = ArrayList<ComponentName>()
-            envInfo.appConverter.packageManager.getPreferredActivities(outFilters, outActivities, appInfo.applicationInfo.packageName)
+            params.appConverter.packageManager.getPreferredActivities(outFilters, outActivities, params.applicationInfo.packageName)
             app.isDefaultApp = !outActivities.isEmpty()
         }
     },
     icon(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            if (appInfo.applicationInfo.icon == 0) {
-                Timber.v(appInfo.applicationInfo.packageName + ", icon=0x0")
-                app.iconByteArray = envInfo.appConverter.iconHelper.defaultIconByteArray
+        override fun setValue(app: App, params: AppConverter.Params) {
+            if (params.applicationInfo.icon == 0) {
+                Timber.v(params.applicationInfo.packageName + ", icon=0x0")
+                app.iconByteArray = params.appConverter.iconHelper.defaultIconByteArray
             } else {
-                app.iconByteArray = envInfo.appConverter.iconHelper.toByteArray(appInfo.applicationInfo.loadIcon(
-                        envInfo.appConverter.packageManager))
-            }
-        }
-    },
-    lastTimeUsed(Build.VERSION_CODES.LOLLIPOP..Int.MAX_VALUE) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            val times = envInfo.appConverter.appUsageStatsManager.getLaunchTimes().get(appInfo.applicationInfo.packageName)
-            if (times != null) {
-                app.launchTimes = times
+                app.iconByteArray = params.appConverter.iconHelper.toByteArray(params.applicationInfo.loadIcon(
+                        params.appConverter.packageManager))
             }
         }
     },
     versionName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
-            app.versionName = appInfo.packageInfo.versionName
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.versionName = params.packageInfo.versionName
         }
     },
     permissions(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, appInfo: AppConverter.AppInfo, envInfo: AppConverter.EnvInfo) {
+        override fun setValue(app: App, params: AppConverter.Params) {
             app.permissions = RealmList()
-            appInfo.packageInfo.requestedPermissions?.forEach {
-                val permission = envInfo.realm.createObject(AppPermission::class.java)
+            params.packageInfo.requestedPermissions?.forEach {
+                val permission = params.realm.createObject(AppPermission::class.java)
                 permission.name = it
                 try {
-                    val pi = envInfo.appConverter.packageManager.getPermissionInfo(it, 0)
-                    permission.label = pi.loadLabel(envInfo.appConverter.packageManager).toString()
+                    val pi = params.appConverter.packageManager.getPermissionInfo(it, 0)
+                    permission.label = pi.loadLabel(params.appConverter.packageManager).toString()
                     permission.group = pi.group
-                    envInfo.allPermissionGroups.forEach {
+                    params.allPermissionGroups.forEach {
                         if (it.name.equals(pi.group)) {
-                            permission.groupLabel = it.loadLabel(envInfo.appConverter.packageManager).toString()
+                            permission.groupLabel = it.loadLabel(params.appConverter.packageManager).toString()
                         }
                     }
                 } catch(e: PackageManager.NameNotFoundException) {

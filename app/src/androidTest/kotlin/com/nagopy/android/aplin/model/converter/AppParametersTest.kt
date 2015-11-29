@@ -16,135 +16,127 @@
 
 package com.nagopy.android.aplin.model.converter
 
+import android.app.Application
 import android.content.pm.ApplicationInfo
+import android.support.test.InstrumentationRegistry
+import com.nagopy.android.aplin.Aplin
+import com.nagopy.android.aplin.BuildConfig
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.App
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Answers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import javax.inject.Inject
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.assertNotNull
 
 class AppParametersTest {
 
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    lateinit var appInfo: AppConverter.AppInfo
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    lateinit var envInfo: AppConverter.EnvInfo
+    val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
+
+    @Inject
+    lateinit var appConverter: AppConverter
+
+    lateinit var aplinApplicationInfo: ApplicationInfo
+
+    lateinit var realm: Realm
+
+    lateinit var aplinApp: App
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        Aplin.component = DaggerAppParametersMockComponent.builder()
+                .appParametersMockModule(AppParametersMockModule(application))
+                .build()
+
+        (Aplin.getApplicationComponent() as AppParametersMockComponent).inject(this)
+        realm = Realm.getInstance(RealmConfiguration.Builder(application)
+                .name(javaClass.name)
+                .inMemory()
+                .build())
+
+        val packageManager = application.packageManager
+        packageManager.getInstalledApplications(0).forEach {
+            if (it.packageName == application.packageName) {
+                aplinApplicationInfo = it
+            }
+        }
+
+        aplinApp = App()
+        realm.executeTransaction {
+            appConverter.setValues(realm, aplinApp, aplinApplicationInfo)
+        }
+    }
+
+    @After
+    fun tearDown() {
+        realm.close()
     }
 
     @Test
     fun packageName() {
-        appInfo.applicationInfo.packageName = "com.nagopy.android.test"
-        val app = App()
-        AppParameters.packageName.setValue(app, appInfo, envInfo)
-        assertEquals("com.nagopy.android.test", app.packageName)
+        assertEquals(InstrumentationRegistry.getTargetContext().packageName, aplinApp.packageName)
     }
 
     @Test
     fun label() {
-        Mockito.`when`(appInfo.applicationInfo.loadLabel(Mockito.any())).thenReturn("Aplin!")
-        val app = App()
-        AppParameters.label.setValue(app, appInfo, envInfo)
-        assertEquals("Aplin!", app.label)
+        assertEquals(application.getString(R.string.app_name), aplinApp.label)
     }
 
     @Test
     fun isEnabled() {
-        appInfo.applicationInfo.enabled = true
-        val app = App()
-        AppParameters.isEnabled.setValue(app, appInfo, envInfo)
-        assertTrue(app.isEnabled)
+        assertEquals(true, aplinApp.isEnabled)
     }
 
     @Test
-    fun isSystem_FLAG_SYSTEM() {
-        appInfo.applicationInfo.flags = ApplicationInfo.FLAG_SYSTEM
-        val app = App()
-        AppParameters.isSystem.setValue(app, appInfo, envInfo)
-        assertTrue(app.isSystem)
-    }
-
-    @Test
-    fun isSystem_FLAG_UPDATED_SYSTEM_APP() {
-        appInfo.applicationInfo.flags = ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
-        val app = App()
-        AppParameters.isSystem.setValue(app, appInfo, envInfo)
-        assertTrue(app.isSystem)
-    }
-
-    @Test
-    fun isSystem_false() {
-        appInfo.applicationInfo.flags = 0
-        val app = App()
-        AppParameters.isSystem.setValue(app, appInfo, envInfo)
-        assertFalse(app.isSystem)
+    fun isSystem() {
+        assertEquals(false, aplinApp.isSystem)
     }
 
     @Test
     fun isThisASystemPackage() {
-        Mockito.`when`(envInfo.appConverter.devicePolicy.isThisASystemPackage(appInfo.packageInfo)).thenReturn(true)
-        val app = App()
-        AppParameters.isThisASystemPackage.setValue(app, appInfo, envInfo)
-        assertTrue(app.isThisASystemPackage)
+        assertEquals(false, aplinApp.isThisASystemPackage)
     }
 
     @Test
     fun firstInstallTime() {
-        appInfo.packageInfo.firstInstallTime = 999
-        val app = App()
-        AppParameters.firstInstallTime.setValue(app, appInfo, envInfo)
-        assertEquals(999, app.firstInstallTime)
+        assert(aplinApp.firstInstallTime > 0)
     }
 
     @Test
     fun lastUpdateTime() {
-        appInfo.packageInfo.lastUpdateTime = 999
-        val app = App()
-        AppParameters.lastUpdateTime.setValue(app, appInfo, envInfo)
-        assertEquals(999, app.lastUpdateTime)
+        assert(aplinApp.lastUpdateTime > 0)
     }
 
     @Test
     fun hasActiveAdmins() {
-        appInfo.applicationInfo.packageName = "com.nagopy.android.test"
-        Mockito.`when`(envInfo.appConverter.devicePolicy.packageHasActiveAdmins("com.nagopy.android.test")).thenReturn(true)
-        val app = App()
-        AppParameters.hasActiveAdmins.setValue(app, appInfo, envInfo)
-        assertTrue(app.hasActiveAdmins)
+        assertEquals(false, aplinApp.hasActiveAdmins)
     }
 
     @Test
-    fun isInstalled_true() {
-        appInfo.applicationInfo.flags = ApplicationInfo.FLAG_INSTALLED
-        val app = App()
-        AppParameters.isInstalled.setValue(app, appInfo, envInfo)
-        assertTrue(app.isInstalled)
-    }
-
-    @Test
-    fun isInstalled_false() {
-        appInfo.applicationInfo.flags = 0
-        val app = App()
-        AppParameters.isInstalled.setValue(app, appInfo, envInfo)
-        assertFalse(app.isInstalled)
+    fun isInstalled() {
+        assertEquals(true, aplinApp.isInstalled)
     }
 
     @Test
     fun isDefaultApp() {
-        val app = App()
-        AppParameters.isDefaultApp.setValue(app, appInfo, envInfo)
-        assertFalse(app.isDefaultApp)
-
-        // TODO trueのときのテスト
+        assertEquals(false, aplinApp.hasActiveAdmins)
     }
 
-    // TODO
+    @Test
+    fun icon() {
+        assertNotNull(aplinApp.iconByteArray)
+    }
+
+    @Test
+    fun versionName() {
+        assertEquals(BuildConfig.VERSION_NAME, aplinApp.versionName)
+    }
+
+    @Test
+    fun permissions() {
+        assertEquals(true, aplinApp.permissions.isNotEmpty())
+    }
 }

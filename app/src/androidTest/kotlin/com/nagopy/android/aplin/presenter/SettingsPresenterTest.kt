@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.support.test.runner.AndroidJUnit4
 import com.nagopy.android.aplin.model.Analytics
-import com.nagopy.android.aplin.model.UsageStatsHelper
 import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Before
 import org.junit.Test
@@ -30,8 +29,6 @@ class SettingsPresenterTest {
     @Mock
     lateinit var settingsView: SettingsView
     @Mock
-    lateinit var usageStatsHelper: UsageStatsHelper
-    @Mock
     lateinit var analytics: Analytics
 
     @Before
@@ -40,7 +37,6 @@ class SettingsPresenterTest {
         MockitoAnnotations.initMocks(this)
         target.application = application
         target.sharedPreferences = sharedPreferences
-        target.usageStatsHelper = usageStatsHelper
         target.analytics = analytics
     }
 

@@ -20,7 +20,6 @@ import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
 import com.nagopy.android.aplin.model.Analytics
-import com.nagopy.android.aplin.model.UsageStatsHelper
 import com.nagopy.android.aplin.view.MainActivity
 import com.nagopy.android.aplin.view.SettingsView
 import javax.inject.Inject
@@ -34,9 +33,6 @@ open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceCh
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
-
-    @Inject
-    lateinit var usageStatsHelper: UsageStatsHelper
 
     @Inject
     lateinit var analytics: Analytics
