@@ -50,6 +50,8 @@
     <string name="category_internet_permissions_summary" />
     <string name="category_runtime_permissions">Runtime permissions</string>
     <string name="category_runtime_permissions_summary" />
+    <string name="category_system_alert_window_permission">Draw over other apps</string>
+    <string name="category_system_alert_window_permission_summary" />
 
     <string name="sort">Sort</string>
     <string name="sort_default">Default</string>
