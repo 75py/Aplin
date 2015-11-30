@@ -84,9 +84,15 @@ constructor() : Presenter {
         view = null
     }
 
-    fun listItemClicked(activity: Activity, app: App) {
+    fun listItemClicked(activity: Activity, app: App, category: Category) {
         val packageName = app.packageName.split(":")[0];
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + packageName))
+        val intent = when (category) {
+            Category.SYSTEM_ALERT_WINDOW_PERMISSION ->
+                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            else ->
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+
+        }
         activity.startActivity(intent);
 
         analytics.click(app.packageName)

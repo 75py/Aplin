@@ -104,7 +104,7 @@ open class AppListPresenter : Presenter {
 
     fun onCreateViewHolder(holder: AppListAdapter.ViewHolder) {
         holder.parent.setOnClickListener { view ->
-            parentView?.onListItemClicked(realmResults[holder.adapterPosition])
+            parentView?.onListItemClicked(realmResults[holder.adapterPosition], category)
         }
         holder.parent.setOnLongClickListener { view ->
             parentView?.onListItemLongClicked(realmResults[holder.adapterPosition])
