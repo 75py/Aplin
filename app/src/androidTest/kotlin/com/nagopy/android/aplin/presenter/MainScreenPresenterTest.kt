@@ -18,16 +18,14 @@ package com.nagopy.android.aplin.presenter
 
 import android.app.Activity
 import android.app.Application
+import android.os.Build
 import android.provider.Settings
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.rule.ActivityTestRule
 import android.support.test.uiautomator.UiDevice
-import com.nagopy.android.aplin.Aplin
-import com.nagopy.android.aplin.ApplicationMockComponent
-import com.nagopy.android.aplin.ApplicationMockModule
-import com.nagopy.android.aplin.DaggerApplicationMockComponent
+import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.view.MainActivity
@@ -42,10 +40,13 @@ class MainScreenPresenterTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
 
+    @Rule
+    @JvmField
     val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
 
     @Rule
-    fun getActivityTestRule() = rule
+    @JvmField
+    val targetSdkVersionRule: TargetSdkVersionTestRule = TargetSdkVersionTestRule()
 
     @Inject
     lateinit var mainScreenPresenter: MainScreenPresenter
@@ -90,8 +91,8 @@ class MainScreenPresenterTest {
         pressBack()
     }
 
-
     @Test
+    @TargetSdkVersionTestRule.TargetSdkVersion(minSdkVersion = Build.VERSION_CODES.M)
     fun listItemClicked_OVERLAY() {
         val activity = rule.launchActivity(null)
 
