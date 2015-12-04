@@ -28,18 +28,15 @@ import io.realm.RealmQuery
 public enum class Category(
         val titleResourceId: Int
         , val summaryResourceId: Int
-        , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION
-        , val defaultValue: Boolean = false) {
+        , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION) {
 
     ALL(titleResourceId = R.string.category_all
-            , summaryResourceId = R.string.category_all_summary
-            , defaultValue = true)
+            , summaryResourceId = R.string.category_all_summary)
 
     ,
     SYSTEM(
             titleResourceId = R.string.category_system
-            , summaryResourceId = R.string.category_system_summary
-            , defaultValue = true) {
+            , summaryResourceId = R.string.category_system_summary) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), true)
         }
@@ -69,8 +66,7 @@ public enum class Category(
     }
     ,
     DISABLED(titleResourceId = R.string.category_disabled
-            , summaryResourceId = R.string.category_disabled_summary
-            , defaultValue = true) {
+            , summaryResourceId = R.string.category_disabled_summary) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isEnabled(), false)
         }
@@ -84,8 +80,7 @@ public enum class Category(
     }
     ,
     USER(titleResourceId = R.string.category_user
-            , summaryResourceId = R.string.category_user_summary
-            , defaultValue = true) {
+            , summaryResourceId = R.string.category_user_summary) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), false)
         }
@@ -125,5 +120,7 @@ public enum class Category(
 
     open fun where(realmQuery: RealmQuery<App>): RealmQuery<App> = realmQuery
 
-    val key: String = "${javaClass.name}_$name"
+    companion object {
+        fun getAll() = Category.values().filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+    }
 }

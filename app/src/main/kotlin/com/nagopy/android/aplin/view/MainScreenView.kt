@@ -35,10 +35,8 @@ public interface MainScreenView {
 
     /**
      * カテゴリ別アプリ一覧を表示する
-
-     * @param categories 表示カテゴリ一覧
      */
-    public open fun showAppList(categories: List<Category>)
+    public open fun showAppList()
 
     /**
      * カテゴリ別アプリ一覧を非表示にする
