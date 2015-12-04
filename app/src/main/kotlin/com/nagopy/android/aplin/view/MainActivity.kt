@@ -52,8 +52,6 @@ public class MainActivity : AppCompatActivity(),
         findViewById(R.id.toolbar) as Toolbar
     }
 
-    val tabLayout: TabLayout by lazy { findViewById(R.id.tab) as TabLayout }
-
     val spinner: Spinner by lazy { findViewById(R.id.spinner) as Spinner }
 
     val viewPager: ViewPager by lazy { findViewById(R.id.pager) as ViewPager }
@@ -105,26 +103,21 @@ public class MainActivity : AppCompatActivity(),
 
     override fun showIndicator() {
         progressBar.visibility = View.VISIBLE
-        tabLayout.visibility = View.GONE
     }
 
     override fun hideIndicator() {
         progressBar.visibility = View.GONE
-        tabLayout.visibility = View.VISIBLE
     }
 
     override fun showAppList(categories: List<Category>) {
         viewPager.visibility = View.VISIBLE
-        tabLayout.visibility = View.VISIBLE
 
         val adapter = MainScreenPagerAdapter(applicationContext, supportFragmentManager, categories)
         viewPager.adapter = adapter
-        tabLayout.setupWithViewPager(viewPager)
     }
 
     override fun hideAppList() {
         viewPager.visibility = View.INVISIBLE
-        tabLayout.visibility = View.INVISIBLE
     }
 
     // menu ===============================================================================================

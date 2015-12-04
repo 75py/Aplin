@@ -30,6 +30,7 @@
         android:layout_alignParentTop="true">
 
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -52,12 +53,6 @@
                     android:theme="@style/ThemeOverlay.AppCompat.Light" />
 
             </android.support.v7.widget.Toolbar>
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tab"
-                style="@style/CustomTabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
@@ -65,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/adView"
-            android:layout_below="@+id/tab"
+            android:layout_below="@+id/appBarLayout"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </android.support.design.widget.CoordinatorLayout>
 
