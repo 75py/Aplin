@@ -103,10 +103,8 @@ public enum class Category(
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), false)
-                    .or().not().beginGroup()
-                    .equalTo(isThisASystemPackage(), true)
-                    .or().equalTo(hasActiveAdmins(), true)
-                    .endGroup()
+                    .equalTo(isThisASystemPackage(), false)
+                    .equalTo(hasActiveAdmins(), false)
                     .isNotNull(permissions().groupLabel())
         }
     }
