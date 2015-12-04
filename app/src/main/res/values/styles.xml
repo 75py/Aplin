@@ -79,4 +79,12 @@
         <item name="android:theme">@style/SelectableItemTheme</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
+
+    <style name="ToolBarSpinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:overlapAnchor">true</item>
+        <item name="android:textSize">@dimen/toolbar_text_size</item>
+    </style>
+
 </resources>

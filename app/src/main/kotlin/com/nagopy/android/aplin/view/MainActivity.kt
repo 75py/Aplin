@@ -26,12 +26,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Spinner
 import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
+import com.nagopy.android.aplin.view.adapter.AppCategoryAdapter
 import com.nagopy.android.aplin.view.adapter.MainScreenPagerAdapter
 import javax.inject.Inject
 
@@ -48,6 +50,8 @@ public class MainActivity : AppCompatActivity(),
     }
 
     val tabLayout: TabLayout by lazy { findViewById(R.id.tab) as TabLayout }
+
+    val spinner: Spinner by lazy { findViewById(R.id.spinner) as Spinner }
 
     val viewPager: ViewPager by lazy { findViewById(R.id.pager) as ViewPager }
 
@@ -68,6 +72,7 @@ public class MainActivity : AppCompatActivity(),
 
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        spinner.adapter = AppCategoryAdapter(application)
 
         presenter.initialize(this)
         adPresenter.initialize(adView)
