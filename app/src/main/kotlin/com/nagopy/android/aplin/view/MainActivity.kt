@@ -17,7 +17,6 @@
 package com.nagopy.android.aplin.view
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -32,7 +31,6 @@ import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
 import com.nagopy.android.aplin.view.adapter.AppCategoryAdapter
@@ -109,10 +107,10 @@ public class MainActivity : AppCompatActivity(),
         progressBar.visibility = View.GONE
     }
 
-    override fun showAppList(categories: List<Category>) {
+    override fun showAppList() {
         viewPager.visibility = View.VISIBLE
 
-        val adapter = MainScreenPagerAdapter(applicationContext, supportFragmentManager, categories)
+        val adapter = MainScreenPagerAdapter(applicationContext, supportFragmentManager)
         viewPager.adapter = adapter
     }
 

@@ -66,7 +66,7 @@ constructor() : Presenter {
 
         applications.initialize {
             view.hideIndicator()
-            view.showAppList(userSettings.categories)
+            view.showAppList()
         }
 
         if (!analytics.isConfirmed()) {

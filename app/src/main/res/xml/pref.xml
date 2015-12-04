@@ -16,8 +16,6 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.nagopy.android.aplin.view.preference.CategoryPreference />
-
     <com.nagopy.android.aplin.view.preference.DisplayItemPreference />
 
     <com.nagopy.android.aplin.view.preference.SortPreference />
