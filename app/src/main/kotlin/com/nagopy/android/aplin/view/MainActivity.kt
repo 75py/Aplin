@@ -131,8 +131,8 @@ public class MainActivity : AppCompatActivity(),
     }
 
 
-    override fun onListItemClicked(app: App) {
-        presenter.listItemClicked(this, app)
+    override fun onListItemClicked(app: App, category: Category) {
+        presenter.listItemClicked(this, app, category)
     }
 
     override fun onListItemLongClicked(app: App) {
