@@ -22,6 +22,10 @@
 
     <dimen name="list_item_vertical_margin">@dimen/unit_4</dimen>
     <dimen name="toolbar_text_size">@dimen/abc_text_size_subtitle_material_toolbar</dimen>
+    <dimen name="toolbar_spinner_drawable_padding">@dimen/unit_2</dimen>
+    <dimen name="toolbar_spinner_margin">@dimen/unit_6</dimen>
+    <dimen name="toolbar_spinner_padding">@dimen/unit_4</dimen>
+    <dimen name="toolbar_spinner_dropdown_indent">@dimen/unit_4</dimen>
 
     <dimen name="licence_margin">@dimen/unit_4</dimen>
 

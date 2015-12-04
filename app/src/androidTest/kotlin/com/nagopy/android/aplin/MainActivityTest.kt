@@ -53,10 +53,8 @@ class MainActivityTest {
         assertNotNull(activity.adPresenter)
         assertNotNull(activity.adView)
         assertNotNull(activity.toolbar)
-        assertNotNull(activity.tabLayout)
         assertNotNull(activity.viewPager)
         assertNotNull(activity.progressBar)
-        assertNotNull(activity.tabLayout)
     }
 
     @Test
@@ -68,7 +66,6 @@ class MainActivityTest {
         uiDevice.wait(Until.hasObject(By.clazz(TableLayout::class.java)), 10000)
 
         assertEquals(View.GONE, activity.progressBar.visibility)
-        assertEquals(View.VISIBLE, activity.tabLayout.visibility)
     }
 
 }
