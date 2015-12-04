@@ -43,9 +43,9 @@ enum class Sort(
             summaryResourceId = R.string.sort_default_summary,
             defaultValue = true) {
         override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
-            return realmQuery.findAllSortedAsync(isInstalled() to true,
-                    label() to true,
-                    packageName() to true)
+            return realmQuery.findAllSortedAsync(isInstalled() to io.realm.Sort.ASCENDING,
+                    label() to io.realm.Sort.ASCENDING,
+                    packageName() to io.realm.Sort.ASCENDING)
         }
     },
     /**
@@ -54,8 +54,8 @@ enum class Sort(
     PACKAGE_NAME(titleResourceId = R.string.sort_package_name
             , summaryResourceId = R.string.sort_package_name_summary) {
         override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
-            return realmQuery.findAllSortedAsync(isInstalled() to true,
-                    packageName() to true)
+            return realmQuery.findAllSortedAsync(isInstalled() to io.realm.Sort.ASCENDING,
+                    packageName() to io.realm.Sort.ASCENDING)
         }
     },
     /**
@@ -64,10 +64,10 @@ enum class Sort(
     UPDATE_DATE_DESC(titleResourceId = R.string.sort_update_time_desc
             , summaryResourceId = R.string.sort_update_time_desc_summary) {
         override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
-            return realmQuery.findAllSortedAsync(lastUpdateTime() to false,
-                    isInstalled() to true,
-                    label() to true,
-                    packageName() to true)
+            return realmQuery.findAllSortedAsync(lastUpdateTime() to io.realm.Sort.DESCENDING,
+                    isInstalled() to io.realm.Sort.ASCENDING,
+                    label() to io.realm.Sort.ASCENDING,
+                    packageName() to io.realm.Sort.ASCENDING)
         }
     };
 

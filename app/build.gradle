@@ -145,10 +145,10 @@ dependencies {
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 }
 buildscript {
-    ext.kotlin_version = '1.0.0-beta-2422'
+    ext.kotlin_version = '1.0.0-beta-2423'
     ext.dagger_version = '2.0.1'
-    ext.realm_version = '0.84.2'
-    ext.kotliname_version = '2.1.1'
+    ext.realm_version = '0.86.0'
+    ext.kotliname_version = '3.0.0'
     ext.target_sdk_version = 23
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
