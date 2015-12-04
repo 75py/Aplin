@@ -31,6 +31,7 @@ import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
 import com.nagopy.android.aplin.view.adapter.AppCategoryAdapter
