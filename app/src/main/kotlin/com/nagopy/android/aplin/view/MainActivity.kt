@@ -25,10 +25,12 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ProgressBar
 import android.widget.Spinner
 import com.google.android.gms.ads.AdView
-import com.nagopy.android.aplin.*
+import com.nagopy.android.aplin.Aplin
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AdPresenter
@@ -43,7 +45,8 @@ import javax.inject.Inject
 public class MainActivity : AppCompatActivity(),
         MainScreenView
         , AppListViewParent // 子Viewから処理を移譲してもらうためのインターフェース
-{
+        , AdapterView.OnItemSelectedListener
+        , ViewPager.OnPageChangeListener {
 
     val toolbar: Toolbar by lazy {
         findViewById(R.id.toolbar) as Toolbar
@@ -73,6 +76,8 @@ public class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         spinner.adapter = AppCategoryAdapter(application)
+        spinner.onItemSelectedListener = this
+        viewPager.addOnPageChangeListener(this)
 
         presenter.initialize(this)
         adPresenter.initialize(adView)
@@ -94,6 +99,8 @@ public class MainActivity : AppCompatActivity(),
         super.onDestroy()
         presenter.destroy()
         adPresenter.destroy()
+        spinner.onItemSelectedListener = null
+        viewPager.removeOnPageChangeListener(this)
     }
 
     override fun showIndicator() {
@@ -151,4 +158,27 @@ public class MainActivity : AppCompatActivity(),
                 .setNegativeButton(R.string.ga_confirm_dialog_disagree, { dialog, i -> presenter.analytics.disagree() })
                 .show();
     }
+
+    // Spinner
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        if (viewPager.adapter != null && viewPager.currentItem != position) {
+            viewPager.setCurrentItem(position, false)
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+    }
+
+    // ViewPager
+    override fun onPageScrollStateChanged(state: Int) {
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+    }
+
+    override fun onPageSelected(position: Int) {
+        spinner.setSelection(position)
+    }
+
+
 }
