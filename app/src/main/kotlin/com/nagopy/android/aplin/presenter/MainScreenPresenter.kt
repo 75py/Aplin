@@ -81,6 +81,14 @@ constructor() : Presenter {
     }
 
     override fun resume() {
+        applications.updateDefaultAppStatus()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe({
+                    // do nothing
+                }, { t ->
+                    Timber.e(t, "Default status update error")
+                    // ignore
+                })
     }
 
     override fun pause() {
