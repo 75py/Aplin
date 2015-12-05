@@ -48,15 +48,11 @@ open class Applications
         enabledSettingField.isAccessible = true
     }
 
-    open fun initialize(func: () -> Unit) {
-        Thread({
+    open fun initialize(): Observable<Void> = Observable.create {
             if (!isLoaded()) {
                 refresh()
             }
-            handler.post {
-                func()
-            }
-        }).start()
+        it.onCompleted()
     }
 
     open fun isLoaded(): Boolean {

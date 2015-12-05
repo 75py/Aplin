@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.support.test.InstrumentationRegistry
+import android.support.test.filters.FlakyTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.By
@@ -57,6 +58,7 @@ class MainActivityTest {
         assertNotNull(activity.progressBar)
     }
 
+    @FlakyTest
     @Test
     fun all() {
         analytics.agree()

@@ -19,7 +19,7 @@ package com.nagopy.android.aplin.view
 /**
  * アプリ一覧のビューを表すインターフェース
  */
-public interface AppListView {
+interface AppListView {
 
     fun notifyDataSetChanged()
 

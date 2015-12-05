@@ -59,7 +59,7 @@ open class AppConverter {
                         or PackageManager.GET_SIGNATURES
         )
         val params = Params(applicationInfo, packageInfo, realm, allPermissionGroups, this)
-        AppParameters.values
+        AppParameters.values()
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                 .forEach { param ->
                     param.setValue(app, params)

@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
     class displayItemProperty : ReadOnlyProperty<UserSettings, List<DisplayItem>> {
         override fun getValue(thisRef: UserSettings, property: KProperty<*>): List<DisplayItem> {
             val v = ArrayList<DisplayItem>()
-            DisplayItem.values.forEach {
+            DisplayItem.values().forEach {
                 val checked = thisRef.sharedPreferences.getBoolean(it.key, it.defaultValue)
                 if (checked) {
                     v.add(it)

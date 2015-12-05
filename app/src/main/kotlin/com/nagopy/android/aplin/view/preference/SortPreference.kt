@@ -49,16 +49,18 @@ class SortPreference : PreferenceCategory, Preference.OnPreferenceChangeListener
 
         setTitle(R.string.sort)
         key = Sort::class.java.name
-        Sort.values.forEach {
-            val preference = CheckBoxPreference(context)
-            preference.widgetLayoutResource = R.layout.preference_widget_checkbox_single
-            preference.setTitle(it.titleResourceId)
-            preference.setSummary(it.summaryResourceId)
-            preference.key = it.key
-            preference.setDefaultValue(it.defaultValue)
-            addPreference(preference)
-            preference.onPreferenceChangeListener = this
-        }
+        Sort.values()
+                .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+                .forEach {
+                    val preference = CheckBoxPreference(context)
+                    preference.widgetLayoutResource = R.layout.preference_widget_checkbox_single
+                    preference.setTitle(it.titleResourceId)
+                    preference.setSummary(it.summaryResourceId)
+                    preference.key = it.key
+                    preference.setDefaultValue(it.defaultValue)
+                    addPreference(preference)
+                    preference.onPreferenceChangeListener = this
+                }
     }
 
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
@@ -66,7 +68,7 @@ class SortPreference : PreferenceCategory, Preference.OnPreferenceChangeListener
             return false
         }
 
-        Sort.values
+        Sort.values()
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                 .forEach {
                     val p = findPreference(it.key) as CheckBoxPreference

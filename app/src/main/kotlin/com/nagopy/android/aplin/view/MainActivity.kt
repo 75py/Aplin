@@ -41,7 +41,7 @@ import javax.inject.Inject
 /**
  * メインになる画面用のActivity
  */
-public class MainActivity : AppCompatActivity(),
+class MainActivity : AppCompatActivity(),
         MainScreenView
         , AppListViewParent // 子Viewから処理を移譲してもらうためのインターフェース
         , AdapterView.OnItemSelectedListener
