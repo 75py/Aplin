@@ -66,6 +66,20 @@ open class AppConverter {
                 }
     }
 
+    open fun setValue(realm: Realm, app: App, applicationInfo: ApplicationInfo, appParameters: AppParameters) {
+        val allPermissionGroups = packageManager.getAllPermissionGroups(0)
+        val packageInfo = packageManager.getPackageInfo(
+                applicationInfo.packageName,
+                PackageManager.GET_PERMISSIONS
+                        or PackageManager.GET_META_DATA
+                        or PackageManager.GET_DISABLED_COMPONENTS
+                        or PackageManager.GET_UNINSTALLED_PACKAGES
+                        or PackageManager.GET_SIGNATURES
+        )
+        val params = Params(applicationInfo, packageInfo, realm, allPermissionGroups, this)
+        appParameters.setValue(app, params)
+    }
+
     interface Converter {
         fun targetSdkVersion(): IntRange
         fun setValue(app: App, params: Params)

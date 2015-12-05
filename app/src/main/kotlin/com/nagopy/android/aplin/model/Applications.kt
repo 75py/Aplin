@@ -19,12 +19,12 @@ package com.nagopy.android.aplin.model
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.os.UserHandle
 import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.entity.names.AppNames
 import com.nagopy.android.aplin.entity.names.AppNames.packageName
 import com.nagopy.android.aplin.model.converter.AppConverter
+import com.nagopy.android.aplin.model.converter.AppParameters
 import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
 import io.realm.RealmResults
@@ -41,7 +41,6 @@ open class Applications
         , val userSettings: UserSettings
 ) {
 
-    val handler: Handler = Handler(Looper.getMainLooper())
     val enabledSettingField = ApplicationInfo::class.java.getDeclaredField("enabledSetting")
 
     init {
@@ -49,9 +48,9 @@ open class Applications
     }
 
     open fun initialize(): Observable<Void> = Observable.create {
-            if (!isLoaded()) {
-                refresh()
-            }
+        if (!isLoaded()) {
+            refresh()
+        }
         it.onCompleted()
     }
 
@@ -174,6 +173,26 @@ open class Applications
                 realm.executeTransaction {
                     val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
                     entity.clear()
+                }
+            }
+            it.onCompleted()
+        }
+    }
+
+    open fun updateDefaultAppStatus(): Observable<Void> {
+        return Observable.create {
+            val all = getInstalledApplications()
+            val realm = Realm.getDefaultInstance()
+            realm.use {
+                realm.executeTransaction {
+                    all.forEach { applicationInfo ->
+                        val apps = realm.where(App::class.java).equalTo(AppNames.packageName(), applicationInfo.packageName).findAll()
+                        if (apps.isEmpty()) {
+                        } else {
+                            val app = apps[0]
+                            appConverter.setValue(realm, app, applicationInfo, AppParameters.isDefaultApp)
+                        }
+                    }
                 }
             }
             it.onCompleted()
