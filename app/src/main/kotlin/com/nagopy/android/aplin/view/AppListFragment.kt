@@ -36,7 +36,7 @@ import javax.inject.Inject
 /**
  * カテゴリ毎のアプリ一覧を表示するフラグメント
  */
-public class AppListFragment : Fragment(), AppListView {
+class AppListFragment : Fragment(), AppListView {
 
     // ButterKnifeのresetにあたるものがないので諦める
     //    val recyclerView: RecyclerView by bindView(R.id.list)

@@ -24,7 +24,7 @@ import com.nagopy.android.aplin.model.Category
  * AppListViewの親Viewのインターフェース<br>
  * 主にメニュー操作などの処理を移譲するために使用。
  */
-public interface AppListViewParent {
+interface AppListViewParent {
     fun onListItemClicked(app: App, category: Category)
 
     fun onListItemLongClicked(app: App)

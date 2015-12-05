@@ -47,7 +47,7 @@ class DisplayItemPreference : PreferenceCategory {
         super.onAttachedToHierarchy(preferenceManager)
 
         setTitle(R.string.display_item)
-        DisplayItem.values
+        DisplayItem.values()
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                 .forEach {
                     val preference = CheckBoxPreference(context)

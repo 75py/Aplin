@@ -26,7 +26,7 @@ import com.nagopy.android.aplin.presenter.SettingsPresenter
 import javax.inject.Inject
 
 
-public class SettingsActivity : AppCompatActivity(), SettingsView {
+class SettingsActivity : AppCompatActivity(), SettingsView {
 
     @Inject
     lateinit var settingsPresenter: SettingsPresenter
