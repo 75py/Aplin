@@ -29,6 +29,7 @@ import com.nagopy.android.aplin.model.*
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
 import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -64,10 +65,15 @@ constructor() : Presenter {
         view.hideAppList()
         view.showIndicator()
 
-        applications.initialize {
-            view.hideIndicator()
-            view.showAppList()
-        }
+        applications.initialize()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe ({}, {
+                    Timber.e(it, "Error occurred")
+                }, {
+                    view.hideIndicator()
+                    view.showAppList()
+                })
 
         if (!analytics.isConfirmed()) {
             view.showAnalyticsConfirm()
