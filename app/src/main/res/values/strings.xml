@@ -23,11 +23,8 @@
     <string name="action_share_label">App name</string>
     <string name="action_share_package_name">Package name</string>
     <string name="action_share_label_and_package_name">App name &amp; Package name</string>
-    <string name="action_share_csv">CSV</string>
-    <string name="action_search">Search</string>
-    <string name="action_reload">Reload</string>
     <string name="action_preference">Preference</string>
-    <string name="action_open_source_license">Open source license</string>
+    <string name="action_open_source_license" translatable="false">@string/open_source_license</string>
 
     <string name="category">Categories</string>
     <string name="category_all">All</string>
@@ -44,8 +41,6 @@
     <string name="category_user_summary" />
     <string name="category_default">Default</string>
     <string name="category_default_summary">Applications that are default for some action. Ex: launcher app</string>
-    <string name="category_recently_used">Recently used</string>
-    <string name="category_recently_used_summary">Please allow usage access</string>
     <string name="category_internet_permissions">Internet permissions</string>
     <string name="category_internet_permissions_summary" />
     <string name="category_runtime_permissions">Runtime permissions</string>
@@ -71,9 +66,6 @@
     <string name="display_item_last_update_time">Last update time</string>
     <string name="display_item_last_update_time_summary" />
     <string name="display_item_last_update_time_format">Last update : %1$s</string>
-    <string name="display_item_recently_used_count">Recently used count</string>
-    <string name="display_item_recently_used_count_summary">Please allow usage access</string>
-    <string name="display_item_recently_used_count_format">Recently used : %1$s</string>
     <string name="display_item_version_name">Version name</string>
     <string name="display_item_version_name_summary" />
     <string name="display_item_version_name_format">Version: %1$s</string>
@@ -86,13 +78,13 @@
 
 
     <!-- GA -->
-    <string name="ga_trackingId">UA-9578951-16</string>
-    <string name="ga_confirm_dialog_title">Google Analytics</string>
+    <string name="ga_trackingId" translatable="false">UA-9578951-16</string>
+    <string name="ga_confirm_dialog_title" translatable="false">Google Analytics</string>
     <string name="ga_confirm_dialog_message">AplinはGoogle Analyticsにより匿名の情報収集を行います。\n収集した情報は、今後のアプリ開発に使用させていただきます。\nこの設定はいつでも変更できます。</string>
     <string name="ga_confirm_dialog_agree">Agree</string>
     <string name="ga_confirm_dialog_disagree">Disagree</string>
     <string name="ga_preference_category">Analytics</string>
-    <string name="ga_preference_key">ga_confirm</string>
+    <string name="ga_preference_key" translatable="false">ga_confirm</string>
     <string name="ga_preference_title">Allow analytics</string>
     <string name="ga_preference_summary">匿名の情報収集を行います。収集した情報は、今後のアプリ開発に使用させていただきます。</string>
 
@@ -100,6 +92,6 @@
     <string name="about">About</string>
     <string name="version_title">Version</string>
     <string name="source_code_title">Source code</string>
-    <string name="source_code_url">https://github.com/75py/Aplin</string>
+    <string name="source_code_url" translatable="false">https://github.com/75py/Aplin</string>
     <string name="open_source_license">Open source license</string>
 </resources>
