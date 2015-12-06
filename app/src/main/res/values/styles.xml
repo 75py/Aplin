@@ -39,6 +39,9 @@
         <item name="android:scrollbarTrackVertical">@drawable/fast_scroll_track_drawable</item>
         <item name="android:scrollbarThumbHorizontal">@drawable/fast_scroll_thumb</item>
         <item name="android:scrollbarTrackHorizontal">@drawable/fast_scroll_track_drawable</item>
+
+        <item name="android:dropDownListViewStyle">@style/ToolBarSpinner</item>
+        <item name="dropDownListViewStyle">@style/ToolBarSpinner</item>
     </style>
 
     <style name="OverflowMenuButton" parent="Widget.AppCompat.ActionButton.Overflow">
@@ -81,10 +84,12 @@
     </style>
 
     <style name="ToolBarSpinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
-        <item name="android:background">?android:selectableItemBackground</item>
-        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:listSelector">@color/colorBackground</item>
+        <item name="android:background">@null</item>
         <item name="android:overlapAnchor">true</item>
         <item name="android:textSize">@dimen/toolbar_text_size</item>
+        <item name="android:divider">@color/divider</item>
+        <item name="android:dividerHeight">@dimen/divider</item>
     </style>
 
 </resources>
