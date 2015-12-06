@@ -31,4 +31,11 @@
         android:textAppearance="@style/TextAppearance.AppTheme.Medium"
         tools:text="Title" />
 
+    <TextView
+        android:id="@android:id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppTheme.Small"
+        tools:text="Summary" />
+
 </LinearLayout>

@@ -17,10 +17,12 @@
 package com.nagopy.android.aplin.view.adapter
 
 import android.app.Application
-import android.os.Build
+import android.content.Context
+import android.graphics.Point
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.nagopy.android.aplin.R
@@ -28,9 +30,19 @@ import com.nagopy.android.aplin.model.Category
 
 class AppCategoryAdapter(val application: Application) : BaseAdapter() {
 
-    internal val categories = Category.values().filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+    internal val categories = Category.getAll()
 
     val inflater = LayoutInflater.from(application)
+
+    val screenWidth: Int
+
+    init {
+        val wm = application.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val point = Point()
+        display.getSize(point)
+        screenWidth = point.x
+    }
 
     override fun getCount(): Int {
         return categories.size
@@ -52,8 +64,21 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
         } else {
             view = convertView
         }
+
+        val category = getItem(position)
+
         val titleView = view.findViewById(android.R.id.text1) as TextView
-        titleView.text = getTitle(position)
+        titleView.setText(category.titleResourceId)
+
+        val summaryTextView: TextView = view.findViewById(android.R.id.text2) as TextView
+        summaryTextView.setText(category.summaryResourceId)
+        summaryTextView.visibility = if (summaryTextView.text.isEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+        summaryTextView.maxWidth = screenWidth * 7 / 10
+
         return view
     }
 
@@ -66,11 +91,9 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
             view = convertView
         }
         val textView: TextView = view.findViewById(android.R.id.text1) as TextView
-        textView.text = getTitle(position)
-        return view
-    }
+        val category = getItem(position)
+        textView.setText(category.titleResourceId)
 
-    private fun getTitle(position: Int): String {
-        return application.getString(getItem(position).titleResourceId)
+        return view
     }
 }
