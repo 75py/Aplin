@@ -2,14 +2,11 @@
 
 echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
-echo "TRAVIS_TAG: ${TRAVIS_TAG}"
 
-
-if [ -n "${TRAVIS_TAG}" ]; then
+if [ ${TRAVIS_BRANCH} = "master" -a ${TRAVIS_PULL_REQUEST} = "false" ]; then
   echo "Deploy Beta"
-  MSG=`git show ${TRAVIS_TAG}`
-  echo "${MSG}"
-  ./gradlew crashlyticsUploadDistributionProductionDebug -PdisablePreDex --stacktrace --info -DbetaDistributionReleaseNotes="${MSG}"
+  MGS=``
+  ./gradlew crashlyticsUploadDistributionProductionDebug -PdisablePreDex --stacktrace --info
 else
   echo "Skip deployment"
 fi
