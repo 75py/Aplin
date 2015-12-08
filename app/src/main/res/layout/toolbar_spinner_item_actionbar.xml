@@ -25,6 +25,8 @@
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/abc_spinner_mtrl_am_alpha"
         android:drawablePadding="@dimen/toolbar_spinner_drawable_padding"
+        android:ellipsize="end"
+        android:lines="1"
         android:textColor="@android:color/white"
         android:textSize="@dimen/abc_text_size_title_material_toolbar" />
 
