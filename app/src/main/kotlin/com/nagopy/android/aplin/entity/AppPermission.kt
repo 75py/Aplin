@@ -24,7 +24,7 @@ open class AppPermission : RealmObject() {
     @Required
     open var name: String = ""
 
-    open var label: String? = null
+    // open var label: String? = null
 
     open var group: String? = null
 

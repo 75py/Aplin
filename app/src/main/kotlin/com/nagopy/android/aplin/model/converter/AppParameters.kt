@@ -113,7 +113,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                 permission.name = it
                 try {
                     val pi = params.appConverter.packageManager.getPermissionInfo(it, 0)
-                    permission.label = pi.loadLabel(params.appConverter.packageManager).toString()
+                    // permission.label = pi.loadLabel(params.appConverter.packageManager).toString()
                     permission.group = pi.group
                     params.allPermissionGroups.forEach {
                         if (it.name.equals(pi.group)) {
