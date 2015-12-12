@@ -68,7 +68,7 @@ open class AplinDevicePolicyManager {
      * @return packageHasActiveAdminsの結果を返す。
      * * エラーがあった場合はfalseを返す。
      */
-    public fun packageHasActiveAdmins(packageName: String): Boolean {
+    open fun packageHasActiveAdmins(packageName: String): Boolean {
         try {
             return packageHasActiveAdmins?.invoke(devicePolicyManager, packageName) as Boolean
         } catch (e: IllegalAccessException) {
@@ -88,7 +88,7 @@ open class AplinDevicePolicyManager {
      * @return isThisASystemPackageの結果をそのまま返す。
      * * エラーがあった場合はfalseを返す。
      */
-    fun isThisASystemPackage(packageInfo: PackageInfo?): Boolean {
+    open fun isThisASystemPackage(packageInfo: PackageInfo?): Boolean {
         return (packageInfo != null
                 && packageInfo.signatures != null
                 && mSystemPackageInfo != null
