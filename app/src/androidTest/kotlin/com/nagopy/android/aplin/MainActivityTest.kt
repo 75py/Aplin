@@ -26,6 +26,7 @@ import android.support.test.uiautomator.Until
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ProgressBar
+import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.view.MainActivity
@@ -33,11 +34,13 @@ import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.Matcher
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import timber.log.Timber
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import org.hamcrest.CoreMatchers.`is` as _is
@@ -49,7 +52,11 @@ class MainActivityTest {
     @JvmField
     val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, false, false)
 
-    val timeout = 60 * 1000L
+    @Rule
+    @JvmField
+    val aplinRule = AplinTestRule()
+
+    val timeout = 3 * 1000L
 
 
     lateinit var uiDevice: UiDevice
@@ -62,6 +69,12 @@ class MainActivityTest {
         sp = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
         analytics = Analytics(InstrumentationRegistry.getTargetContext().applicationContext as Application, sp)
         analytics.disagree()
+    }
+
+    @After
+    fun tearDown() {
+        uiDevice.pressBack()
+        rule.activity?.finish()
     }
 
     private fun startActivity(): MainActivity = rule.launchActivity(null)
@@ -90,7 +103,7 @@ class MainActivityTest {
         onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.ALL)))
                 .perform(click())
 
-        uiDevice.waitForIdle(timeout)
+        waitForIdle()
 
         val list = onView(allOf(withId(R.id.list), isDisplayed()))
         val gpa = GetParamsAction(0)
@@ -98,25 +111,26 @@ class MainActivityTest {
         var lastIndex = gpa.itemCount - 1
         for (index in 0..lastIndex) {
             // 件数、パッケージ名・アプリ名を取得
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
             val getParams = GetParamsAction(index)
             list.perform(getParams)
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
             Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
+            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
 
             // タップしてみて、Intentを確認
-            Intents.init()
-            list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-            uiDevice.waitForIdle(timeout)
-            Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-            Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
-            Intents.release()
+            intentBlock {
+                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
+                waitForIdle()
+                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+            }
             // ラベル名が表示されていることをuiautomatorで確認
             assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
 
             if (index % 50 == 49) {
                 // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
@@ -136,7 +150,7 @@ class MainActivityTest {
         onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.SYSTEM)))
                 .perform(click())
 
-        uiDevice.waitForIdle(timeout)
+        waitForIdle()
 
         val list = onView(allOf(withId(R.id.list), isDisplayed()))
         val gpa = GetParamsAction(0)
@@ -144,25 +158,83 @@ class MainActivityTest {
         var lastIndex = gpa.itemCount - 1
         for (index in 0..lastIndex) {
             // 件数、パッケージ名・アプリ名を取得
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
             val getParams = GetParamsAction(index)
             list.perform(getParams)
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
             Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
+            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
 
             // タップしてみて、Intentを確認
-            Intents.init()
-            list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-            uiDevice.waitForIdle(timeout)
-            Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-            Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
-            Intents.release()
+            intentBlock {
+                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
+                waitForIdle()
+                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+            }
             // ラベル名が表示されていることをuiautomatorで確認
             assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
+
+            if (index % 50 == 49) {
+                // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
+                stopSettings()
+            }
+        }
+    }
+
+    @RequiresDevice
+    @Test
+
+    fun undisablable() {
+        startActivity()
+
+        uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
+
+        onView(withId(R.id.spinner)).perform(click())
+        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.SYSTEM_UNDISABLABLE)))
+                .perform(click())
+
+        waitForIdle()
+
+        val list = onView(allOf(withId(R.id.list), isDisplayed()))
+        val gpa = GetParamsAction(0)
+        list.perform(gpa)
+        var lastIndex = gpa.itemCount - 1
+        for (index in 0..lastIndex) {
+            // 件数、パッケージ名・アプリ名を取得
+            waitForIdle()
+            val getParams = GetParamsAction(index)
+            list.perform(getParams)
+            waitForIdle()
+            Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
+            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
+
+            // タップしてみて、Intentを確認
+            intentBlock {
+                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
+                waitForIdle()
+                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+            }
+            // ラベル名が表示されていることをuiautomatorで確認
+            assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
+
+            val disableButtonExists = uiDevice.findObject(UiSelector().text("無効にする")).waitForExists(1000)
+            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text("有効にする")).waitForExists(1000)
+            assertTrue(disableButtonExists || enableButtonExists)
+            if (disableButtonExists) {
+                assertFalse(uiDevice.findObject(UiSelector().text("無効にする")).isEnabled)
+            } else {
+                assertFalse(uiDevice.findObject(UiSelector().text("有効にする")).isEnabled)
+            }
+
+            // 設定画面からバックキーで戻る
+            uiDevice.pressBack()
+            waitForIdle()
 
             if (index % 50 == 49) {
                 // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
@@ -182,7 +254,7 @@ class MainActivityTest {
         onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.SYSTEM_DISABLABLE)))
                 .perform(click())
 
-        uiDevice.waitForIdle(timeout)
+        waitForIdle()
 
         val list = onView(allOf(withId(R.id.list), isDisplayed()))
         val gpa = GetParamsAction(0)
@@ -190,24 +262,25 @@ class MainActivityTest {
         var lastIndex = gpa.itemCount - 1
         for (index in 0..lastIndex) {
             // 件数、パッケージ名・アプリ名を取得
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
             val getParams = GetParamsAction(index)
             list.perform(getParams)
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
             Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
+            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
 
             // タップしてみて、Intentを確認
-            Intents.init()
-            list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-            uiDevice.waitForIdle(timeout)
-            Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-            Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
-            Intents.release()
+            intentBlock {
+                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
+                waitForIdle()
+                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+            }
             // ラベル名が表示されていることをuiautomatorで確認
             assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
 
             val disableButtonExists = uiDevice.findObject(UiSelector().text("無効にする")).waitForExists(1000)
-            val enableButtonExists = uiDevice.findObject(UiSelector().text("有効にする")).waitForExists(1000)
+            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text("有効にする")).waitForExists(1000)
             assertTrue(disableButtonExists || enableButtonExists)
             if (disableButtonExists) {
                 assertTrue(uiDevice.findObject(UiSelector().text("無効にする")).isEnabled)
@@ -217,7 +290,7 @@ class MainActivityTest {
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
-            uiDevice.waitForIdle(timeout)
+            waitForIdle()
 
             if (index % 50 == 49) {
                 // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
@@ -230,9 +303,14 @@ class MainActivityTest {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:com.android.settings"))
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         InstrumentationRegistry.getTargetContext().startActivity(intent)
-        uiDevice.waitForIdle(timeout)
+        waitForIdle()
         uiDevice.findObject(UiSelector().text("強制停止")).clickAndWaitForNewWindow(timeout)
         uiDevice.findObject(UiSelector().text("OK")).clickAndWaitForNewWindow(timeout)
+    }
+
+    private fun waitForIdle() {
+        uiDevice.waitForIdle(timeout)
+        Thread.sleep(100)
     }
 
     class GetParamsAction(val position: Int) : ViewAction {

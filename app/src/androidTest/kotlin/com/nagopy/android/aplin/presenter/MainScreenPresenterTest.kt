@@ -30,6 +30,7 @@ import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
 import com.nagopy.android.aplin.DaggerApplicationMockComponent
+import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.view.MainActivity
@@ -68,6 +69,7 @@ class MainScreenPresenterTest {
     @After
     fun tearDown() {
         activity?.finish()
+        pressBack()
     }
 
     private fun pressBack() {
@@ -78,17 +80,14 @@ class MainScreenPresenterTest {
     fun listItemClicked_ALL() {
         activity = rule.launchActivity(null)
 
-        Intents.init()
+        intentBlock {
+            val app = App()
+            app.packageName = "com.nagopy.android.aplin"
+            mainScreenPresenter.listItemClicked(activity as Activity, app, Category.ALL)
 
-        val app = App()
-        app.packageName = "com.nagopy.android.aplin"
-        mainScreenPresenter.listItemClicked(activity as Activity, app, Category.ALL)
-
-        Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-        Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
-
-        Intents.release()
-        pressBack()
+            Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+            Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
+        }
     }
 
     @Test
@@ -96,17 +95,14 @@ class MainScreenPresenterTest {
     fun listItemClicked_OVERLAY() {
         val activity = rule.launchActivity(null)
 
-        Intents.init()
+        intentBlock {
+            val app = App()
+            app.packageName = "com.nagopy.android.aplin"
+            mainScreenPresenter.listItemClicked(activity, app, Category.SYSTEM_ALERT_WINDOW_PERMISSION)
 
-        val app = App()
-        app.packageName = "com.nagopy.android.aplin"
-        mainScreenPresenter.listItemClicked(activity, app, Category.SYSTEM_ALERT_WINDOW_PERMISSION)
-
-        Intents.intended(IntentMatchers.hasAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
-        Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
-
-        Intents.release()
-        pressBack()
+            Intents.intended(IntentMatchers.hasAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
+            Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
+        }
     }
 
 }
