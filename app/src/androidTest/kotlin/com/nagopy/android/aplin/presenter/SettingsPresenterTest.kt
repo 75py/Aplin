@@ -2,12 +2,11 @@ package com.nagopy.android.aplin.presenter
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.support.test.runner.AndroidJUnit4
+import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Matchers
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -16,8 +15,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import org.hamcrest.CoreMatchers.`is` as _is
 
-
-@RunWith(AndroidJUnit4::class)
+@SmallTest
 class SettingsPresenterTest {
 
     lateinit var target: SettingsPresenter

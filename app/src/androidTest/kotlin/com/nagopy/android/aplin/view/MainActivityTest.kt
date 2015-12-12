@@ -1,4 +1,20 @@
-package com.nagopy.android.aplin
+/*
+ * Copyright 2015 75py
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.nagopy.android.aplin.view
 
 import android.app.Application
 import android.content.Intent
@@ -16,20 +32,21 @@ import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.filters.RequiresDevice
 import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.By
 import android.support.test.uiautomator.UiDevice
 import android.support.test.uiautomator.UiSelector
 import android.support.test.uiautomator.Until
 import android.support.v7.widget.RecyclerView
+import android.test.suitebuilder.annotation.LargeTest
+import android.test.suitebuilder.annotation.MediumTest
 import android.view.View
 import android.widget.ProgressBar
+import com.nagopy.android.aplin.AplinTestRule
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.model.Category
-import com.nagopy.android.aplin.view.MainActivity
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
@@ -38,14 +55,13 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import timber.log.Timber
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import org.hamcrest.CoreMatchers.`is` as _is
 
-@RunWith(AndroidJUnit4::class)
+@LargeTest
 class MainActivityTest {
 
     @Rule
@@ -79,6 +95,7 @@ class MainActivityTest {
 
     private fun startActivity(): MainActivity = rule.launchActivity(null)
 
+    @MediumTest
     @Test
     fun testLaunch() {
         startActivity()
@@ -92,7 +109,7 @@ class MainActivityTest {
         assertNotNull(activity.progressBar)
     }
 
-    @RequiresDevice
+    @LargeTest
     @Test
     fun all() {
         startActivity()
@@ -139,7 +156,7 @@ class MainActivityTest {
         }
     }
 
-    @RequiresDevice
+    @LargeTest
     @Test
     fun system() {
         startActivity()
@@ -186,9 +203,8 @@ class MainActivityTest {
         }
     }
 
-    @RequiresDevice
+    @LargeTest
     @Test
-
     fun undisablable() {
         startActivity()
 
@@ -243,7 +259,7 @@ class MainActivityTest {
         }
     }
 
-    @RequiresDevice
+    @LargeTest
     @Test
     fun disablable() {
         startActivity()

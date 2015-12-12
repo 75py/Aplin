@@ -26,6 +26,8 @@ import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.filters.SdkSuppress
 import android.support.test.rule.ActivityTestRule
 import android.support.test.uiautomator.UiDevice
+import android.test.suitebuilder.annotation.MediumTest
+import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
@@ -41,6 +43,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import javax.inject.Inject
 
+@MediumTest
 class MainScreenPresenterTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application

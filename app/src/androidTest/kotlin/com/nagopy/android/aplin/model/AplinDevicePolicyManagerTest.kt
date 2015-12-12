@@ -18,6 +18,7 @@ package com.nagopy.android.aplin.model
 
 import android.app.Application
 import android.support.test.InstrumentationRegistry
+import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
@@ -29,6 +30,7 @@ import javax.inject.Inject
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 
+@SmallTest
 class AplinDevicePolicyManagerTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application

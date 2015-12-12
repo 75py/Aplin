@@ -18,6 +18,7 @@ package com.nagopy.android.aplin.model
 
 import android.app.Application
 import android.support.test.InstrumentationRegistry
+import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.AppPermission
 import io.realm.Realm
@@ -27,6 +28,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+@SmallTest
 class CategoryTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
