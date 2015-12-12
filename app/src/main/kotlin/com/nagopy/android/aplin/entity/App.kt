@@ -45,6 +45,8 @@ open class App : RealmObject() {
 
     open var isDefaultApp: Boolean = false
 
+    open var isHomeApp = false
+
     open var firstInstallTime: Long = 0
 
     open var lastUpdateTime: Long = 0

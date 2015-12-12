@@ -51,6 +51,7 @@ public enum class Category(
                     .equalTo(isThisASystemPackage(), true)
                     .or().equalTo(hasActiveAdmins(), true)
                     .or().equalTo(isProfileOrDeviceOwner(), true)
+                    .or().equalTo(isHomeApp(), true)
                     .endGroup()
         }
     }
@@ -62,6 +63,7 @@ public enum class Category(
                     .equalTo(isProfileOrDeviceOwner(), false)
                     .equalTo(isThisASystemPackage(), false)
                     .equalTo(hasActiveAdmins(), false)
+                    .equalTo(isHomeApp(), false) // システムのHomeアプリは無効化不可
         }
     }
     ,

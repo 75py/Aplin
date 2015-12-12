@@ -17,6 +17,7 @@
 package com.nagopy.android.aplin.model.converter
 
 import android.app.Application
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -49,16 +50,7 @@ open class AppConverter {
     }
 
     open fun setValues(realm: Realm, app: App, applicationInfo: ApplicationInfo) {
-        val allPermissionGroups = packageManager.getAllPermissionGroups(0)
-        val packageInfo = packageManager.getPackageInfo(
-                applicationInfo.packageName,
-                PackageManager.GET_PERMISSIONS
-                        or PackageManager.GET_META_DATA
-                        or PackageManager.GET_DISABLED_COMPONENTS
-                        or PackageManager.GET_UNINSTALLED_PACKAGES
-                        or PackageManager.GET_SIGNATURES
-        )
-        val params = Params(applicationInfo, packageInfo, realm, allPermissionGroups, this)
+        val params = prepare(realm, applicationInfo)
         AppParameters.values()
                 .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                 .forEach { param ->
@@ -67,6 +59,11 @@ open class AppConverter {
     }
 
     open fun setValue(realm: Realm, app: App, applicationInfo: ApplicationInfo, appParameters: AppParameters) {
+        val params = prepare(realm, applicationInfo)
+        appParameters.setValue(app, params)
+    }
+
+    open fun prepare(realm: Realm, applicationInfo: ApplicationInfo): Params {
         val allPermissionGroups = packageManager.getAllPermissionGroups(0)
         val packageInfo = packageManager.getPackageInfo(
                 applicationInfo.packageName,
@@ -76,8 +73,12 @@ open class AppConverter {
                         or PackageManager.GET_UNINSTALLED_PACKAGES
                         or PackageManager.GET_SIGNATURES
         )
-        val params = Params(applicationInfo, packageInfo, realm, allPermissionGroups, this)
-        appParameters.setValue(app, params)
+        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        val homeActivities = packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
+                .map { it.activityInfo.packageName }
+                .plus("com.google.android.launcher") // 仕組みが未確認だが、これはホームアプリ判定になっているっぽい
+
+        return Params(applicationInfo, packageInfo, realm, allPermissionGroups, homeActivities, this)
     }
 
     interface Converter {
@@ -89,6 +90,7 @@ open class AppConverter {
                       , open var packageInfo: PackageInfo
                       , open var realm: Realm
                       , open var allPermissionGroups: List<PermissionGroupInfo>
+                      , open var homeActivities: List<String>
                       , open var appConverter: AppConverter
     )
 

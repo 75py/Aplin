@@ -84,6 +84,11 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             app.isDefaultApp = !outActivities.isEmpty()
         }
     },
+    isHomeApp(Constants.ALL_SDK_VERSION) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isHomeApp = params.homeActivities.contains(params.applicationInfo.packageName)
+        }
+    },
     icon(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
             if (params.applicationInfo.icon == 0) {
