@@ -18,6 +18,7 @@ package com.nagopy.android.aplin.presenter
 
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import com.nagopy.android.aplin.BuildConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +41,9 @@ public open class AdPresenter : Presenter {
                 .addTestDevice("0FDB3E1E20DE9A1E911A85F87903A069")
                 .addTestDevice("F3D630FD4B16A430A0CB29123A096F71")
                 .build()
-        adView.loadAd(adRequest)
+        if (!BuildConfig.DEBUG && BuildConfig.PRODUCTION) {
+            adView.loadAd(adRequest)
+        }
     }
 
     public override fun resume() {
