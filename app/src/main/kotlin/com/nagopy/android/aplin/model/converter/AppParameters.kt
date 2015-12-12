@@ -133,6 +133,11 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                     && params.appConverter.aplinDevicePolicyManager.isProfileOrDeviceOwner(params.applicationInfo.packageName)
         }
     },
+    isLaunchable(Constants.ALL_SDK_VERSION) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isLaunchable = params.launcherPkgs.contains(params.applicationInfo.packageName)
+        }
+    },
     ;
 
     override fun targetSdkVersion(): IntRange = targetSdkVersion

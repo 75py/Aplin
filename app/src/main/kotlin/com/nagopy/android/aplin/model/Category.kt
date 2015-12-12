@@ -99,9 +99,7 @@ public enum class Category(
             , summaryResourceId = R.string.category_runtime_permissions_summary
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isSystem(), false)
-                    .equalTo(isThisASystemPackage(), false)
-                    .equalTo(hasActiveAdmins(), false)
+            return realmQuery.equalTo(isThisASystemPackage(), false)
                     .isNotNull(permissions().groupLabel())
         }
     }

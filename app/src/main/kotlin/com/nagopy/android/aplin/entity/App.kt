@@ -56,4 +56,6 @@ open class App : RealmObject() {
     open var permissions: RealmList<AppPermission> = RealmList()
 
     open var isProfileOrDeviceOwner: Boolean = false // 6.0以降
+
+    open var isLaunchable: Boolean = false // ランチャーから起動可能か。権限拒否可能判定で使用する
 }

@@ -78,7 +78,10 @@ open class AppConverter {
                 .map { it.activityInfo.packageName }
                 .plus("com.google.android.launcher") // 仕組みが未確認だが、これはホームアプリ判定になっているっぽい
 
-        return Params(applicationInfo, packageInfo, realm, allPermissionGroups, homeActivities, this)
+        val launcherIntent = Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER)
+        val launcherPkgs = packageManager.queryIntentActivities(launcherIntent, 0).map { it.activityInfo.packageName }
+
+        return Params(applicationInfo, packageInfo, realm, allPermissionGroups, homeActivities, launcherPkgs, this)
     }
 
     interface Converter {
@@ -91,6 +94,7 @@ open class AppConverter {
                       , open var realm: Realm
                       , open var allPermissionGroups: List<PermissionGroupInfo>
                       , open var homeActivities: List<String>
+                      , open var launcherPkgs: List<String>
                       , open var appConverter: AppConverter
     )
 

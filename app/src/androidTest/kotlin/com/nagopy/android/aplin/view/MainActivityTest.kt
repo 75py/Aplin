@@ -51,10 +51,7 @@ import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.Matcher
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import timber.log.Timber
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -303,6 +300,57 @@ class MainActivityTest {
             } else {
                 assertTrue(uiDevice.findObject(UiSelector().text("有効にする")).isEnabled)
             }
+
+            // 設定画面からバックキーで戻る
+            uiDevice.pressBack()
+            waitForIdle()
+
+            if (index % 50 == 49) {
+                // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
+                stopSettings()
+            }
+        }
+    }
+
+    @Ignore("WRITE_EXTERNAL_STORAGEが正常に判定できない場合があるため保留")
+    @LargeTest
+    @Test
+    fun runtimePermissions() {
+        startActivity()
+
+        uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
+
+        onView(withId(R.id.spinner)).perform(click())
+        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.RUNTIME_PERMISSIONS)))
+                .perform(click())
+
+        waitForIdle()
+
+        val list = onView(allOf(withId(R.id.list), isDisplayed()))
+        val gpa = GetParamsAction(0)
+        list.perform(gpa)
+        var lastIndex = gpa.itemCount - 1
+        for (index in 0..lastIndex) {
+            // 件数、パッケージ名・アプリ名を取得
+            waitForIdle()
+            val getParams = GetParamsAction(index)
+            list.perform(getParams)
+            waitForIdle()
+            Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
+            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
+
+            // タップしてみて、Intentを確認
+            intentBlock {
+                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
+                waitForIdle()
+                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+            }
+            // ラベル名が表示されていることをuiautomatorで確認
+            assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
+
+            val permissionButton = uiDevice.findObject(UiSelector().text("リクエストされた権限はありません")).waitForExists(1000)
+            assertFalse(permissionButton)
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
