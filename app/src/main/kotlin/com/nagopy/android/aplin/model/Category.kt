@@ -95,8 +95,8 @@ public enum class Category(
         }
     }
     ,
-    RUNTIME_PERMISSIONS(titleResourceId = R.string.category_runtime_permissions
-            , summaryResourceId = R.string.category_runtime_permissions_summary
+    DENIABLE_PERMISSIONS(titleResourceId = R.string.category_deniable_permissions
+            , summaryResourceId = R.string.category_deniable_permissions_summary
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isThisASystemPackage(), false)

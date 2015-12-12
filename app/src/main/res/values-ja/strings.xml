@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015 75py
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,9 +27,9 @@
     <string name="category_all">全て</string>
     <string name="category_all_summary" />
     <string name="category_system">システム</string>
-    <string name="category_system_summary"/>
+    <string name="category_system_summary" />
     <string name="category_system_undisablable">無効化不可</string>
-    <string name="category_system_undisablable_summary"/>
+    <string name="category_system_undisablable_summary" />
     <string name="category_system_disablable">無効化可能</string>
     <string name="category_system_disablable_summary">システムアプリのうち、無効化ボタンを押すことができるアプリを表示します。無効化は自己責任で行い、万が一端末が不安定になった場合は元に戻してください。</string>
     <string name="category_disabled">無効化済み</string>
@@ -40,9 +39,9 @@
     <string name="category_default">デフォルト起動</string>
     <string name="category_default_summary">特定の操作で常に起動するアプリを表示します。ホームアプリなどが該当します。</string>
     <string name="category_internet_permissions">インターネット権限あり</string>
-    <string name="category_internet_permissions_summary"/>
-    <string name="category_runtime_permissions">実行時権限</string>
-    <string name="category_runtime_permissions_summary">実行時に特定の権限（カメラ、位置情報など）を要求するアプリを表示します。設定画面から権限の許可・不許可を選択できます。</string>
+    <string name="category_internet_permissions_summary" />
+    <string name="category_deniable_permissions">拒否可能権限あり</string>
+    <string name="category_deniable_permissions_summary">カメラ・位置情報など、設定画面から権限を拒否できるアプリを表示します。不許可設定は自己責任で行い、アプリが正常に動作しない場合は元に戻してください。</string>
     <string name="category_system_alert_window_permission">他のアプリに重ねて表示</string>
     <string name="category_system_alert_window_permission_summary">他のアプリの上に重ねて表示する機能を持つアプリを表示します。設定画面から許可・不許可を選択できます。</string>
 
@@ -59,7 +58,7 @@
     <string name="display_item_not_installed_format">未インストール</string>
     <string name="display_item_first_install_time">初回インストール日時</string>
     <string name="display_item_first_install_time_format">初回インストール：%1$s</string>
-    <string name="display_item_first_install_time_summary"/>
+    <string name="display_item_first_install_time_summary" />
     <string name="display_item_last_update_time">最終更新日時</string>
     <string name="display_item_last_update_time_summary" />
     <string name="display_item_last_update_time_format">最終更新：%1$s</string>
@@ -67,16 +66,16 @@
     <string name="display_item_version_name_summary" />
     <string name="display_item_version_name_format">バージョン：%1$s</string>
     <string name="display_item_internet_permission">インターネット権限</string>
-    <string name="display_item_internet_permission_summary"/>
+    <string name="display_item_internet_permission_summary" />
     <string name="display_item_internet_permission_label">インターネット権限あり</string>
-    <string name="display_item_deniable_permissions">実行時権限</string>
-    <string name="display_item_deniable_permissions_summary">実行時に要求される権限（カメラ、位置情報など）を表示します。</string>
+    <string name="display_item_deniable_permissions">拒否可能権限</string>
+    <string name="display_item_deniable_permissions_summary">カメラ・位置情報など、設定画面から拒否可能な権限を表示します</string>
     <string name="display_item_deniable_permissions_separator">/</string>
 
     <string name="ga_confirm_dialog_agree">許可する</string>
     <string name="ga_confirm_dialog_disagree">許可しない</string>
     <string name="ga_confirm_dialog_message">AplinはGoogle Analyticsにより匿名の情報収集を行います。\n収集した情報は、今後のアプリ開発に使用させていただきます。\nこの設定はいつでも変更できます。</string>
-    <string name="ga_confirm_dialog_title"/>
+    <string name="ga_confirm_dialog_title" />
     <string name="ga_preference_category">利用統計</string>
     <string name="ga_preference_summary">匿名の情報収集を行います。収集した情報は、今後のアプリ開発に使用させていただきます。</string>
     <string name="ga_preference_title">利用統計の収集を許可</string>

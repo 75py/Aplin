@@ -42,9 +42,9 @@
     <string name="category_default">Default</string>
     <string name="category_default_summary">Applications that are default for some action. Ex: launcher app</string>
     <string name="category_internet_permissions">Internet permissions</string>
-    <string name="category_internet_permissions_summary" />
-    <string name="category_runtime_permissions">Runtime permissions</string>
-    <string name="category_runtime_permissions_summary" />
+    <string name="category_internet_permissions_summary">Applications that requests internet permissions</string>
+    <string name="category_deniable_permissions">Deniable permissions</string>
+    <string name="category_deniable_permissions_summary">Applications that requests deniable permissions (Storage, Camera and so on)</string>
     <string name="category_system_alert_window_permission">Draw over other apps</string>
     <string name="category_system_alert_window_permission_summary" />
 

@@ -321,7 +321,7 @@ class MainActivityTest {
         uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
 
         onView(withId(R.id.spinner)).perform(click())
-        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.RUNTIME_PERMISSIONS)))
+        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.DENIABLE_PERMISSIONS)))
                 .perform(click())
 
         waitForIdle()
