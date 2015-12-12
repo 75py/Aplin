@@ -27,7 +27,6 @@ import android.support.test.filters.SdkSuppress
 import android.support.test.rule.ActivityTestRule
 import android.support.test.uiautomator.UiDevice
 import android.test.suitebuilder.annotation.MediumTest
-import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
@@ -57,8 +56,12 @@ class MainScreenPresenterTest {
 
     var activity: MainActivity? = null
 
+    lateinit var uiDevice: UiDevice
+
     @Before
     fun setup() {
+        uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
         Aplin.component = DaggerApplicationMockComponent.builder()
                 .applicationMockModule(ApplicationMockModule(application))
                 .build()
@@ -71,12 +74,10 @@ class MainScreenPresenterTest {
 
     @After
     fun tearDown() {
+        uiDevice.pressBack()
+        uiDevice.waitForIdle(1000)
         activity?.finish()
-        pressBack()
-    }
-
-    private fun pressBack() {
-        UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack()
+        uiDevice.waitForIdle(1000)
     }
 
     @Test
