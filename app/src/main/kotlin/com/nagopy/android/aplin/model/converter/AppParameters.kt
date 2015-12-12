@@ -53,7 +53,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
     },
     isThisASystemPackage(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.isThisASystemPackage = params.appConverter.devicePolicy.isThisASystemPackage(params.packageInfo)
+            app.isThisASystemPackage = params.appConverter.aplinDevicePolicyManager.isThisASystemPackage(params.packageInfo)
         }
     },
     firstInstallTime(Constants.ALL_SDK_VERSION) {
@@ -68,7 +68,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
     },
     hasActiveAdmins(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.hasActiveAdmins = params.appConverter.devicePolicy.packageHasActiveAdmins(params.applicationInfo.packageName)
+            app.hasActiveAdmins = params.appConverter.aplinDevicePolicyManager.packageHasActiveAdmins(params.applicationInfo.packageName)
         }
     },
     isInstalled(IntRange(Build.VERSION_CODES.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
@@ -121,7 +121,13 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                 app.permissions.add(permission)
             }
         }
-    }
+    },
+    isProfileOrDeviceOwner(Build.VERSION_CODES.M..Int.MAX_VALUE) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isProfileOrDeviceOwner = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && params.appConverter.aplinDevicePolicyManager.isProfileOrDeviceOwner(params.applicationInfo.packageName)
+        }
+    },
     ;
 
     override fun targetSdkVersion(): IntRange = targetSdkVersion

@@ -50,6 +50,7 @@ public enum class Category(
                     .beginGroup()
                     .equalTo(isThisASystemPackage(), true)
                     .or().equalTo(hasActiveAdmins(), true)
+                    .or().equalTo(isProfileOrDeviceOwner(), true)
                     .endGroup()
         }
     }
@@ -58,10 +59,9 @@ public enum class Category(
             , summaryResourceId = R.string.category_system_disablable_summary) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), true)
-                    .not().beginGroup()
-                    .equalTo(isThisASystemPackage(), true)
-                    .or().equalTo(hasActiveAdmins(), true)
-                    .endGroup()
+                    .equalTo(isProfileOrDeviceOwner(), false)
+                    .equalTo(isThisASystemPackage(), false)
+                    .equalTo(hasActiveAdmins(), false)
         }
     }
     ,

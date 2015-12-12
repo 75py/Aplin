@@ -52,4 +52,6 @@ open class App : RealmObject() {
     open var versionName: String? = null
 
     open var permissions: RealmList<AppPermission> = RealmList()
+
+    open var isProfileOrDeviceOwner: Boolean = false // 6.0以降
 }

@@ -16,6 +16,7 @@
 
 package com.nagopy.android.aplin
 
+import com.nagopy.android.aplin.model.AplinDevicePolicyManagerTest
 import com.nagopy.android.aplin.model.converter.AppConverterTest
 import com.nagopy.android.aplin.presenter.MainScreenPresenterTest
 import dagger.Component
@@ -27,4 +28,5 @@ import javax.inject.Singleton
 interface ApplicationMockComponent : ApplicationComponent {
     fun inject(appParametersTest: AppConverterTest)
     fun inject(mainScreenPresenterTest: MainScreenPresenterTest)
+    fun inject(aplinDevicePolicyManagerTest: AplinDevicePolicyManagerTest)
 }

@@ -23,7 +23,7 @@ import android.content.pm.PackageManager
 import android.content.pm.PermissionGroupInfo
 import android.os.Build
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.model.DevicePolicy
+import com.nagopy.android.aplin.model.AplinDevicePolicyManager
 import com.nagopy.android.aplin.model.IconHelper
 import io.realm.Realm
 import javax.inject.Inject
@@ -42,7 +42,7 @@ open class AppConverter {
     open lateinit var iconHelper: IconHelper
 
     @Inject
-    open lateinit var devicePolicy: DevicePolicy
+    open lateinit var aplinDevicePolicyManager: AplinDevicePolicyManager
 
     @Inject
     constructor() {
