@@ -35,7 +35,7 @@ android {
         versionCode publish_version_code
         versionName "$publish_version_name-$gitSha"
         resValue "string", "version_name", "$publish_version_name ($publish_version_code, $gitSha, $buildTime)"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.nagopy.android.aplin.AplinTestRunner"
         multiDexEnabled true
     }
     signingConfigs {
