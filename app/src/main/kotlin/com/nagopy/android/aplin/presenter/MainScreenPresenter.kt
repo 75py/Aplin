@@ -73,6 +73,7 @@ constructor() : Presenter {
         override fun onCompleted() {
             view?.hideIndicator()
             view?.showAppList()
+            view?.setToolbarSpinnerEnabled(true)
         }
     }
     var subscription: Subscription? = null
@@ -82,6 +83,7 @@ constructor() : Presenter {
 
         view.hideAppList()
         view.showIndicator()
+        view.setToolbarSpinnerEnabled(false)
 
         if (!analytics.isConfirmed()) {
             view.showAnalyticsConfirm()

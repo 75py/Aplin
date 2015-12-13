@@ -119,6 +119,10 @@ class MainActivity : AppCompatActivity(),
         viewPager.visibility = View.INVISIBLE
     }
 
+    override fun setToolbarSpinnerEnabled(enabled: Boolean) {
+        spinner.isEnabled = enabled
+    }
+
     // menu ===============================================================================================
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

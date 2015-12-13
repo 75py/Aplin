@@ -43,4 +43,6 @@ interface MainScreenView {
 
     open fun showAnalyticsConfirm()
 
+    open fun setToolbarSpinnerEnabled(enabled: Boolean)
+
 }
