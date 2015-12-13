@@ -110,6 +110,7 @@ constructor() : Presenter {
 
     override fun destroy() {
         view = null
+        subscription?.unsubscribe()
     }
 
     fun listItemClicked(activity: Activity, app: App, category: Category) {
