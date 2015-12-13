@@ -28,6 +28,8 @@ import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.*
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
+import rx.Observer
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import timber.log.Timber
@@ -59,21 +61,27 @@ constructor() : Presenter {
 
     var view: MainScreenView? = null
 
+
+    val observer = object : Observer<Void> {
+        override fun onNext(t: Void?) {
+        }
+
+        override fun onError(e: Throwable?) {
+            Timber.e(e, "Error occurred")
+        }
+
+        override fun onCompleted() {
+            view?.hideIndicator()
+            view?.showAppList()
+        }
+    }
+    var subscription: Subscription? = null
+
     open fun initialize(view: MainScreenView) {
         this.view = view
 
         view.hideAppList()
         view.showIndicator()
-
-        applications.initialize()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({}, {
-                    Timber.e(it, "Error occurred")
-                }, {
-                    view.hideIndicator()
-                    view.showAppList()
-                })
 
         if (!analytics.isConfirmed()) {
             view.showAnalyticsConfirm()
@@ -81,6 +89,7 @@ constructor() : Presenter {
     }
 
     override fun resume() {
+        subscription = applications.asyncSubject.subscribe(observer)
         applications.updateDefaultAppStatus()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe({
@@ -92,6 +101,7 @@ constructor() : Presenter {
     }
 
     override fun pause() {
+        subscription?.unsubscribe()
     }
 
     override fun destroy() {

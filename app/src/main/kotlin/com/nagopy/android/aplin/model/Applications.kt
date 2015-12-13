@@ -29,6 +29,9 @@ import com.nagopy.android.kotlinames.equalTo
 import io.realm.Realm
 import io.realm.RealmResults
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import rx.subjects.AsyncSubject
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,17 +44,21 @@ open class Applications
         , val userSettings: UserSettings
 ) {
 
-    val enabledSettingField = ApplicationInfo::class.java.getDeclaredField("enabledSetting")
-
-    init {
-        enabledSettingField.isAccessible = true
+    val asyncSubject = AsyncSubject.create<Void>().apply {
+        Observable.create<Void> {
+            if (!isLoaded()) {
+                refresh()
+            }
+            it.onNext(null)
+        }.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    onCompleted()
+                }
     }
 
-    open fun initialize(): Observable<Void> = Observable.create {
-        if (!isLoaded()) {
-            refresh()
-        }
-        it.onCompleted()
+    val enabledSettingField = ApplicationInfo::class.java.getDeclaredField("enabledSetting").apply {
+        isAccessible = true
     }
 
     open fun isLoaded(): Boolean {
