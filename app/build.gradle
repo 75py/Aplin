@@ -35,7 +35,7 @@ android {
         versionCode publish_version_code
         versionName "$publish_version_name-$gitSha"
         resValue "string", "version_name", "$publish_version_name ($publish_version_code, $gitSha, $buildTime)"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.nagopy.android.aplin.AplinTestRunner"
         multiDexEnabled true
     }
     signingConfigs {
@@ -115,8 +115,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.google.android.gms:play-services-ads:8.3.0'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
-    compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'io.reactivex:rxjava:1.0.16'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton.timber:timber:4.0.1'
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
@@ -131,11 +131,15 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.powermock:powermock-module-junit4:1.6.2'
     testCompile 'org.powermock:powermock-api-mockito:1.6.2'
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.2"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.2"
+    testCompile "org.robolectric:robolectric:3.0"
 
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support:support-annotations:23.0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
@@ -147,7 +151,7 @@ dependencies {
 buildscript {
     ext.kotlin_version = '1.0.0-beta-2423'
     ext.dagger_version = '2.0.1'
-    ext.realm_version = '0.86.0'
+    ext.realm_version = '0.86.1'
     ext.kotliname_version = '3.0.0'
     ext.target_sdk_version = 23
     Properties properties = new Properties()

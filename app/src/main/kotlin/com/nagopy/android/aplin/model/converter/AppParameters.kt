@@ -53,7 +53,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
     },
     isThisASystemPackage(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.isThisASystemPackage = params.appConverter.devicePolicy.isThisASystemPackage(params.packageInfo)
+            app.isThisASystemPackage = params.appConverter.aplinDevicePolicyManager.isThisASystemPackage(params.packageInfo)
         }
     },
     firstInstallTime(Constants.ALL_SDK_VERSION) {
@@ -68,7 +68,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
     },
     hasActiveAdmins(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.hasActiveAdmins = params.appConverter.devicePolicy.packageHasActiveAdmins(params.applicationInfo.packageName)
+            app.hasActiveAdmins = params.appConverter.aplinDevicePolicyManager.packageHasActiveAdmins(params.applicationInfo.packageName)
         }
     },
     isInstalled(IntRange(Build.VERSION_CODES.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
@@ -82,6 +82,11 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             val outActivities = ArrayList<ComponentName>()
             params.appConverter.packageManager.getPreferredActivities(outFilters, outActivities, params.applicationInfo.packageName)
             app.isDefaultApp = !outActivities.isEmpty()
+        }
+    },
+    isHomeApp(Constants.ALL_SDK_VERSION) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isHomeApp = params.homeActivities.contains(params.applicationInfo.packageName)
         }
     },
     icon(Constants.ALL_SDK_VERSION) {
@@ -108,7 +113,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                 permission.name = it
                 try {
                     val pi = params.appConverter.packageManager.getPermissionInfo(it, 0)
-                    permission.label = pi.loadLabel(params.appConverter.packageManager).toString()
+                    // permission.label = pi.loadLabel(params.appConverter.packageManager).toString()
                     permission.group = pi.group
                     params.allPermissionGroups.forEach {
                         if (it.name.equals(pi.group)) {
@@ -121,7 +126,18 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                 app.permissions.add(permission)
             }
         }
-    }
+    },
+    isProfileOrDeviceOwner(Build.VERSION_CODES.M..Int.MAX_VALUE) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isProfileOrDeviceOwner = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && params.appConverter.aplinDevicePolicyManager.isProfileOrDeviceOwner(params.applicationInfo.packageName)
+        }
+    },
+    isLaunchable(Constants.ALL_SDK_VERSION) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.isLaunchable = params.launcherPkgs.contains(params.applicationInfo.packageName)
+        }
+    },
     ;
 
     override fun targetSdkVersion(): IntRange = targetSdkVersion

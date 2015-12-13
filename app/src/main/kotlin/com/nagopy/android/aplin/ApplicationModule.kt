@@ -19,6 +19,7 @@ package com.nagopy.android.aplin
 import android.app.ActivityManager
 import android.app.AppOpsManager
 import android.app.Application
+import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -52,4 +53,9 @@ open class ApplicationModule(val application: Application) {
     @Provides
     open fun provideAppOpsManager(application: Application): AppOpsManager
             = application.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+
+    @Singleton
+    @Provides
+    open fun provideDevicePolicyManager(application: Application): DevicePolicyManager
+            = application.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 }

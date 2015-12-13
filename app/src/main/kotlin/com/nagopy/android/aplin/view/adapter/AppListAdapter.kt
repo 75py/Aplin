@@ -57,14 +57,12 @@ open class AppListAdapter(val appListPresenter: AppListPresenter) : RecyclerView
         open val icon: ImageView
         open val label: TextView
         open val status: TextView
-        open val packageName: TextView
 
         constructor(parentView: View) : super(parentView) {
             parent = parentView
             icon = parentView.findViewById(R.id.icon) as ImageView
             label = parentView.findViewById(R.id.label) as TextView
             status = parentView.findViewById(R.id.status) as TextView
-            packageName = parentView.findViewById(R.id.packageName) as TextView
         }
 
     }

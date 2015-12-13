@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.nagopy.android.aplin.entity
+package com.nagopy.android.aplin
 
-import io.realm.RealmObject
-import io.realm.annotations.Required
+import android.support.test.espresso.intent.Intents
 
-open class AppPermission : RealmObject() {
+object TestFunction {
 
-    @Required
-    open var name: String = ""
-
-    // open var label: String? = null
-
-    open var group: String? = null
-
-    open var groupLabel: String? = null
+    @JvmStatic
+    fun intentBlock(func: () -> Unit) {
+        try {
+            Intents.init()
+            func()
+        } finally {
+            Intents.release()
+        }
+    }
 }

@@ -99,7 +99,7 @@ class AppParametersTest {
 
     @Test
     fun isThisASystemPackage() {
-        Mockito.`when`(params.appConverter.devicePolicy.isThisASystemPackage(params.packageInfo)).thenReturn(true)
+        Mockito.`when`(params.appConverter.aplinDevicePolicyManager.isThisASystemPackage(params.packageInfo)).thenReturn(true)
         val app = App()
         AppParameters.isThisASystemPackage.setValue(app, params)
         assertTrue(app.isThisASystemPackage)
@@ -124,7 +124,7 @@ class AppParametersTest {
     @Test
     fun hasActiveAdmins() {
         params.applicationInfo.packageName = "com.nagopy.android.test"
-        Mockito.`when`(params.appConverter.devicePolicy.packageHasActiveAdmins("com.nagopy.android.test")).thenReturn(true)
+        Mockito.`when`(params.appConverter.aplinDevicePolicyManager.packageHasActiveAdmins("com.nagopy.android.test")).thenReturn(true)
         val app = App()
         AppParameters.hasActiveAdmins.setValue(app, params)
         assertTrue(app.hasActiveAdmins)

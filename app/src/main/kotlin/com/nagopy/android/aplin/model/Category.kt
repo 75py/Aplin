@@ -50,6 +50,8 @@ public enum class Category(
                     .beginGroup()
                     .equalTo(isThisASystemPackage(), true)
                     .or().equalTo(hasActiveAdmins(), true)
+                    .or().equalTo(isProfileOrDeviceOwner(), true)
+                    .or().equalTo(isHomeApp(), true)
                     .endGroup()
         }
     }
@@ -58,10 +60,10 @@ public enum class Category(
             , summaryResourceId = R.string.category_system_disablable_summary) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), true)
-                    .not().beginGroup()
-                    .equalTo(isThisASystemPackage(), true)
-                    .or().equalTo(hasActiveAdmins(), true)
-                    .endGroup()
+                    .equalTo(isProfileOrDeviceOwner(), false)
+                    .equalTo(isThisASystemPackage(), false)
+                    .equalTo(hasActiveAdmins(), false)
+                    .equalTo(isHomeApp(), false) // システムのHomeアプリは無効化不可
         }
     }
     ,
@@ -93,13 +95,11 @@ public enum class Category(
         }
     }
     ,
-    RUNTIME_PERMISSIONS(titleResourceId = R.string.category_runtime_permissions
-            , summaryResourceId = R.string.category_runtime_permissions_summary
+    DENIABLE_PERMISSIONS(titleResourceId = R.string.category_deniable_permissions
+            , summaryResourceId = R.string.category_deniable_permissions_summary
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isSystem(), false)
-                    .equalTo(isThisASystemPackage(), false)
-                    .equalTo(hasActiveAdmins(), false)
+            return realmQuery.equalTo(isThisASystemPackage(), false)
                     .isNotNull(permissions().groupLabel())
         }
     }

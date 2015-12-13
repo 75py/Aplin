@@ -19,6 +19,7 @@ package com.nagopy.android.aplin.model.converter
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.support.test.InstrumentationRegistry
+import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.App
 import io.realm.Realm
@@ -30,6 +31,7 @@ import javax.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+@SmallTest
 class AppConverterTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application

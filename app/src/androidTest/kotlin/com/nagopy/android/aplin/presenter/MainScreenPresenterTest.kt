@@ -26,10 +26,12 @@ import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.filters.SdkSuppress
 import android.support.test.rule.ActivityTestRule
 import android.support.test.uiautomator.UiDevice
+import android.test.suitebuilder.annotation.MediumTest
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
 import com.nagopy.android.aplin.DaggerApplicationMockComponent
+import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.view.MainActivity
@@ -40,6 +42,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import javax.inject.Inject
 
+@MediumTest
 class MainScreenPresenterTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
@@ -53,8 +56,12 @@ class MainScreenPresenterTest {
 
     var activity: MainActivity? = null
 
+    lateinit var uiDevice: UiDevice
+
     @Before
     fun setup() {
+        uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
         Aplin.component = DaggerApplicationMockComponent.builder()
                 .applicationMockModule(ApplicationMockModule(application))
                 .build()
@@ -67,28 +74,24 @@ class MainScreenPresenterTest {
 
     @After
     fun tearDown() {
+        uiDevice.pressBack()
+        uiDevice.waitForIdle(1000)
         activity?.finish()
-    }
-
-    private fun pressBack() {
-        UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack()
+        uiDevice.waitForIdle(1000)
     }
 
     @Test
     fun listItemClicked_ALL() {
         activity = rule.launchActivity(null)
 
-        Intents.init()
+        intentBlock {
+            val app = App()
+            app.packageName = "com.nagopy.android.aplin"
+            mainScreenPresenter.listItemClicked(activity as Activity, app, Category.ALL)
 
-        val app = App()
-        app.packageName = "com.nagopy.android.aplin"
-        mainScreenPresenter.listItemClicked(activity as Activity, app, Category.ALL)
-
-        Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-        Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
-
-        Intents.release()
-        pressBack()
+            Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+            Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
+        }
     }
 
     @Test
@@ -96,17 +99,14 @@ class MainScreenPresenterTest {
     fun listItemClicked_OVERLAY() {
         val activity = rule.launchActivity(null)
 
-        Intents.init()
+        intentBlock {
+            val app = App()
+            app.packageName = "com.nagopy.android.aplin"
+            mainScreenPresenter.listItemClicked(activity, app, Category.SYSTEM_ALERT_WINDOW_PERMISSION)
 
-        val app = App()
-        app.packageName = "com.nagopy.android.aplin"
-        mainScreenPresenter.listItemClicked(activity, app, Category.SYSTEM_ALERT_WINDOW_PERMISSION)
-
-        Intents.intended(IntentMatchers.hasAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
-        Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
-
-        Intents.release()
-        pressBack()
+            Intents.intended(IntentMatchers.hasAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
+            Intents.intended(IntentMatchers.hasData("package:com.nagopy.android.aplin"))
+        }
     }
 
 }

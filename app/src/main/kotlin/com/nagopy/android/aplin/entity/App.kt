@@ -18,6 +18,7 @@ package com.nagopy.android.aplin.entity
 
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 
 /**
@@ -25,7 +26,7 @@ import io.realm.annotations.Required
  */
 open class App : RealmObject() {
 
-    @Required
+    @PrimaryKey
     open var packageName: String = ""
 
     @Required
@@ -45,6 +46,8 @@ open class App : RealmObject() {
 
     open var isDefaultApp: Boolean = false
 
+    open var isHomeApp = false
+
     open var firstInstallTime: Long = 0
 
     open var lastUpdateTime: Long = 0
@@ -52,4 +55,8 @@ open class App : RealmObject() {
     open var versionName: String? = null
 
     open var permissions: RealmList<AppPermission> = RealmList()
+
+    open var isProfileOrDeviceOwner: Boolean = false // 6.0以降
+
+    open var isLaunchable: Boolean = false // ランチャーから起動可能か。権限拒否可能判定で使用する
 }

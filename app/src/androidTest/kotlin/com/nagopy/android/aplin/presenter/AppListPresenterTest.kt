@@ -17,6 +17,7 @@
 package com.nagopy.android.aplin.presenter
 
 import android.app.Application
+import android.test.suitebuilder.annotation.SmallTest
 import android.widget.ImageView
 import com.nagopy.android.aplin.model.Applications
 import com.nagopy.android.aplin.model.Category
@@ -35,6 +36,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
+@SmallTest
 class AppListPresenterTest {
 
     @Mock
