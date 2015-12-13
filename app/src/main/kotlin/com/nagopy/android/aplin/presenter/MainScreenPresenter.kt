@@ -74,6 +74,8 @@ constructor() : Presenter {
             view?.hideIndicator()
             view?.showAppList()
             view?.setToolbarSpinnerEnabled(true)
+
+            subscription?.unsubscribe()
         }
     }
     var subscription: Subscription? = null
@@ -88,10 +90,11 @@ constructor() : Presenter {
         if (!analytics.isConfirmed()) {
             view.showAnalyticsConfirm()
         }
+
+        subscription = applications.asyncSubject.subscribe(observer)
     }
 
     override fun resume() {
-        subscription = applications.asyncSubject.subscribe(observer)
         applications.updateDefaultAppStatus()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe({
@@ -103,7 +106,6 @@ constructor() : Presenter {
     }
 
     override fun pause() {
-        subscription?.unsubscribe()
     }
 
     override fun destroy() {
