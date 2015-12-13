@@ -56,10 +56,7 @@ before_script:
     - adb shell input keyevent 82 &
 
 script:
-    - ./gradlew assembleProductionDebug -PdisablePreDex $BUILD_OPTIONS
-    - ./gradlew testProductionDebug -PdisablePreDex $BUILD_OPTIONS
-    - ./gradlew connectedProductionDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=small -PdisablePreDex $BUILD_OPTIONS
-    - ./gradlew connectedProductionDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=medium -PdisablePreDex $BUILD_OPTIONS
+    - ./main.sh
 
 after_success:
   - ./deploy_beta.sh
