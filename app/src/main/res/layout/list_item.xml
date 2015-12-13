@@ -54,20 +54,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/label"
         android:layout_toEndOf="@+id/icon"
+        android:layout_alignParentBottom="true"
         android:gravity="bottom|end"
         android:textAppearance="@style/TextAppearance.AppTheme.Small"
         android:textColor="@color/textColorSecondary"
         tools:text="Running" />
 
-    <TextView
-        android:id="@+id/packageName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/status"
-        android:layout_toEndOf="@+id/icon"
-        android:gravity="end"
-        android:textAppearance="@style/TextAppearance.AppTheme.Small"
-        android:textColor="@color/textColorSecondary"
-        tools:text="com.nagopy.android.mypkgs" />
 </RelativeLayout>

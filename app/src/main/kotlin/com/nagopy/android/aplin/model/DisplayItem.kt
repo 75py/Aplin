@@ -125,6 +125,16 @@ enum class DisplayItem(
             }
             return true
         }
+    },
+    PACKAGE_NAME(
+            titleResourceId = R.string.display_item_package_name
+            , summaryResourceId = R.string.display_item_package_name_summary
+            , targetSdkVersion = Constants.ALL_SDK_VERSION
+            , defaultValue = true) {
+        override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
+            sb.append(appData.packageName)
+            return true
+        }
     }
     ;
 

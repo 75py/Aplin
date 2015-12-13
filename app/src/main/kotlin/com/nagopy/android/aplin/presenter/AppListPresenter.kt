@@ -125,9 +125,6 @@ open class AppListPresenter : Presenter {
         holder.label.text = entity.label
         holder.label.setTextColor(textColor)
 
-        holder.packageName.text = entity.packageName
-        holder.packageName.setTextColor(textColor)
-
         val sb = StringBuilder()
         for (item in userSettings.displayItems) {
             if (item.append(application, sb, entity)) {

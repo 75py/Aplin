@@ -131,6 +131,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.powermock:powermock-module-junit4:1.6.2'
     testCompile 'org.powermock:powermock-api-mockito:1.6.2'
+    testCompile "org.robolectric:robolectric:3.0"
 
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support:support-annotations:23.0.1'
