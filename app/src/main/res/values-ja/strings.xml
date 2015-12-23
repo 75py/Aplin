@@ -55,6 +55,7 @@
 
     <string name="display_item">表示項目</string>
     <string name="display_item_not_installed">未インストール</string>
+    <string name="display_item_not_installed_summary" />
     <string name="display_item_not_installed_format">未インストール</string>
     <string name="display_item_first_install_time">初回インストール日時</string>
     <string name="display_item_first_install_time_format">初回インストール：%1$s</string>
@@ -77,7 +78,6 @@
     <string name="ga_confirm_dialog_agree">許可する</string>
     <string name="ga_confirm_dialog_disagree">許可しない</string>
     <string name="ga_confirm_dialog_message">AplinはGoogle Analyticsにより匿名の情報収集を行います。\n収集した情報は、今後のアプリ開発に使用させていただきます。\nこの設定はいつでも変更できます。</string>
-    <string name="ga_confirm_dialog_title" />
     <string name="ga_preference_category">利用統計</string>
     <string name="ga_preference_summary">匿名の情報収集を行います。収集した情報は、今後のアプリ開発に使用させていただきます。</string>
     <string name="ga_preference_title">利用統計の収集を許可</string>
