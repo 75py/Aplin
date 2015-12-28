@@ -58,7 +58,7 @@
 
     <string name="display_item">Display items</string>
     <string name="display_item_not_installed">Not installed</string>
-    <string name="display_item_not_installed_summary" />
+    <string name="display_item_not_installed_summary">Installed by other user. That means it is on your device but not installed for your current user.</string>
     <string name="display_item_not_installed_format">Not installed</string>
     <string name="display_item_first_install_time">First install time</string>
     <string name="display_item_first_install_time_summary" />

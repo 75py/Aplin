@@ -55,7 +55,7 @@
 
     <string name="display_item">表示項目</string>
     <string name="display_item_not_installed">未インストール</string>
-    <string name="display_item_not_installed_summary" />
+    <string name="display_item_not_installed_summary">マルチアカウントが利用できる状態で、別ユーザーがインストールした（このユーザーではインストールされていない）場合に表示されます。</string>
     <string name="display_item_not_installed_format">未インストール</string>
     <string name="display_item_first_install_time">初回インストール日時</string>
     <string name="display_item_first_install_time_format">初回インストール：%1$s</string>
