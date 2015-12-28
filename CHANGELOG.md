@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 1.0.0 *(2015-12-28)*
+Version 1.1.0 *(2015-12-28)*
 ----------------------------
 
 * Add a description of "Not installed"
