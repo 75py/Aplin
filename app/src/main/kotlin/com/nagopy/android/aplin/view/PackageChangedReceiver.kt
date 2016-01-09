@@ -36,7 +36,7 @@ class PackageChangedReceiver : BroadcastReceiver() {
         val uid = intent.getIntExtra(Intent.EXTRA_UID, Integer.MIN_VALUE)
         val pkg = intent.data.schemeSpecificPart
 
-        Timber.i("action=${intent.action}, uid=$uid, pkg=$pkg, ${intent.extras}")
+        Timber.d("action=${intent.action}, uid=$uid, pkg=$pkg, ${intent.extras}")
         if (pkg != null) {
             when (intent.action) {
                 Intent.ACTION_PACKAGE_ADDED -> applications.insert(pkg)
