@@ -52,16 +52,36 @@ open class AppConverter {
 
     open fun setValues(realm: Realm, app: App, applicationInfo: ApplicationInfo) {
         val params = prepare(realm, applicationInfo)
-        AppParameters.values()
-                .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
-                .forEach { param ->
-                    param.setValue(app, params)
-                }
+
+        try {
+            AppParameters.values()
+                    .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+                    .forEach { param ->
+                        param.setValue(app, params)
+                    }
+        } catch(e: Exception) {
+            Timber.e(e, "Error occurred. pkg=%s", applicationInfo.packageName)
+            app.removeFromRealmSilently()
+        }
     }
 
     open fun setValue(realm: Realm, app: App, applicationInfo: ApplicationInfo, appParameters: AppParameters) {
         val params = prepare(realm, applicationInfo)
-        appParameters.setValue(app, params)
+
+        try {
+            appParameters.setValue(app, params)
+        } catch(e: Exception) {
+            Timber.e(e, "Error occurred. pkg=%s", applicationInfo.packageName)
+            app.removeFromRealmSilently()
+        }
+    }
+
+    fun App.removeFromRealmSilently() {
+        try {
+            removeFromRealm()
+        } catch(e: Exception) {
+            // ignore
+        }
     }
 
     open fun prepare(realm: Realm, applicationInfo: ApplicationInfo): Params {
