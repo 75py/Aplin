@@ -27,6 +27,7 @@ import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.AplinDevicePolicyManager
 import com.nagopy.android.aplin.model.IconHelper
 import io.realm.Realm
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,7 +80,13 @@ open class AppConverter {
                 .plus("com.google.android.launcher") // 仕組みが未確認だが、これはホームアプリ判定になっているっぽい
 
         val launcherIntent = Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER)
-        val launcherPkgs = packageManager.queryIntentActivities(launcherIntent, 0).map { it.activityInfo.packageName }
+        val launcherPkgs =
+                try {
+                    packageManager.queryIntentActivities(launcherIntent, 0).map { it.activityInfo.packageName }
+                } catch(e: Exception) {
+                    Timber.w(e, "Error: queryIntentActivities")
+                    emptyList<String>()
+                }
 
         return Params(applicationInfo, packageInfo, realm, allPermissionGroups, homeActivities, launcherPkgs, this)
     }
