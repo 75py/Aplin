@@ -18,6 +18,7 @@ package com.nagopy.android.aplin.presenter
 
 import android.app.Application
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -104,9 +105,21 @@ open class AppListPresenter : Presenter {
 
     fun onCreateViewHolder(holder: AppListAdapter.ViewHolder) {
         holder.parent.setOnClickListener { view ->
+            if (holder.adapterPosition == RecyclerView.NO_POSITION) {
+                Timber.w("adapterPosition == -1. Do nothing.")
+                view.setOnClickListener(null)
+                return@setOnClickListener
+            }
+
             parentView?.onListItemClicked(realmResults[holder.adapterPosition], category)
         }
         holder.parent.setOnLongClickListener { view ->
+            if (holder.adapterPosition == RecyclerView.NO_POSITION) {
+                Timber.w("adapterPosition == -1. Do nothing.")
+                view.setOnLongClickListener(null)
+                return@setOnLongClickListener false
+            }
+
             parentView?.onListItemLongClicked(realmResults[holder.adapterPosition])
             return@setOnLongClickListener true
         }

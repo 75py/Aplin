@@ -18,6 +18,7 @@ package com.nagopy.android.aplin
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import io.realm.Realm
@@ -41,6 +42,7 @@ open class Aplin : Application() {
 
         if (BuildConfig.PRODUCTION) {
             Fabric.with(this, Crashlytics())
+            Timber.plant(CrashlyticsTree())
         }
 
         Realm.setDefaultConfiguration(RealmConfiguration.Builder(this)
@@ -60,5 +62,25 @@ open class Aplin : Application() {
         fun getApplicationComponent(): ApplicationComponent {
             return component!!
         }
+    }
+
+    class CrashlyticsTree : Timber.Tree() {
+
+        override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
+            when (priority) {
+                Log.ERROR -> {
+                    Crashlytics.log(priority, tag, message)
+                    Crashlytics.logException(t)
+                }
+                Log.WARN, Log.INFO -> {
+                    Crashlytics.log(priority, tag, message)
+                }
+                else -> {
+                    // ignore
+                }
+            }
+
+        }
+
     }
 }
