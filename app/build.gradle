@@ -17,6 +17,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
+apply plugin: 'realm-android'
 
 apply from: 'signingConfigs/release.gradle', to: android
 
@@ -127,7 +128,6 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
         transitive = true;
     }
-    compile "io.realm:realm-android:$realm_version"
     compile "com.nagopy.android:kotlinames:$kotliname_version"
     kapt "com.nagopy.android:kotlinames-compiler:$kotliname_version"
 
@@ -156,7 +156,7 @@ dependencies {
 buildscript {
     ext.kotlin_version = '1.0.0-beta-4583'
     ext.dagger_version = '2.0.1'
-    ext.realm_version = '0.87.0'
+    ext.realm_version = '0.87.2'
     ext.kotliname_version = '3.0.0'
     ext.target_sdk_version = 23
     Properties properties = new Properties()
@@ -167,9 +167,11 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "io.realm:realm-gradle-plugin:$realm_version"
     }
 }
 repositories {
