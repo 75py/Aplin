@@ -18,9 +18,10 @@ package com.nagopy.android.aplin.view
 
 import android.app.Application
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -31,16 +32,13 @@ import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AppListPresenter
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import com.nagopy.android.aplin.view.decoration.DividerItemDecoration
+import kotlinx.android.synthetic.main.fragment_app_list.*
 import javax.inject.Inject
 
 /**
  * カテゴリ毎のアプリ一覧を表示するフラグメント
  */
 class AppListFragment : Fragment(), AppListView {
-
-    // ButterKnifeのresetにあたるものがないので諦める
-    //    val recyclerView: RecyclerView by bindView(R.id.list)
-    var recyclerView: RecyclerView? = null
 
     @Inject
     lateinit var presenter: AppListPresenter
@@ -86,18 +84,23 @@ class AppListFragment : Fragment(), AppListView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view!!.findViewById(R.id.list) as RecyclerView
 
-        recyclerView!!.layoutManager = LinearLayoutManager(application, LinearLayoutManager.VERTICAL, false)
-        recyclerView!!.adapter = adapter
-        recyclerView!!.addItemDecoration(DividerItemDecoration(application, R.color.colorDivider, R.dimen.divider))
+        recyclerView.layoutManager = LinearLayoutManager(application, LinearLayoutManager.VERTICAL, false)
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(DividerItemDecoration(application, R.color.colorDivider, R.dimen.divider))
+
+        fastScroller.attachRecyclerView(recyclerView)
+        val appBarLayout = activity.findViewById(R.id.appBarLayout) as AppBarLayout
+        fastScroller.attachAppBarLayout(
+                activity.findViewById(R.id.coordinatorLayout) as CoordinatorLayout
+                , appBarLayout
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recyclerView?.layoutManager = null
-        recyclerView?.adapter = null
-        recyclerView = null
+        recyclerView.layoutManager = null
+        recyclerView.adapter = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
