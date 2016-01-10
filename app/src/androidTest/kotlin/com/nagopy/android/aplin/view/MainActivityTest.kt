@@ -119,7 +119,7 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
+        val list = onView(allOf(withId(R.id.recyclerView), isDisplayed()))
         val gpa = GetParamsAction(0)
         list.perform(gpa)
         var lastIndex = gpa.itemCount - 1
@@ -166,7 +166,7 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
+        val list = onView(allOf(withId(R.id.recyclerView), isDisplayed()))
         val gpa = GetParamsAction(0)
         list.perform(gpa)
         var lastIndex = gpa.itemCount - 1
@@ -213,7 +213,7 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
+        val list = onView(allOf(withId(R.id.recyclerView), isDisplayed()))
         val gpa = GetParamsAction(0)
         list.perform(gpa)
         var lastIndex = gpa.itemCount - 1
@@ -269,7 +269,7 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
+        val list = onView(allOf(withId(R.id.recyclerView), isDisplayed()))
         val gpa = GetParamsAction(0)
         list.perform(gpa)
         var lastIndex = gpa.itemCount - 1
@@ -326,7 +326,7 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
+        val list = onView(allOf(withId(R.id.recyclerView), isDisplayed()))
         val gpa = GetParamsAction(0)
         list.perform(gpa)
         var lastIndex = gpa.itemCount - 1
