@@ -95,26 +95,12 @@ class AppListFragment : Fragment(), AppListView {
                 activity.findViewById(R.id.coordinatorLayout) as CoordinatorLayout
                 , appBarLayout
         )
-
-        // 調整
-        appBarLayout.addOnOffsetChangedListener(offsetChangedListener)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         recyclerView.layoutManager = null
         recyclerView.adapter = null
-
-        (activity.findViewById(R.id.appBarLayout) as? AppBarLayout)?.removeOnOffsetChangedListener(offsetChangedListener)
-    }
-
-    // attachAppBarLayoutでなぜか上部に余白ができるため、余白を０に上書きする
-    val offsetChangedListener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-        fastScroller.apply {
-            val layoutParams = layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.topMargin = 0
-            setLayoutParams(layoutParams)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
