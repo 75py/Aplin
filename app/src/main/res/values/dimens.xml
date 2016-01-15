@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright 2015 75py
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,8 +30,6 @@
     <dimen name="licence_margin">@dimen/unit_4</dimen>
 
     <dimen name="divider">1dp</dimen>
-
-    <dimen name="fast_scroll_touch_target_width">@dimen/unit_16</dimen>
 
     <dimen name="unit_1">3dp</dimen>
     <dimen name="unit_2">6dp</dimen>
