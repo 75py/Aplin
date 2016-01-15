@@ -51,14 +51,16 @@ open class AppConverter {
     }
 
     open fun setValues(realm: Realm, app: App, applicationInfo: ApplicationInfo) {
-        val params = prepare(realm, applicationInfo)
-
         try {
+            val params = prepare(realm, applicationInfo)
             AppParameters.values()
                     .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                     .forEach { param ->
                         param.setValue(app, params)
                     }
+        } catch(e: PackageManager.NameNotFoundException) {
+            Timber.w(e, "Not found. pkg=%s", applicationInfo.packageName)
+            app.removeFromRealmSilently()
         } catch(e: Exception) {
             Timber.e(e, "Error occurred. pkg=%s", applicationInfo.packageName)
             app.removeFromRealmSilently()
@@ -66,10 +68,12 @@ open class AppConverter {
     }
 
     open fun setValue(realm: Realm, app: App, applicationInfo: ApplicationInfo, appParameters: AppParameters) {
-        val params = prepare(realm, applicationInfo)
-
         try {
+            val params = prepare(realm, applicationInfo)
             appParameters.setValue(app, params)
+        } catch(e: PackageManager.NameNotFoundException) {
+            Timber.w(e, "Not found. pkg=%s", applicationInfo.packageName)
+            app.removeFromRealmSilently()
         } catch(e: Exception) {
             Timber.e(e, "Error occurred. pkg=%s", applicationInfo.packageName)
             app.removeFromRealmSilently()
