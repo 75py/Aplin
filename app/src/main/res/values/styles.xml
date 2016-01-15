@@ -92,4 +92,7 @@
         <item name="android:dividerHeight">@dimen/divider</item>
     </style>
 
+    <string name="recycler_view_layoutManager">android.support.v7.widget.LinearLayoutManager</string>
+    <integer name="recycler_view_spanCount">1</integer>
+
 </resources>

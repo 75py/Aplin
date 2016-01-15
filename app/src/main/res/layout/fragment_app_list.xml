@@ -14,29 +14,13 @@
  ~ limitations under the License.
  -->
 
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        tools:listitem="@layout/list_item" />
-
-    <com.pluscubed.recyclerfastscroll.AplinRecyclerFastScroller
-        android:id="@+id/fastScroller"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        app:rfs_barColor="@color/colorPrimary"
-        app:rfs_handleNormalColor="@color/colorPrimary"
-        app:rfs_handlePressedColor="@color/colorSecondary"
-        app:rfs_touchTargetWidth="@dimen/fast_scroll_touch_target_width" />
-
-</FrameLayout>
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    app:layoutManager="@string/recycler_view_layoutManager"
+    app:spanCount="@integer/recycler_view_spanCount"
+    tools:listitem="@layout/list_item" />

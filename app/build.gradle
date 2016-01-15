@@ -131,8 +131,6 @@ dependencies {
     compile "com.nagopy.android:kotlinames:$kotliname_version"
     kapt "com.nagopy.android:kotlinames-compiler:$kotliname_version"
 
-    compile 'com.github.pluscubed:recycler-fast-scroll:0.3.0@aar'
-
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile 'junit:junit:4.12'
     testCompile 'org.powermock:powermock-module-junit4:1.6.2'
@@ -164,7 +162,7 @@ buildscript {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     ext.sdk_dir = properties.getProperty("sdk.dir")
-    if (properties.containsKey("travis.job")) {
+    if(properties.containsKey("travis.job")) {
         ext.publish_version_name = "$publish_version_name-${properties.getProperty("travis.job")}"
     }
     repositories {
@@ -173,13 +171,11 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
         classpath "io.realm:realm-gradle-plugin:$realm_version"
     }
 }
 repositories {
     mavenCentral()
-    maven { url "https://jitpack.io" }
 }
 kapt {
     generateStubs = true
