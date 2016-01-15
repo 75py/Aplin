@@ -27,6 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
+        app:layoutManager="@string/recycler_view_layoutManager"
+        app:spanCount="@integer/recycler_view_spanCount"
         tools:listitem="@layout/list_item" />
 
     <com.pluscubed.recyclerfastscroll.AplinRecyclerFastScroller

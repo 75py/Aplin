@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -85,7 +84,6 @@ class AppListFragment : Fragment(), AppListView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView.layoutManager = LinearLayoutManager(application, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(application, R.color.colorDivider, R.dimen.divider))
 
