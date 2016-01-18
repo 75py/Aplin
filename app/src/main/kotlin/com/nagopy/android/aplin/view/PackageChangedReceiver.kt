@@ -33,10 +33,9 @@ class PackageChangedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Aplin.getApplicationComponent().inject(this)
 
-        val uid = intent.getIntExtra(Intent.EXTRA_UID, Integer.MIN_VALUE)
         val pkg = intent.data.schemeSpecificPart
 
-        Timber.d("action=${intent.action}, uid=$uid, pkg=$pkg, ${intent.extras}")
+        Timber.d("%s", intent)
         if (pkg != null) {
             when (intent.action) {
                 Intent.ACTION_PACKAGE_ADDED -> applications.insert(pkg)

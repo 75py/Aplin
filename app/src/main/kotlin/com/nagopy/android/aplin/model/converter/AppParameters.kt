@@ -121,7 +121,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                         }
                     }
                 } catch(e: PackageManager.NameNotFoundException) {
-                    Timber.d("ignore ${e.message}")
+                    Timber.d("ignore %s", e.message)
                 }
                 app.permissions.add(permission)
             }

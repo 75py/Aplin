@@ -75,7 +75,7 @@ open class Applications
                 val allApps = getInstalledApplications()
                 allApps.forEach {
                     if (shouldSkip(it)) {
-                        Timber.d("skip:" + it.packageName)
+                        Timber.d("skip: %s", it.packageName)
                         return@forEach
                     }
 
@@ -88,7 +88,7 @@ open class Applications
 
     open fun getApplicationList(category: Category): RealmResults<App> {
         Realm.getDefaultInstance().use {
-            Timber.d("getApplicationList " + category)
+            Timber.d("getApplicationList %s", category)
             val query = it.where(App::class.java)
             val result = userSettings.sort.findAllSortedAsync(category.where(query))
             return result
@@ -144,12 +144,12 @@ open class Applications
     }
 
     open fun insert(pkg: String): Observable<Void> {
-        Timber.d("insert $pkg")
+        Timber.d("insert %s", pkg)
         return upsert(pkg)
     }
 
     open fun update(pkg: String): Observable<Void> {
-        Timber.d("update $pkg")
+        Timber.d("update %s", pkg)
         return upsert(pkg)
     }
 
@@ -173,7 +173,7 @@ open class Applications
     }
 
     open fun delete(pkg: String): Observable<Void> {
-        Timber.d("delete $pkg")
+        Timber.d("delete %s", pkg)
         return Observable.create {
             val realm = Realm.getDefaultInstance()
             realm.use {
