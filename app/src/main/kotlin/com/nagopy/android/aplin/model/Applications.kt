@@ -191,11 +191,10 @@ open class Applications
             val all = getInstalledApplications()
             val realm = Realm.getDefaultInstance()
             realm.use {
-                realm.executeTransaction {
-                    all.forEach { applicationInfo ->
+                all.forEach { applicationInfo ->
+                    realm.executeTransaction {
                         val apps = realm.where(App::class.java).equalTo(AppNames.packageName(), applicationInfo.packageName).findAll()
-                        if (apps.isEmpty()) {
-                        } else {
+                        if (apps.isNotEmpty()) {
                             val app = apps[0]
                             appConverter.setValue(realm, app, applicationInfo, AppParameters.isDefaultApp)
                         }
