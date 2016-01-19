@@ -15,7 +15,6 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.nagopy.android.aplin">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -75,18 +74,6 @@
             android:name="io.fabric.ApiKey"
             android:value="3aee8f5201b277386756bfdeb1653a635fad9555" />
 
-        <receiver
-            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name="com.google.android.gms.analytics.AnalyticsService"
-            android:enabled="true"
-            android:exported="false" />
     </application>
 
 </manifest>

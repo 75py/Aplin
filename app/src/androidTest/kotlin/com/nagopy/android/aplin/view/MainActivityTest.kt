@@ -16,7 +16,6 @@
 
 package com.nagopy.android.aplin.view
 
-import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -45,7 +44,6 @@ import android.widget.ProgressBar
 import com.nagopy.android.aplin.AplinTestRule
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.TestFunction.intentBlock
-import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import org.hamcrest.CoreMatchers.allOf
@@ -74,14 +72,11 @@ class MainActivityTest {
 
     lateinit var uiDevice: UiDevice
     lateinit var sp: SharedPreferences
-    lateinit var analytics: Analytics
 
     @Before
     fun setup() {
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         sp = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
-        analytics = Analytics(InstrumentationRegistry.getTargetContext().applicationContext as Application, sp)
-        analytics.disagree()
     }
 
     @After

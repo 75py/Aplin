@@ -3,7 +3,6 @@ package com.nagopy.android.aplin.presenter
 import android.app.Application
 import android.content.SharedPreferences
 import android.test.suitebuilder.annotation.SmallTest
-import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Before
 import org.junit.Test
@@ -26,8 +25,6 @@ class SettingsPresenterTest {
     lateinit var sharedPreferences: SharedPreferences
     @Mock
     lateinit var settingsView: SettingsView
-    @Mock
-    lateinit var analytics: Analytics
 
     @Before
     fun setup() {
@@ -35,7 +32,6 @@ class SettingsPresenterTest {
         MockitoAnnotations.initMocks(this)
         target.application = application
         target.sharedPreferences = sharedPreferences
-        target.analytics = analytics
     }
 
     @Test

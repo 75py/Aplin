@@ -75,13 +75,6 @@
     <string name="display_item_package_name">パッケージ名</string>
     <string name="display_item_package_name_summary" />
 
-    <string name="ga_confirm_dialog_agree">許可する</string>
-    <string name="ga_confirm_dialog_disagree">許可しない</string>
-    <string name="ga_confirm_dialog_message">AplinはGoogle Analyticsにより匿名の情報収集を行います。\n収集した情報は、今後のアプリ開発に使用させていただきます。\nこの設定はいつでも変更できます。</string>
-    <string name="ga_preference_category">利用統計</string>
-    <string name="ga_preference_summary">匿名の情報収集を行います。収集した情報は、今後のアプリ開発に使用させていただきます。</string>
-    <string name="ga_preference_title">利用統計の収集を許可</string>
-
     <string name="about">このアプリについて</string>
     <string name="version_title">バージョン</string>
     <string name="source_code_title">ソースコード</string>

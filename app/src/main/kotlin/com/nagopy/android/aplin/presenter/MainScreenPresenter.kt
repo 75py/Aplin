@@ -54,9 +54,6 @@ constructor() : Presenter {
     lateinit var application: Application
 
     @Inject
-    lateinit var analytics: Analytics
-
-    @Inject
     lateinit var applications: Applications
 
     var view: MainScreenView? = null
@@ -86,10 +83,6 @@ constructor() : Presenter {
         view.hideAppList()
         view.showIndicator()
         view.setToolbarSpinnerEnabled(false)
-
-        if (!analytics.isConfirmed()) {
-            view.showAnalyticsConfirm()
-        }
 
         subscription = applications.asyncSubject.subscribe(observer)
     }
@@ -122,9 +115,7 @@ constructor() : Presenter {
                 Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
 
         }
-        activity.startActivity(intent);
-
-        analytics.click(app.packageName)
+        activity.startActivity(intent)
     }
 
     fun listItemLongClicked(app: App) {
@@ -134,8 +125,6 @@ constructor() : Presenter {
                     Timber.e(e, "onError")
                     Toast.makeText(application, e.message, Toast.LENGTH_LONG).show()
                 })
-
-        analytics.longClick(app.packageName)
     }
 
     fun onMenuItemClicked(item: MenuItem, checkedItemList: List<App>) {
@@ -169,7 +158,5 @@ constructor() : Presenter {
                         .subscribe(onNext, onError)
             }
         }
-
-        analytics.menuClick(item.title.toString())
     }
 }

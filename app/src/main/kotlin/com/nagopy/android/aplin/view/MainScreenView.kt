@@ -41,8 +41,6 @@ interface MainScreenView {
      */
     open fun hideAppList()
 
-    open fun showAnalyticsConfirm()
-
     open fun setToolbarSpinnerEnabled(enabled: Boolean)
 
 }

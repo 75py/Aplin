@@ -144,17 +144,6 @@ class MainActivity : AppCompatActivity(),
         presenter.listItemLongClicked(app)
     }
 
-    // GA =================================================================================================
-    override fun showAnalyticsConfirm() {
-        AlertDialog.Builder(this)
-                .setTitle(R.string.ga_confirm_dialog_title)
-                .setMessage(R.string.ga_confirm_dialog_message)
-                .setCancelable(false)
-                .setPositiveButton(R.string.ga_confirm_dialog_agree, { dialog, i -> presenter.analytics.agree() })
-                .setNegativeButton(R.string.ga_confirm_dialog_disagree, { dialog, i -> presenter.analytics.disagree() })
-                .show();
-    }
-
     // Spinner
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         if (viewPager.adapter != null && viewPager.currentItem != position) {

@@ -20,13 +20,6 @@
 
     <com.nagopy.android.aplin.view.preference.SortPreference />
 
-    <PreferenceCategory android:title="@string/ga_preference_category">
-        <CheckBoxPreference
-            android:key="@string/ga_preference_key"
-            android:summary="@string/ga_preference_summary"
-            android:title="@string/ga_preference_title" />
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/about">
         <Preference
             android:summary="@string/version_name"

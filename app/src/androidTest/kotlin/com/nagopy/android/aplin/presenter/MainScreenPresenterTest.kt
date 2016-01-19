@@ -39,7 +39,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
 import javax.inject.Inject
 
 @MediumTest
@@ -67,9 +66,6 @@ class MainScreenPresenterTest {
                 .build()
 
         (Aplin.getApplicationComponent() as ApplicationMockComponent).inject(this)
-
-        mainScreenPresenter.analytics = Mockito.spy(mainScreenPresenter.analytics)
-        Mockito.doNothing().`when`(mainScreenPresenter.analytics).click(Mockito.anyString())
     }
 
     @After

@@ -19,7 +19,6 @@ package com.nagopy.android.aplin.presenter
 import android.app.Application
 import android.content.Intent
 import android.content.SharedPreferences
-import com.nagopy.android.aplin.model.Analytics
 import com.nagopy.android.aplin.view.MainActivity
 import com.nagopy.android.aplin.view.SettingsView
 import javax.inject.Inject
@@ -33,9 +32,6 @@ open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceCh
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
-
-    @Inject
-    lateinit var analytics: Analytics
 
     var settingChanged: Boolean = false
 
@@ -78,6 +74,5 @@ open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceCh
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         settingChanged = true
-        analytics.settingChanged(key!!, sharedPreferences!!.all[key])
     }
 }
