@@ -59,6 +59,18 @@ enum class Sort(
         }
     },
     /**
+     * 初回インストール日時の降順
+     */
+    FIRST_INSTALL_TIME_DESC(titleResourceId = R.string.sort_install_time_desc
+            , summaryResourceId = R.string.sort_install_time_desc_summary) {
+        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
+            return realmQuery.findAllSortedAsync(firstInstallTime() to io.realm.Sort.DESCENDING,
+                    isInstalled() to io.realm.Sort.ASCENDING,
+                    label() to io.realm.Sort.ASCENDING,
+                    packageName() to io.realm.Sort.ASCENDING)
+        }
+    },
+    /**
      * 最終更新日時の降順
      */
     UPDATE_DATE_DESC(titleResourceId = R.string.sort_update_time_desc

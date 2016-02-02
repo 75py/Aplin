@@ -50,6 +50,8 @@
     <string name="sort_default_summary">アプリ名昇順、パッケージ名昇順</string>
     <string name="sort_package_name">パッケージ名</string>
     <string name="sort_package_name_summary">パッケージ名昇順</string>
+    <string name="sort_install_time_desc">初回インストール日時</string>
+    <string name="sort_install_time_desc_summary">初回インストール日時降順、アプリ名昇順、パッケージ名昇順</string>
     <string name="sort_update_time_desc">最終更新日時</string>
     <string name="sort_update_time_desc_summary">最終更新日時降順、アプリ名昇順、パッケージ名昇順</string>
 
