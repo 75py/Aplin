@@ -18,9 +18,8 @@ package com.nagopy.android.aplin
 
 import android.app.Application
 import android.content.Intent
-import android.util.Log
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
+import com.google.android.gms.analytics.GoogleAnalytics
+import com.google.android.gms.analytics.Tracker
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import timber.log.Timber
@@ -41,8 +40,13 @@ open class Aplin : Application() {
         }
 
         if (BuildConfig.PRODUCTION) {
-            Fabric.with(this, Crashlytics())
-            Timber.plant(CrashlyticsTree())
+            val ga = GoogleAnalytics.getInstance(this)
+            val tracker = ga.newTracker(getString(R.string.ga_trackingId))
+            tracker.enableExceptionReporting(true)
+            tracker.enableAdvertisingIdCollection(true)
+            tracker.enableAutoActivityTracking(true)
+            Aplin.tracker = tracker
+            Timber.plant(AnalyticsTree())
         }
 
         Realm.setDefaultConfiguration(RealmConfiguration.Builder(this)
@@ -62,24 +66,14 @@ open class Aplin : Application() {
         fun getApplicationComponent(): ApplicationComponent {
             return component!!
         }
+
+        var tracker: Tracker? = null
     }
 
-    class CrashlyticsTree : Timber.Tree() {
+    class AnalyticsTree : Timber.Tree() {
 
         override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-            when (priority) {
-                Log.ERROR -> {
-                    Crashlytics.log(priority, tag, message)
-                    Crashlytics.logException(t)
-                }
-                Log.WARN, Log.INFO -> {
-                    Crashlytics.log(priority, tag, message)
-                }
-                else -> {
-                    // ignore
-                }
-            }
-
+            // ignore
         }
 
     }

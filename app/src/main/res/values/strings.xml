@@ -78,6 +78,7 @@
     <string name="display_item_package_name">Package name</string>
     <string name="display_item_package_name_summary" />
 
+    <string name="ga_trackingId" translatable="false">UA-9578951-16</string>
     <!-- about -->
     <string name="about">About</string>
     <string name="version_title">Version</string>
