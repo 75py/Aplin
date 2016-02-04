@@ -6,7 +6,6 @@ env:
   global:
     - ADB_INSTALL_TIMEOUT=10
     - MALLOC_ARENA_MAX=2
-    - secure: "d3vnsXF2Yp5oIOTJ0jLecMTuC2wRvRivN4wJhz5VL6OcUjlE253MM5+cdOgoAm3zRDVX0MWY67lP8Ftz9moZe4kqHitN9CvGIdelTMa67TYePCvkBjUjfEL9h8HgO/d0yN8Z9DNKYt9wlFJ2PWk63CLKTcOulX0tYLdJNUiNcDn5TZtTQ9AhBru5sji9WZmTX0y0GDOml352r3ZBmwFDeJeNQKUQdtAKPe9eqEZ+4kfJ0RDrRUTotx0871LOUr4S8GD8U/SzahL26Zwu+U72KC+3Dq+fLUzD/3khI2wQzZms/4qzQ15IL7FF9Bw/WbX5xtEkL9Sx3k0FZVfQLKfjIE670Z2DsGAlzvJiO2H+OJdvbETo+WvMj6nIfAWI8B5Mg7ynq4bR14HMwbfFM4IkMOEhoHGytnubGQVtbmZtmfO332tCXT6Pu9Gy3XrfexEubcjqzcW0UtEcLR8DAOPflfqhSUGEmGVkBJv0JJMPqomY1M03g4qf9NLPxKgv8XcPHG5GggXzAfQ8MPXnd2upbEdACoEm9n7GpICgsENyHaMYJO7agavY15Z2w2XC29zX+fSs2WACN4Arh6TJqk3K1nOytMb4hBWj3yEqxuGGSCmWu0P0Dpz3E1Slrf/pVDUMWXi2STF0y0HA2O6GIiVhbBmeASPoy4Ij8rwKdMhQtYU="
 
 android:
   components:
@@ -41,12 +40,10 @@ branches:
 before_script:
     - chmod +x gradlew
     - chmod +x main.sh
-    - chmod +x deploy_beta.sh
     - echo "sdk.dir=$ANDROID_HOME" > local.properties
     - echo "travis.job=$TRAVIS_JOB_NUMBER" >> local.properties
     - mkdir app/signingConfigs
     - echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
-    - echo "apiSecret=$FABRIC_API_SECRET" > app/fabric.properties
     # see https://github.com/travis-ci/travis-ci/issues/2496
     - ulimit -t 514029
     # Emulator
@@ -59,4 +56,3 @@ script:
     - ./main.sh
 
 after_success:
-  - ./deploy_beta.sh

@@ -53,6 +53,8 @@
     <string name="sort_default_summary">Order by app name, package name</string>
     <string name="sort_package_name">Package name</string>
     <string name="sort_package_name_summary">Order by package name</string>
+    <string name="sort_install_time_desc">First install time desc</string>
+    <string name="sort_install_time_desc_summary">Order by first install time desc, app name, packagename</string>
     <string name="sort_update_time_desc">Update time desc</string>
     <string name="sort_update_time_desc_summary">Order by update time desc, app name, packagename</string>
 
@@ -78,6 +80,7 @@
     <string name="display_item_package_name">Package name</string>
     <string name="display_item_package_name_summary" />
 
+    <string name="ga_trackingId" translatable="false">UA-9578951-16</string>
     <!-- about -->
     <string name="about">About</string>
     <string name="version_title">Version</string>
