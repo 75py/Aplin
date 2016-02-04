@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 2.1.0 *(2016-02-04)*
+----------------------------
+
+* Add "First install time desc" sort #96
+* Small bug fix
+* Remove Crashlytics, Add Google Analytics
+
 Version 1.2.2 *(2016-01-18)*
 ----------------------------
 
