@@ -55,7 +55,7 @@ constructor(var application: Application, var activityManager: ActivityManager) 
     val cache: Map<String, Drawable> = HashMap()
 
     init {
-        defaultIcon = ResourcesCompat.getDrawable(application.resources, android.R.drawable.sym_def_app_icon, null)
+        defaultIcon = ResourcesCompat.getDrawable(application.resources, android.R.drawable.sym_def_app_icon, null)!!
         iconSize = activityManager.launcherLargeIconSize * 4 / 3
 
         defaultIconByteArray = toByteArray(defaultIcon)
