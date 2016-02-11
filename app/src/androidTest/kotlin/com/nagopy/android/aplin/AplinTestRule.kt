@@ -26,7 +26,7 @@ class AplinTestRule : TestRule {
     var moreMessages = ArrayList<String>()
 
     fun setMessages(vararg messages: String) {
-        moreMessages = messages.toArrayList()
+        moreMessages = messages.toCollection(ArrayList<String>())
     }
 
     fun addMessage(message: String) {
