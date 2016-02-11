@@ -18,7 +18,6 @@ package com.nagopy.android.aplin.presenter
 
 import android.app.Application
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -31,7 +30,7 @@ import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
-import com.nagopy.android.aplin.view.adapter.AppListAdapter
+import com.nagopy.android.aplin.view.adapter.LegacyAppListAdapter
 import io.realm.Realm
 import io.realm.RealmResults
 import timber.log.Timber
@@ -75,6 +74,7 @@ open class AppListPresenter : Presenter {
         this.category = category
 
         realmResults = applications.getApplicationList(category)
+        addRealmChangeListener()
     }
 
     override fun resume() {
@@ -84,12 +84,13 @@ open class AppListPresenter : Presenter {
     }
 
     override fun destroy() {
+        removeRealmChangeListeners()
         view = null
         parentView = null
         realm.close()
     }
 
-    fun onAttachedToRecyclerView() {
+    fun addRealmChangeListener() {
         realmResults.removeChangeListeners()
         Timber.v("addChangeListener category=$category")
         realmResults.addChangeListener {
@@ -97,39 +98,18 @@ open class AppListPresenter : Presenter {
         }
     }
 
-    fun onDetachedFromRecyclerView() {
+    fun removeRealmChangeListeners() {
         Timber.v("removeChangeListeners category=$category")
         realmResults.removeChangeListeners()
-
     }
 
-    fun onCreateViewHolder(holder: AppListAdapter.ViewHolder) {
-        holder.parent.setOnClickListener { view ->
-            if (holder.adapterPosition == RecyclerView.NO_POSITION) {
-                Timber.w("adapterPosition == -1. Do nothing.")
-                view.setOnClickListener(null)
-                return@setOnClickListener
-            }
+    open fun getItemCount(): Int = realmResults.size
 
-            parentView?.onListItemClicked(realmResults[holder.adapterPosition], category)
-        }
-        holder.parent.setOnLongClickListener { view ->
-            if (holder.adapterPosition == RecyclerView.NO_POSITION) {
-                Timber.w("adapterPosition == -1. Do nothing.")
-                view.setOnLongClickListener(null)
-                return@setOnLongClickListener false
-            }
-
-            parentView?.onListItemLongClicked(realmResults[holder.adapterPosition])
-            return@setOnLongClickListener true
-        }
-
-        holder.icon.scaleType = ImageView.ScaleType.FIT_CENTER
-        holder.icon.layoutParams.width = iconHelper.iconSize
-        holder.icon.layoutParams.height = iconHelper.iconSize
+    fun onOptionsItemSelected(item: MenuItem) {
+        parentView?.onOptionsItemSelected(item, realmResults)
     }
 
-    fun onBindViewHolder(holder: AppListAdapter.ViewHolder, position: Int) {
+    fun onItemViewCreated(holder: LegacyAppListAdapter.ViewHolder, position: Int) {
         val entity = realmResults[position]
 
         val textColor = ContextCompat.getColor(application,
@@ -157,12 +137,20 @@ open class AppListPresenter : Presenter {
         holder.status.setTextColor(textColor)
 
         holder.icon.setImageDrawable(iconHelper.getIcon(entity))
+
+        holder.icon.scaleType = ImageView.ScaleType.FIT_CENTER
+        holder.icon.layoutParams.width = iconHelper.iconSize
+        holder.icon.layoutParams.height = iconHelper.iconSize
     }
 
-    open fun getItemCount(): Int = realmResults.size
+    fun onItemClicked(position: Int) {
+        val app = realmResults[position]
+        parentView?.onListItemClicked(app, category)
+    }
 
-    fun onOptionsItemSelected(item: MenuItem) {
-        parentView?.onOptionsItemSelected(item, realmResults)
+    fun onItemLongClicked(position: Int) {
+        val app = realmResults[position]
+        parentView?.onListItemLongClicked(app)
     }
 
 }

@@ -17,27 +17,50 @@
 package com.nagopy.android.aplin.presenter
 
 import android.app.Application
+import android.os.Build
 import android.test.suitebuilder.annotation.SmallTest
-import android.widget.ImageView
+import com.nagopy.android.aplin.BuildConfig
+import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Applications
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
-import com.nagopy.android.aplin.view.adapter.AppListAdapter
+import com.nagopy.android.aplin.view.adapter.LegacyAppListAdapter
+import io.realm.MockRealm
+import io.realm.Realm
+import io.realm.RealmResults
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+import org.powermock.api.mockito.PowerMockito
+import org.powermock.core.classloader.annotations.PowerMockIgnore
+import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.modules.junit4.rule.PowerMockRule
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import java.util.*
+import kotlin.test.*
 
+@RunWith(RobolectricTestRunner::class)
+@Config(constants = BuildConfig::class
+        , sdk = intArrayOf(Build.VERSION_CODES.LOLLIPOP)
+        //        , manifest = "src/main/AndroidManifest.xml"
+)
+@PowerMockIgnore("org.mockito.*", "org.robolectric.*", "android.*", "org.json.*")
+@PrepareForTest(Realm::class, RealmResults::class)
 @SmallTest
 class AppListPresenterTest {
+
+    @Rule
+    @JvmField
+    val rule = PowerMockRule()
 
     @Mock
     lateinit var application: Application
@@ -60,7 +83,7 @@ class AppListPresenterTest {
     lateinit var appListPresenter: AppListPresenter
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    lateinit var holder: AppListAdapter.ViewHolder
+    lateinit var holder: LegacyAppListAdapter.ViewHolder
 
     @Before
     fun setup() {
@@ -70,6 +93,15 @@ class AppListPresenterTest {
         appListPresenter.applications = applications
         appListPresenter.userSettings = userSettings
         appListPresenter.iconHelper = iconHelper
+
+        val list = ArrayList<App>()
+        val mockRealm = MockRealm.mockRealm()
+        val mockResult: RealmResults<App> = MockRealm.mockRealmResult(mockRealm, list)
+        Mockito.`when`(applications.getApplicationList(Category.ALL)).thenReturn(mockResult)
+        PowerMockito.doNothing().`when`(mockRealm).close()
+
+        PowerMockito.mockStatic(Realm::class.java)
+        PowerMockito.`when`(Realm.getDefaultInstance()).thenReturn(mockRealm)
     }
 
     @Test
@@ -105,47 +137,7 @@ class AppListPresenterTest {
         assertNull(appListPresenter.view)
         assertNull(appListPresenter.parentView)
 
-        // Mockにして close() が呼ばれたか、にしたい
-        // assertTrue(appListPresenter.realm.isClosed)
-    }
-
-    @Test
-    fun onAttachedToRecyclerView() {
-        // RealmResultsをモックにできないので不可
-    }
-
-    @Test
-    fun onDetachedFromRecyclerView() {
-        // RealmResultsをモックにできないので不可
-    }
-
-    @Test
-    fun onCreateViewHolder() {
-        Mockito.`when`(iconHelper.iconSize).thenReturn(999)
-
-        callInitialize()
-        appListPresenter.onCreateViewHolder(holder)
-
-        Mockito.verify(holder.parent, Mockito.times(1)).setOnClickListener(Mockito.any())
-        Mockito.verify(holder.parent, Mockito.times(1)).setOnLongClickListener(Mockito.any())
-        Mockito.verify(holder.icon, Mockito.times(1)).scaleType = ImageView.ScaleType.FIT_CENTER
-        assertEquals(999, holder.icon.layoutParams.width)
-        assertEquals(999, holder.icon.layoutParams.height)
-    }
-
-    @Test
-    fun onBindViewHolder() {
-        // ここが肝心だけど、RealmResultsがMockにできないと……
-    }
-
-    @Test
-    fun getItemCount() {
-        // RealmResultsをMockにしないとできない
-    }
-
-    @Test
-    fun onOptionsItemSelected() {
-        // RealmResultsをMockにしないとできない
+        PowerMockito.verifyPrivate(appListPresenter.realm, Mockito.times(1)).invoke("close")
     }
 
 }

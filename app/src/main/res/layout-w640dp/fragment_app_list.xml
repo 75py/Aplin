@@ -14,11 +14,13 @@
  ~ limitations under the License.
  -->
 
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical"
     android:fastScrollEnabled="true"
+    android:numColumns="auto_fit"
+    android:scrollbars="vertical"
+    android:stretchMode="columnWidth"
     tools:listitem="@layout/list_item" />

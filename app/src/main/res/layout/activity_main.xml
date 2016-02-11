@@ -22,47 +22,32 @@
     android:layout_height="match_parent"
     tools:context="com.nagopy.android.aplin.view.MainActivity">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinatorLayout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/ToolBarSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Light" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/adView"
-        android:layout_alignParentTop="true">
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-                <Spinner
-                    android:id="@+id/spinner"
-                    style="@style/ToolBarSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/ThemeOverlay.AppCompat.Light" />
-
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/adView"
-            android:layout_below="@+id/appBarLayout"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    </android.support.design.widget.CoordinatorLayout>
+        android:layout_below="@+id/toolbar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

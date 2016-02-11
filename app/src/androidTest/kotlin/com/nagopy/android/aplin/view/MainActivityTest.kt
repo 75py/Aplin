@@ -16,46 +16,49 @@
 
 package com.nagopy.android.aplin.view
 
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
+import android.os.Build
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.UiController
-import android.support.test.espresso.ViewAction
 import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.contrib.RecyclerViewActions
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.matcher.IntentMatchers
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.filters.SdkSuppress
 import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.By
 import android.support.test.uiautomator.UiDevice
 import android.support.test.uiautomator.UiSelector
 import android.support.test.uiautomator.Until
-import android.support.v7.widget.RecyclerView
 import android.test.suitebuilder.annotation.LargeTest
 import android.test.suitebuilder.annotation.MediumTest
-import android.view.View
 import android.widget.ProgressBar
 import com.nagopy.android.aplin.AplinTestRule
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.TestFunction.intentBlock
+import com.nagopy.android.aplin.TestResources
+import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
-import com.nagopy.android.aplin.view.adapter.AppListAdapter
-import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.Matcher
-import org.junit.*
-import timber.log.Timber
+import io.realm.Realm
+import org.hamcrest.CoreMatchers.*
+import org.hamcrest.Matchers.hasToString
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import java.util.*
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import org.hamcrest.CoreMatchers.`is` as _is
 
+@RunWith(AndroidJUnit4::class)
 @LargeTest
 class MainActivityTest {
 
@@ -67,8 +70,7 @@ class MainActivityTest {
     @JvmField
     val aplinRule = AplinTestRule()
 
-    val timeout = 3 * 1000L
-
+    val timeout = 500L
 
     lateinit var uiDevice: UiDevice
     lateinit var sp: SharedPreferences
@@ -114,37 +116,36 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
-        val gpa = GetParamsAction(0)
-        list.perform(gpa)
-        var lastIndex = gpa.itemCount - 1
-        for (index in 0..lastIndex) {
-            // 件数、パッケージ名・アプリ名を取得
-            waitForIdle()
-            val getParams = GetParamsAction(index)
-            list.perform(getParams)
-            waitForIdle()
-            Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
-            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
-
-            // タップしてみて、Intentを確認
-            intentBlock {
-                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-                waitForIdle()
-                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+        for (index in 1..5) {
+            var packageName: String = ""
+            var label: String = ""
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                val realm = Realm.getDefaultInstance()
+                realm.use {
+                    val apps = realm.where(App::class.java).findAll()
+                    val app = apps[Random().nextInt(apps.size)]
+                    packageName = app.packageName
+                    label = app.label
+                    assertTrue(packageName.isNotEmpty())
+                    assertTrue(label.isNotEmpty())
+                }
             }
+            aplinRule.setMessages(packageName, label)
+
+            intentBlock {
+                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
+                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                        .perform(click())
+                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
+            }
+
             // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
+            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
             waitForIdle()
-
-            if (index % 50 == 49) {
-                // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
-                stopSettings()
-            }
         }
     }
 
@@ -161,37 +162,37 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
-        val gpa = GetParamsAction(0)
-        list.perform(gpa)
-        var lastIndex = gpa.itemCount - 1
-        for (index in 0..lastIndex) {
-            // 件数、パッケージ名・アプリ名を取得
-            waitForIdle()
-            val getParams = GetParamsAction(index)
-            list.perform(getParams)
-            waitForIdle()
-            Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
-            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
+        for (index in 1..5) {
+            var packageName: String = ""
+            var label: String = ""
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                val realm = Realm.getDefaultInstance()
+                realm.use {
+                    val apps = Category.SYSTEM.where(realm.where(App::class.java)).findAll()
+                    val app = apps[Random().nextInt(apps.size)]
+                    packageName = app.packageName
+                    label = app.label
+                    assertTrue(packageName.isNotEmpty())
+                    assertTrue(label.isNotEmpty())
+                }
+            }
+            aplinRule.setMessages(packageName, label)
 
             // タップしてみて、Intentを確認
             intentBlock {
-                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-                waitForIdle()
+                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
+                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                        .perform(click())
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
+
             // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
+            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
             waitForIdle()
-
-            if (index % 50 == 49) {
-                // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
-                stopSettings()
-            }
         }
     }
 
@@ -208,46 +209,46 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
-        val gpa = GetParamsAction(0)
-        list.perform(gpa)
-        var lastIndex = gpa.itemCount - 1
-        for (index in 0..lastIndex) {
-            // 件数、パッケージ名・アプリ名を取得
-            waitForIdle()
-            val getParams = GetParamsAction(index)
-            list.perform(getParams)
-            waitForIdle()
-            Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
-            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
+        for (index in 1..5) {
+            var packageName: String = ""
+            var label: String = ""
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                val realm = Realm.getDefaultInstance()
+                realm.use {
+                    val apps = Category.SYSTEM_UNDISABLABLE.where(realm.where(App::class.java)).findAll()
+                    val app = apps[Random().nextInt(apps.size)]
+                    packageName = app.packageName
+                    label = app.label
+                    assertTrue(packageName.isNotEmpty())
+                    assertTrue(label.isNotEmpty())
+                }
+            }
+            aplinRule.setMessages(packageName, label)
 
             // タップしてみて、Intentを確認
             intentBlock {
-                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-                waitForIdle()
+                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
+                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                        .perform(click())
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
-            // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
 
-            val disableButtonExists = uiDevice.findObject(UiSelector().text("無効にする")).waitForExists(1000)
-            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text("有効にする")).waitForExists(1000)
+            // ラベル名が表示されていることをuiautomatorで確認
+            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
+
+            val disableButtonExists = uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).waitForExists(1000)
+            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).waitForExists(1000)
             assertTrue(disableButtonExists || enableButtonExists)
             if (disableButtonExists) {
-                assertFalse(uiDevice.findObject(UiSelector().text("無効にする")).isEnabled)
+                assertFalse(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).isEnabled)
             } else {
-                assertFalse(uiDevice.findObject(UiSelector().text("有効にする")).isEnabled)
+                assertFalse(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).isEnabled)
             }
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
             waitForIdle()
-
-            if (index % 50 == 49) {
-                // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
-                stopSettings()
-            }
         }
     }
 
@@ -264,50 +265,50 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
-        val gpa = GetParamsAction(0)
-        list.perform(gpa)
-        var lastIndex = gpa.itemCount - 1
-        for (index in 0..lastIndex) {
-            // 件数、パッケージ名・アプリ名を取得
-            waitForIdle()
-            val getParams = GetParamsAction(index)
-            list.perform(getParams)
-            waitForIdle()
-            Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
-            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
+        for (index in 1..5) {
+            var packageName: String = ""
+            var label: String = ""
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                val realm = Realm.getDefaultInstance()
+                realm.use {
+                    val apps = Category.SYSTEM_DISABLABLE.where(realm.where(App::class.java)).findAll()
+                    val app = apps[Random().nextInt(apps.size)]
+                    packageName = app.packageName
+                    label = app.label
+                    assertTrue(packageName.isNotEmpty())
+                    assertTrue(label.isNotEmpty())
+                }
+            }
+            aplinRule.setMessages(packageName, label)
 
             // タップしてみて、Intentを確認
             intentBlock {
-                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-                waitForIdle()
+                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
+                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                        .perform(click())
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
-            // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
 
-            val disableButtonExists = uiDevice.findObject(UiSelector().text("無効にする")).waitForExists(1000)
-            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text("有効にする")).waitForExists(1000)
+            // ラベル名が表示されていることをuiautomatorで確認
+            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
+
+            val disableButtonExists = uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).waitForExists(1000)
+            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).waitForExists(1000)
             assertTrue(disableButtonExists || enableButtonExists)
             if (disableButtonExists) {
-                assertTrue(uiDevice.findObject(UiSelector().text("無効にする")).isEnabled)
+                assertTrue(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).isEnabled)
             } else {
-                assertTrue(uiDevice.findObject(UiSelector().text("有効にする")).isEnabled)
+                assertTrue(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).isEnabled)
             }
 
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
             waitForIdle()
-
-            if (index % 50 == 49) {
-                // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
-                stopSettings()
-            }
         }
     }
 
-    @Ignore("WRITE_EXTERNAL_STORAGEが正常に判定できない場合があるため保留")
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.M)
     @LargeTest
     @Test
     fun runtimePermissions() {
@@ -321,28 +322,33 @@ class MainActivityTest {
 
         waitForIdle()
 
-        val list = onView(allOf(withId(R.id.list), isDisplayed()))
-        val gpa = GetParamsAction(0)
-        list.perform(gpa)
-        var lastIndex = gpa.itemCount - 1
-        for (index in 0..lastIndex) {
-            // 件数、パッケージ名・アプリ名を取得
-            waitForIdle()
-            val getParams = GetParamsAction(index)
-            list.perform(getParams)
-            waitForIdle()
-            Timber.d("$index/${getParams.itemCount} ${getParams.packageName} ${getParams.label}")
-            aplinRule.setMessages(getParams.packageName!!, getParams.label!!)
+        for (index in 1..5) {
+            var packageName: String = ""
+            var label: String = ""
+            InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                val realm = Realm.getDefaultInstance()
+                realm.use {
+                    val apps = Category.DENIABLE_PERMISSIONS.where(realm.where(App::class.java)).findAll()
+                    val app = apps[Random().nextInt(apps.size)]
+                    packageName = app.packageName
+                    label = app.label
+                    assertTrue(packageName.isNotEmpty())
+                    assertTrue(label.isNotEmpty())
+                }
+            }
+            aplinRule.setMessages(packageName, label)
 
             // タップしてみて、Intentを確認
             intentBlock {
-                list.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
-                waitForIdle()
+                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
+                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                        .perform(click())
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${getParams.packageName}"))
+                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
+
             // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(getParams.label)).waitForExists(timeout))
+            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
 
             val permissionButton = uiDevice.findObject(UiSelector().text("リクエストされた権限はありません")).waitForExists(1000)
             assertFalse(permissionButton)
@@ -350,49 +356,11 @@ class MainActivityTest {
             // 設定画面からバックキーで戻る
             uiDevice.pressBack()
             waitForIdle()
-
-            if (index % 50 == 49) {
-                // なぜか100件を越えると不安定になるので、50件ごとにアプリを終了させる
-                stopSettings()
-            }
         }
-    }
-
-    private fun stopSettings() {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:com.android.settings"))
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        InstrumentationRegistry.getTargetContext().startActivity(intent)
-        waitForIdle()
-        uiDevice.findObject(UiSelector().text("強制停止")).clickAndWaitForNewWindow(timeout)
-        uiDevice.findObject(UiSelector().text("OK")).clickAndWaitForNewWindow(timeout)
     }
 
     private fun waitForIdle() {
         uiDevice.waitForIdle(timeout)
         Thread.sleep(100)
-    }
-
-    class GetParamsAction(val position: Int) : ViewAction {
-
-        var itemCount: Int = 0
-        var packageName: String? = null
-        var label: String? = null
-
-        override fun getDescription(): String? = "getChildCount"
-
-        override fun getConstraints(): Matcher<View>? {
-            return isAssignableFrom(RecyclerView::class.java)
-        }
-
-        override fun perform(uiController: UiController?, view: View?) {
-            val recyclerView = view as RecyclerView
-            itemCount = recyclerView.adapter.itemCount
-            if (position < itemCount) {
-                val app = (recyclerView.adapter as AppListAdapter).appListPresenter.realmResults[position]
-                packageName = app.packageName
-                label = app.label
-            }
-        }
-
     }
 }
