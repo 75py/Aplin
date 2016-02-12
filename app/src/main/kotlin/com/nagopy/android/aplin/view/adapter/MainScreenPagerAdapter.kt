@@ -26,7 +26,7 @@ import com.nagopy.android.aplin.view.AppListFragment
 /**
  * メイン画面のカテゴリ表示用アダプタ
  */
-public class MainScreenPagerAdapter(
+class MainScreenPagerAdapter(
         val context: Context,
         fragmentManager: FragmentManager,
         val categories: List<Category> = Category.getAll()) : FragmentPagerAdapter(fragmentManager) {

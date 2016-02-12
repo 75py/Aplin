@@ -74,6 +74,7 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
         super.onPause()
         presenter.pause()
         listView.onItemClickListener = null
+        listView.onItemLongClickListener = null
     }
 
     override fun onDestroy() {
