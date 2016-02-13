@@ -47,12 +47,19 @@ before_script:
     # see https://github.com/travis-ci/travis-ci/issues/2496
     - ulimit -t 514029
     # Emulator
-    - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-    - emulator -avd test -no-skin -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+#    - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+#    - emulator -avd test -no-skin -no-audio -no-window &
+#    - android-wait-for-emulator
+#    - adb shell input keyevent 82 &
 
 script:
-    - ./main.sh
+    - echo 'build & test'
+    - ./gradlew assembleDebug testDebug -PdisablePreDex ${BUILD_OPTIONS}
+#    - echo 'connectedDebugAndroidTest small'
+#    - ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=small -PdisablePreDex ${BUILD_OPTIONS}
+#    - echo 'connectedDebugAndroidTest medium'
+#    - ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=medium -PdisablePreDex ${BUILD_OPTIONS}
+#    - echo 'connectedDebugAndroidTest large'
+#    - ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=large -PdisablePreDex ${BUILD_OPTIONS}
 
 after_success:
