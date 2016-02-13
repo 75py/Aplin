@@ -17,7 +17,9 @@
 package com.nagopy.android.aplin
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.support.multidex.MultiDex
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 import io.realm.Realm
@@ -25,6 +27,11 @@ import io.realm.RealmConfiguration
 import timber.log.Timber
 
 open class Aplin : Application() {
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -37,9 +44,7 @@ open class Aplin : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        }
-
-        if (BuildConfig.PRODUCTION) {
+        } else {
             val ga = GoogleAnalytics.getInstance(this)
             val tracker = ga.newTracker(getString(R.string.ga_trackingId))
             tracker.enableExceptionReporting(true)

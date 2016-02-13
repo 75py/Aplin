@@ -18,13 +18,20 @@ package com.nagopy.android.aplin
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.support.multidex.MultiDex
 import android.support.test.runner.AndroidJUnitRunner
 import android.view.View
 import android.view.WindowManager
 
 class AplinTestRunner : AndroidJUnitRunner() {
+
+    override fun onCreate(arguments: Bundle) {
+        MultiDex.install(this.targetContext)
+        super.onCreate(arguments)
+    }
 
     val wm by lazy {
         targetContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager

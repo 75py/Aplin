@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion "$target_sdk_version"
         versionCode publish_version_code
         versionName "$publish_version_name-$gitSha"
@@ -46,20 +46,16 @@ android {
             keyPassword 'android'
         }
     }
-    productFlavors {
-        internal {
-            buildConfigField "boolean", "PRODUCTION", "false"
-        }
-        production {
-            buildConfigField "boolean", "PRODUCTION", "true"
-        }
-    }
     buildTypes {
         debug {
+            minifyEnabled false
+            shrinkResources false
+            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -107,13 +103,14 @@ configurations.all {
         force 'junit:junit:4.12'
         force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
         force "io.realm:realm-android:$realm_version"
+        force 'com.android.support:multidex:1.0.1'
     }
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
     compile 'com.google.android.gms:play-services-analytics:8.4.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'io.reactivex:rxandroid:1.1.0'
