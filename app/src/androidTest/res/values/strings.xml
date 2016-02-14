@@ -15,8 +15,6 @@
   -->
 
 <resources>
-
-    <string name="recycler_view_layoutManager">android.support.v7.widget.GridLayoutManager</string>
-    <integer name="recycler_view_spanCount">2</integer>
-
+    <string name="test_btn_enable">Enable</string>
+    <string name="test_btn_disable">Disable</string>
 </resources>

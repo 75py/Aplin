@@ -79,10 +79,12 @@ class SettingsActivity : AppCompatActivity(), SettingsView {
         return super.onOptionsItemSelected(item)
     }
 
-    public class SettingsFragment : PreferenceFragment() {
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            addPreferencesFromResource(R.xml.pref)
+    companion object {
+        class SettingsFragment : PreferenceFragment() {
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                addPreferencesFromResource(R.xml.pref)
+            }
         }
     }
 }

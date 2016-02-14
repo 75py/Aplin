@@ -17,14 +17,24 @@
 package com.nagopy.android.aplin
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.support.multidex.MultiDex
+import android.util.Log
 import com.google.android.gms.analytics.GoogleAnalytics
+import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.StandardExceptionParser
 import com.google.android.gms.analytics.Tracker
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import timber.log.Timber
 
 open class Aplin : Application() {
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -37,16 +47,14 @@ open class Aplin : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        }
-
-        if (BuildConfig.PRODUCTION) {
+        } else {
             val ga = GoogleAnalytics.getInstance(this)
             val tracker = ga.newTracker(getString(R.string.ga_trackingId))
             tracker.enableExceptionReporting(true)
             tracker.enableAdvertisingIdCollection(true)
             tracker.enableAutoActivityTracking(true)
             Aplin.tracker = tracker
-            Timber.plant(AnalyticsTree())
+            Timber.plant(AnalyticsTree(this))
         }
 
         Realm.setDefaultConfiguration(RealmConfiguration.Builder(this)
@@ -70,10 +78,19 @@ open class Aplin : Application() {
         var tracker: Tracker? = null
     }
 
-    class AnalyticsTree : Timber.Tree() {
+    class AnalyticsTree(val application: Application) : Timber.Tree() {
+
+        val exceptionParser = StandardExceptionParser(application, null)
 
         override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-            // ignore
+            if (priority == Log.ERROR) {
+                Aplin.tracker?.send(
+                        HitBuilders.ExceptionBuilder()
+                                .setDescription(exceptionParser.getDescription(Thread.currentThread().name, t))
+                                .setFatal(false)
+                                .build()
+                )
+            }
         }
 
     }

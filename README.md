@@ -13,7 +13,7 @@ https://play.google.com/store/apps/details?id=com.nagopy.android.aplin
 Latest version
 --------------
 
-2.1.0
+3.0.0
 
 
 License

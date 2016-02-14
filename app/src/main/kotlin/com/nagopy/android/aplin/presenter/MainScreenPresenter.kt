@@ -40,7 +40,7 @@ import javax.inject.Singleton
  * メイン画面用プレゼンター
  */
 @Singleton
-public open class MainScreenPresenter
+open class MainScreenPresenter
 @Inject
 constructor() : Presenter {
 

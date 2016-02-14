@@ -26,7 +26,7 @@ import javax.inject.Singleton
  * 広告表示（AdMob）の処理を移譲するためのクラス
  */
 @Singleton
-public open class AdPresenter : Presenter {
+open class AdPresenter : Presenter {
 
     @Inject
     constructor()
@@ -41,20 +41,20 @@ public open class AdPresenter : Presenter {
                 .addTestDevice("0FDB3E1E20DE9A1E911A85F87903A069")
                 .addTestDevice("F3D630FD4B16A430A0CB29123A096F71")
                 .build()
-        if (!BuildConfig.DEBUG && BuildConfig.PRODUCTION) {
+        if (!BuildConfig.DEBUG) {
             adView.loadAd(adRequest)
         }
     }
 
-    public override fun resume() {
+    override fun resume() {
         adView?.resume()
     }
 
-    public override fun pause() {
+    override fun pause() {
         adView?.pause()
     }
 
-    public override fun destroy() {
+    override fun destroy() {
         adView?.destroy()
         adView = null
     }

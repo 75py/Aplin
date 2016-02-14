@@ -76,10 +76,13 @@ class SettingsPresenterTest {
     }
 
     @Test
-    fun finish() {
+    fun finish_1() {
         target.settingChanged = false
         assertFalse(target.finish())
+    }
 
+    @Test
+    fun finish_2() {
         target.settingChanged = true
         assertTrue(target.finish())
     }

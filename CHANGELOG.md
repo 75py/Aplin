@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 3.0.0 *(2016-02-13)*
+----------------------------
+
+* Support KitKat devices
+* Implement fast scroll #76
+* Fix bugs
+
 Version 2.1.0 *(2016-02-04)*
 ----------------------------
 

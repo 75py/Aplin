@@ -25,7 +25,7 @@ import com.nagopy.android.kotlinames.equalTo
 import com.nagopy.android.kotlinames.isNotNull
 import io.realm.RealmQuery
 
-public enum class Category(
+enum class Category(
         val titleResourceId: Int
         , val summaryResourceId: Int
         , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION) {

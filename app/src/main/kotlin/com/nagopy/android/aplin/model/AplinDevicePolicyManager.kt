@@ -20,6 +20,7 @@ import android.app.Application
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import timber.log.Timber
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -96,6 +97,7 @@ open class AplinDevicePolicyManager {
     }
 
     open fun isProfileOrDeviceOwner(packageName: String): Boolean
-            = devicePolicyManager.isDeviceOwnerApp(packageName) || devicePolicyManager.isProfileOwnerApp(packageName)
+            = devicePolicyManager.isDeviceOwnerApp(packageName)
+            || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && devicePolicyManager.isProfileOwnerApp(packageName))
 
 }

@@ -19,27 +19,26 @@ package com.nagopy.android.aplin.view
 import android.app.Application
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
+import android.widget.AdapterView
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AppListPresenter
-import com.nagopy.android.aplin.view.adapter.AppListAdapter
-import com.nagopy.android.aplin.view.decoration.DividerItemDecoration
+import com.nagopy.android.aplin.view.adapter.LegacyAppListAdapter
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * カテゴリ毎のアプリ一覧を表示するフラグメント
  */
-class AppListFragment : Fragment(), AppListView {
+class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    // ButterKnifeのresetにあたるものがないので諦める
-    //    val recyclerView: RecyclerView by bindView(R.id.list)
-    var recyclerView: RecyclerView? = null
+    lateinit var listView: AbsListView
 
     @Inject
     lateinit var presenter: AppListPresenter
@@ -47,7 +46,7 @@ class AppListFragment : Fragment(), AppListView {
     @Inject
     lateinit var application: Application
 
-    lateinit var adapter: AppListAdapter
+    lateinit var adapter: LegacyAppListAdapter
 
     val category: Category by lazy { Category.valueOf(arguments.getString("type")) }
 
@@ -58,7 +57,7 @@ class AppListFragment : Fragment(), AppListView {
 
         Aplin.getApplicationComponent().inject(this)
 
-        adapter = AppListAdapter(presenter)
+        adapter = LegacyAppListAdapter(presenter)
 
         val parentView = activity as AppListViewParent
         presenter.initialize(this, parentView, category)
@@ -67,11 +66,15 @@ class AppListFragment : Fragment(), AppListView {
     override fun onResume() {
         super.onResume()
         presenter.resume()
+        listView.onItemClickListener = this
+        listView.onItemLongClickListener = this
     }
 
     override fun onPause() {
         super.onPause()
         presenter.pause()
+        listView.onItemClickListener = null
+        listView.onItemLongClickListener = null
     }
 
     override fun onDestroy() {
@@ -86,16 +89,12 @@ class AppListFragment : Fragment(), AppListView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view!!.findViewById(R.id.list) as RecyclerView
-        recyclerView?.adapter = adapter
-        recyclerView?.addItemDecoration(DividerItemDecoration(application, R.color.colorDivider, R.dimen.divider))
+        listView = view!!.findViewById(R.id.list) as AbsListView
+        listView.adapter = adapter
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recyclerView?.layoutManager = null
-        recyclerView?.adapter = null
-        recyclerView = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -107,8 +106,20 @@ class AppListFragment : Fragment(), AppListView {
         adapter.notifyDataSetChanged()
     }
 
+    override fun onItemClick(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        Timber.d("Click pos=%s", position)
+        presenter.onItemClicked(position)
+    }
+
+    override fun onItemLongClick(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
+        Timber.d("Long-click pos=%s", position)
+        presenter.onItemLongClicked(position)
+        return true
+    }
+
+
     companion object {
-        public fun newInstance(category: Category): AppListFragment {
+        fun newInstance(category: Category): AppListFragment {
             val appListFragment = AppListFragment()
             val args = Bundle()
             args.putString("type", category.name)

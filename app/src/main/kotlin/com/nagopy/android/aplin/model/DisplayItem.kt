@@ -149,7 +149,7 @@ enum class DisplayItem(
      * *
      * @return 文字列を追加した場合はtrue、追加しなかった場合はfalse
      */
-    public abstract fun append(context: Context, sb: StringBuilder, appData: App): Boolean
+    abstract fun append(context: Context, sb: StringBuilder, appData: App): Boolean
 
     val key: String = "${javaClass.name}_$name"
 }

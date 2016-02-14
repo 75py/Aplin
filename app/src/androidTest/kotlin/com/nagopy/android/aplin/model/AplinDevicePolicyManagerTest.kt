@@ -17,6 +17,7 @@
 package com.nagopy.android.aplin.model
 
 import android.app.Application
+import android.os.Build
 import android.support.test.InstrumentationRegistry
 import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.Aplin
@@ -61,10 +62,14 @@ class AplinDevicePolicyManagerTest {
     fun isProfileOrDeviceOwner() {
         aplinDevicePolicyManager.devicePolicyManager = Mockito.spy(aplinDevicePolicyManager.devicePolicyManager)
         Mockito.`when`(aplinDevicePolicyManager.devicePolicyManager.isDeviceOwnerApp("testpkg")).thenReturn(false)
-        Mockito.`when`(aplinDevicePolicyManager.devicePolicyManager.isProfileOwnerApp("testpkg")).thenReturn(false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Mockito.`when`(aplinDevicePolicyManager.devicePolicyManager.isProfileOwnerApp("testpkg")).thenReturn(false)
+        }
         assertFalse(aplinDevicePolicyManager.isProfileOrDeviceOwner("testpkg"))
 
         Mockito.verify(aplinDevicePolicyManager.devicePolicyManager, Mockito.times(1)).isDeviceOwnerApp("testpkg")
-        Mockito.verify(aplinDevicePolicyManager.devicePolicyManager, Mockito.times(1)).isProfileOwnerApp("testpkg")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Mockito.verify(aplinDevicePolicyManager.devicePolicyManager, Mockito.times(1)).isProfileOwnerApp("testpkg")
+        }
     }
 }

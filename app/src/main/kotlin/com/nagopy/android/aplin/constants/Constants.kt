@@ -23,17 +23,17 @@ import java.util.*
 /**
  * 定数クラス
  */
-public object Constants {
+object Constants {
 
     /**
      * 改行
      */
-    public val LINE_SEPARATOR: String = System.getProperty("line.separator")
+    val LINE_SEPARATOR: String = System.getProperty("line.separator")
 
     /**
      * 2000/01/01（ミリ秒）
      */
-    public val Y2K: Long
+    val Y2K: Long
 
     init {
         val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
@@ -44,7 +44,7 @@ public object Constants {
         }
     }
 
-    public val ALL_SDK_VERSION = IntRange(Build.VERSION_CODES.BASE, Int.MAX_VALUE)
+    val ALL_SDK_VERSION = IntRange(Build.VERSION_CODES.BASE, Int.MAX_VALUE)
 
 
     const val MIME_TYPE_TEXT_PLAIN = "text/plain"

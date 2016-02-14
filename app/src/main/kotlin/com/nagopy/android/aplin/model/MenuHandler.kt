@@ -30,7 +30,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-public open class MenuHandler {
+open class MenuHandler {
 
     @Inject
     lateinit var application: Application
@@ -41,7 +41,7 @@ public open class MenuHandler {
     @Inject
     constructor()
 
-    public fun search(app: App): Observable<Void> {
+    fun search(app: App): Observable<Void> {
         return Observable.create { s ->
             val actionWebSearch = Intent(Intent.ACTION_WEB_SEARCH)
                     .putExtra(SearchManager.QUERY, "${app.label} ${app.packageName}")
@@ -63,7 +63,7 @@ public open class MenuHandler {
         }
     }
 
-    public fun share(subject: String?, text: String): Observable<Void> {
+    fun share(subject: String?, text: String): Observable<Void> {
         return Observable.create { s ->
             val intent = Intent(Intent.ACTION_SEND)
                     .setType(Constants.MIME_TYPE_TEXT_PLAIN)

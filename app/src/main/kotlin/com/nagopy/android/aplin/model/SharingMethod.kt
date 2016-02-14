@@ -21,7 +21,7 @@ import com.nagopy.android.aplin.entity.App
 /**
  * 共有方法の定義クラス
  */
-public enum class SharingMethod {
+enum class SharingMethod {
     /**
      * アプリ名共有
      */
@@ -82,7 +82,7 @@ public enum class SharingMethod {
      * *
      * @return 共有用の文字列
      */
-    public abstract fun makeShareString(appList: List<App>): String
+    abstract fun makeShareString(appList: List<App>): String
 
     /**
      * 共有用の文字列を作成する
@@ -91,6 +91,6 @@ public enum class SharingMethod {
      * *
      * @return 共有用の文字列
      */
-    public abstract fun makeShareString(appData: App): String
+    abstract fun makeShareString(appData: App): String
 
 }

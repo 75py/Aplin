@@ -71,8 +71,7 @@ class MainScreenPresenterTest {
     @After
     fun tearDown() {
         uiDevice.pressBack()
-        uiDevice.waitForIdle(1000)
-        activity?.finish()
+        uiDevice.pressBack()
         uiDevice.waitForIdle(1000)
     }
 
