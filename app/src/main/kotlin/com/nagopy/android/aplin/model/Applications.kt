@@ -186,7 +186,7 @@ open class Applications
         }
     }
 
-    open fun updateDefaultAppStatus(): Observable<Void> {
+    open fun updatePoco(): Observable<Void> {
         return Observable.create {
             val all = getInstalledApplications()
             val realm = Realm.getDefaultInstance()
@@ -196,7 +196,7 @@ open class Applications
                         val apps = realm.where(App::class.java).equalTo(AppNames.packageName(), applicationInfo.packageName).findAll()
                         if (apps.isNotEmpty()) {
                             val app = apps[0]
-                            appConverter.setValue(realm, app, applicationInfo, AppParameters.isDefaultApp)
+                            appConverter.setValues(realm, app, applicationInfo, AppParameters.isDefaultApp)
                         }
                     }
                 }

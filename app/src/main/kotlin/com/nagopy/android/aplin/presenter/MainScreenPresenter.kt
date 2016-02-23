@@ -88,7 +88,7 @@ constructor() : Presenter {
     }
 
     override fun resume() {
-        applications.updateDefaultAppStatus()
+        applications.updatePoco()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe({
                     // do nothing
