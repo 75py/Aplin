@@ -145,7 +145,7 @@ dependencies {
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 }
 buildscript {
-    ext.kotlin_version = '1.0.0-rc-1036'
+    ext.kotlin_version = '1.0.0'
     ext.dagger_version = '2.0.1'
     ext.realm_version = '0.87.4'
     ext.kotliname_version = '4.0.0'
