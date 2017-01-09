@@ -39,7 +39,7 @@ open class Aplin : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        if (component == null ) {
+        if (component == null) {
             component = DaggerApplicationComponent.builder()
                     .applicationModule(ApplicationModule(this))
                     .build()
@@ -57,8 +57,10 @@ open class Aplin : Application() {
             Timber.plant(AnalyticsTree(this))
         }
 
-        Realm.setDefaultConfiguration(RealmConfiguration.Builder(this)
+        Realm.init(this)
+        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
                 .name(Realm.DEFAULT_REALM_NAME)
+                .schemaVersion(BuildConfig.VERSION_CODE.toLong())
                 .deleteRealmIfMigrationNeeded()
                 .build())
     }

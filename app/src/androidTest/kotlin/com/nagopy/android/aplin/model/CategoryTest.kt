@@ -37,10 +37,15 @@ class CategoryTest {
 
     @Before
     fun setup() {
-        realm = Realm.getInstance(RealmConfiguration.Builder(application)
+        Realm.init(application)
+        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
                 .name(javaClass.name)
                 .inMemory()
                 .build())
+        Realm.getDefaultInstance().use {
+            it.where(App::class.java).findAll().deleteAllFromRealm()
+        }
+        realm = Realm.getDefaultInstance()
     }
 
     @After
@@ -51,10 +56,9 @@ class CategoryTest {
     @Test
     fun overlay_systemApp() {
         realm.executeTransaction {
-            val app = it.createObject(App::class.java)
-            app.packageName = "test"
-            app.label = "isThisASystemPackage = true"
-            app.isThisASystemPackage = true
+            val app = it.createObject(App::class.java, "test")
+            app.label = "isSystemPackage = true"
+            app.isSystemPackage = true
         }
         val result = Category.SYSTEM_ALERT_WINDOW_PERMISSION.where(realm.where(App::class.java)).findAll()
 
@@ -65,10 +69,9 @@ class CategoryTest {
     @Test
     fun overlay_noPermissions() {
         realm.executeTransaction {
-            val app = it.createObject(App::class.java)
-            app.packageName = "test"
-            app.label = "isThisASystemPackage = false , permission = empty"
-            app.isThisASystemPackage = false
+            val app = it.createObject(App::class.java, "test")
+            app.label = "isSystemPackage = false , permission = empty"
+            app.isSystemPackage = false
             app.permissions = RealmList()
         }
         val result = Category.SYSTEM_ALERT_WINDOW_PERMISSION.where(realm.where(App::class.java)).findAll()
@@ -79,10 +82,9 @@ class CategoryTest {
     @Test
     fun overlay() {
         realm.executeTransaction {
-            val app = it.createObject(App::class.java)
-            app.packageName = "test"
-            app.label = "isThisASystemPackage = false , permission = SYSTEM_ALERT_WINDOW"
-            app.isThisASystemPackage = false
+            val app = it.createObject(App::class.java, "test")
+            app.label = "isSystemPackage = false , permission = SYSTEM_ALERT_WINDOW"
+            app.isSystemPackage = false
             app.permissions = RealmList()
             val p = it.createObject(AppPermission::class.java)
             p.name = android.Manifest.permission.SYSTEM_ALERT_WINDOW

@@ -17,6 +17,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
+apply plugin: 'com.cookpad.android.licensetools'
 
 apply from: 'signingConfigs/release.gradle', to: android
 
@@ -25,8 +26,8 @@ def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim
 def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
@@ -95,14 +96,14 @@ android {
 configurations.all {
     resolutionStrategy {
         failOnVersionConflict()
-        force 'com.android.support:support-v4:23.2.0'
-        force 'com.android.support:support-annotations:23.2.0'
+        force 'com.android.support:support-v4:25.1.0'
+        force 'com.android.support:support-annotations:25.1.0'
+        force 'com.android.support:appcompat-v7:25.1.0'
         force 'org.hamcrest:hamcrest-core:1.3'
         force 'com.google.dagger:dagger:2.0.1'
         force 'io.reactivex:rxjava:1.0.16'
         force 'junit:junit:4.12'
         force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-        force "io.realm:realm-android:$realm_version"
         force 'com.android.support:multidex:1.0.1'
     }
 }
@@ -110,17 +111,19 @@ configurations.all {
 dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.google.android.gms:play-services-analytics:8.4.0'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.google.android.gms:play-services-analytics:10.0.1'
+    compile 'com.google.android.gms:play-services-ads:10.0.1'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
-    compile 'com.jakewharton.timber:timber:4.1.1'
+    compile 'com.jakewharton.timber:timber:4.5.0'
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     compile "com.nagopy.android:kotlinames:$kotliname_version"
     kapt "com.nagopy.android:kotlinames-compiler:$kotliname_version"
+    compile 'io.realm:android-adapters:1.4.1'
 
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testCompile 'junit:junit:4.12'
@@ -132,24 +135,29 @@ dependencies {
 
     androidTestCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support:support-annotations:23.2.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support:appcompat-v7:25.1.0'
+    androidTestCompile 'com.android.support:support-annotations:25.1.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
+    kaptAndroidTest "org.jetbrains.kotlin:kotlin-annotation-processing:${kotlin_version}"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
+    kaptAndroidTest "com.nagopy.android:kotlinames-compiler:$kotliname_version"
 }
 buildscript {
-    ext.kotlin_version = '1.0.0'
+    ext.kotlin_version = '1.0.6'
     ext.dagger_version = '2.0.2'
-    ext.realm_version = '0.87.5'
-    ext.kotliname_version = '5.0.0'
-    ext.target_sdk_version = 23
+    ext.realm_version = '2.2.2'
+    ext.kotliname_version = '6.0.0'
+    ext.target_sdk_version = 25
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     ext.sdk_dir = properties.getProperty("sdk.dir")
@@ -162,6 +170,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "io.realm:realm-gradle-plugin:$realm_version"
     }
 }
@@ -170,4 +179,10 @@ repositories {
 }
 kapt {
     generateStubs = true
+}
+
+apply plugin: "kotlin-allopen"
+
+allOpen {
+    annotation('io.realm.annotations.RealmClass')
 }

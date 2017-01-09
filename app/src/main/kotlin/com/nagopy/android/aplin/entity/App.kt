@@ -24,39 +24,39 @@ import io.realm.annotations.Required
 /**
  * アプリケーションを表すエンティティ
  */
-open class App : RealmObject() {
+class App : RealmObject() {
 
     @PrimaryKey
-    open var packageName: String = ""
+    var packageName: String = ""
 
     @Required
-    open var label: String = ""
+    var label: String = ""
 
-    open var isEnabled: Boolean = false
+    var isEnabled: Boolean = false
 
-    open var isSystem: Boolean = false
+    var isSystem: Boolean = false
 
-    open var iconByteArray: ByteArray? = null
+    var iconByteArray: ByteArray? = null
 
-    open var isInstalled: Boolean = true // 実行ユーザーでインストールされているか、API17以上で使用するフラグ。
+    var isInstalled: Boolean = true // 実行ユーザーでインストールされているか、API17以上で使用するフラグ。
 
-    open var isThisASystemPackage: Boolean = false
+    var isSystemPackage: Boolean = false
 
-    open var hasActiveAdmins: Boolean = false
+    var hasActiveAdmins: Boolean = false
 
-    open var isDefaultApp: Boolean = false
+    var isDefaultApp: Boolean = false
 
-    open var isHomeApp = false
+    var isHomeApp = false
 
-    open var firstInstallTime: Long = 0
+    var firstInstallTime: Long = 0
 
-    open var lastUpdateTime: Long = 0
+    var lastUpdateTime: Long = 0
 
-    open var versionName: String? = null
+    var versionName: String? = null
 
-    open var permissions: RealmList<AppPermission> = RealmList()
+    var permissions: RealmList<AppPermission> = RealmList()
 
-    open var isProfileOrDeviceOwner: Boolean = false // 6.0以降
+    var isProfileOrDeviceOwner: Boolean = false // 6.0以降
 
-    open var isLaunchable: Boolean = false // ランチャーから起動可能か。権限拒否可能判定で使用する
+    var isLaunchable: Boolean = false // ランチャーから起動可能か。権限拒否可能判定で使用する
 }

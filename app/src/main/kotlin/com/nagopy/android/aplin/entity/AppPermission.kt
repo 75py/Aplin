@@ -19,14 +19,14 @@ package com.nagopy.android.aplin.entity
 import io.realm.RealmObject
 import io.realm.annotations.Required
 
-open class AppPermission : RealmObject() {
+class AppPermission : RealmObject() {
 
     @Required
-    open var name: String = ""
+    var name: String = ""
 
     // open var label: String? = null
 
-    open var group: String? = null
+    var group: String? = null
 
-    open var groupLabel: String? = null
+    var groupLabel: String? = null
 }

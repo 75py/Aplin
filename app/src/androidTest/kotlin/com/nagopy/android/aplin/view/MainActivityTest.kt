@@ -24,6 +24,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.action.ViewActions.swipeDown
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -46,12 +47,14 @@ import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
 import io.realm.Realm
 import org.hamcrest.CoreMatchers.*
+import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.hasToString
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import timber.log.Timber
 import java.util.*
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -116,6 +119,10 @@ class MainActivityTest {
 
         waitForIdle()
 
+        // なぜか最初が動かないときがあるので、一度スクロール
+        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
+        waitForIdle()
+
         for (index in 1..5) {
             var packageName: String = ""
             var label: String = ""
@@ -136,6 +143,7 @@ class MainActivityTest {
                 onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
                         .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
                         .perform(click())
+                waitForIdle()
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
                 Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
@@ -162,6 +170,10 @@ class MainActivityTest {
 
         waitForIdle()
 
+        // なぜか最初が動かないときがあるので、一度スクロール
+        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
+        waitForIdle()
+
         for (index in 1..5) {
             var packageName: String = ""
             var label: String = ""
@@ -183,6 +195,7 @@ class MainActivityTest {
                 onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
                         .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
                         .perform(click())
+                waitForIdle()
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
                 Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
@@ -209,6 +222,10 @@ class MainActivityTest {
 
         waitForIdle()
 
+        // なぜか最初が動かないときがあるので、一度スクロール
+        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
+        waitForIdle()
+
         for (index in 1..5) {
             var packageName: String = ""
             var label: String = ""
@@ -230,6 +247,7 @@ class MainActivityTest {
                 onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
                         .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
                         .perform(click())
+                waitForIdle()
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
                 Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
@@ -237,13 +255,13 @@ class MainActivityTest {
             // ラベル名が表示されていることをuiautomatorで確認
             assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
 
-            val disableButtonExists = uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).waitForExists(1000)
-            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).waitForExists(1000)
+            val disableButtonExists = uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).waitForExists(1000)
+            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).waitForExists(1000)
             assertTrue(disableButtonExists || enableButtonExists)
             if (disableButtonExists) {
-                assertFalse(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).isEnabled)
+                assertFalse(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).isEnabled)
             } else {
-                assertFalse(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).isEnabled)
+                assertFalse(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).isEnabled)
             }
 
             // 設定画面からバックキーで戻る
@@ -265,6 +283,10 @@ class MainActivityTest {
 
         waitForIdle()
 
+        // なぜか最初が動かないときがあるので、一度スクロール
+        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
+        waitForIdle()
+
         for (index in 1..5) {
             var packageName: String = ""
             var label: String = ""
@@ -279,13 +301,16 @@ class MainActivityTest {
                     assertTrue(label.isNotEmpty())
                 }
             }
+            Timber.d("disablable() pkg=%s, label=%s", packageName, label)
             aplinRule.setMessages(packageName, label)
 
             // タップしてみて、Intentを確認
             intentBlock {
                 onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
                         .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                        .atPosition(0)
                         .perform(click())
+                waitForIdle()
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
                 Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
@@ -293,13 +318,13 @@ class MainActivityTest {
             // ラベル名が表示されていることをuiautomatorで確認
             assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
 
-            val disableButtonExists = uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).waitForExists(1000)
-            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).waitForExists(1000)
+            val disableButtonExists = uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).waitForExists(1000)
+            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).waitForExists(1000)
             assertTrue(disableButtonExists || enableButtonExists)
             if (disableButtonExists) {
-                assertTrue(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_disable)).isEnabled)
+                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).isEnabled)
             } else {
-                assertTrue(uiDevice.findObject(UiSelector().text(TestResources.string.test_btn_enable)).isEnabled)
+                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).isEnabled)
             }
 
             // 設定画面からバックキーで戻る
@@ -320,6 +345,10 @@ class MainActivityTest {
         onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.DENIABLE_PERMISSIONS)))
                 .perform(click())
 
+        waitForIdle()
+
+        // なぜか最初が動かないときがあるので、一度スクロール
+        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
         waitForIdle()
 
         for (index in 1..5) {
@@ -343,6 +372,7 @@ class MainActivityTest {
                 onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
                         .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
                         .perform(click())
+                waitForIdle()
                 Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
                 Intents.intended(IntentMatchers.hasData("package:${packageName}"))
             }
@@ -350,7 +380,7 @@ class MainActivityTest {
             // ラベル名が表示されていることをuiautomatorで確認
             assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
 
-            val permissionButton = uiDevice.findObject(UiSelector().text("リクエストされた権限はありません")).waitForExists(1000)
+            val permissionButton = uiDevice.findObject(UiSelector().textStartsWith("リクエストされた権限はありません")).waitForExists(1000)
             assertFalse(permissionButton)
 
             // 設定画面からバックキーで戻る
@@ -361,6 +391,6 @@ class MainActivityTest {
 
     private fun waitForIdle() {
         uiDevice.waitForIdle(timeout)
-        Thread.sleep(100)
+        Thread.sleep(timeout)
     }
 }

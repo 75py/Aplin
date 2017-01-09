@@ -31,7 +31,8 @@ import java.util.*
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
     packageName(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.packageName = params.applicationInfo.packageName
+            // PrimaryKeyは最初に設定されるので、あとからの設定は不要
+            // app.packageName = params.applicationInfo.packageName
         }
     },
     label(Constants.ALL_SDK_VERSION) {
@@ -51,9 +52,9 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                             || (params.applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
         }
     },
-    isThisASystemPackage(Constants.ALL_SDK_VERSION) {
+    isSystemPackage(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.isThisASystemPackage = params.appConverter.aplinDevicePolicyManager.isThisASystemPackage(params.packageInfo)
+            app.isSystemPackage = params.appConverter.aplinDevicePolicyManager.isSystemPackage(params.packageInfo)
         }
     },
     firstInstallTime(Constants.ALL_SDK_VERSION) {
@@ -116,7 +117,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                     // permission.label = pi.loadLabel(params.appConverter.packageManager).toString()
                     permission.group = pi.group
                     params.allPermissionGroups.forEach {
-                        if (it.name.equals(pi.group)) {
+                        if (it.name == pi.group) {
                             permission.groupLabel = it.loadLabel(params.appConverter.packageManager).toString()
                         }
                     }

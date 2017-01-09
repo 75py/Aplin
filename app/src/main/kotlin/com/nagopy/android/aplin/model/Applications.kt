@@ -33,6 +33,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.AsyncSubject
 import timber.log.Timber
+import java.lang.reflect.Field
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,7 +45,7 @@ open class Applications
         , val userSettings: UserSettings
 ) {
 
-    val asyncSubject = AsyncSubject.create<Void>().apply {
+    val asyncSubject: Observable<Void> = AsyncSubject.create<Void>().apply {
         Observable.create<Void> {
             if (!isLoaded()) {
                 refresh()
@@ -57,7 +58,7 @@ open class Applications
                 }
     }
 
-    val enabledSettingField = ApplicationInfo::class.java.getDeclaredField("enabledSetting").apply {
+    val enabledSettingField: Field = ApplicationInfo::class.java.getDeclaredField("enabledSetting").apply {
         isAccessible = true
     }
 
@@ -71,7 +72,7 @@ open class Applications
         val realm = Realm.getDefaultInstance()
         realm.use {
             realm.executeTransaction {
-                realm.where(App::class.java).findAll().clear()
+                realm.where(App::class.java).findAll().deleteAllFromRealm()
                 val allApps = getInstalledApplications()
                 allApps.forEach {
                     if (shouldSkip(it)) {
@@ -79,7 +80,7 @@ open class Applications
                         return@forEach
                     }
 
-                    val entity = realm.createObject(App::class.java)
+                    val entity = realm.createObject(App::class.java, it.packageName)
                     appConverter.setValues(realm, entity, it)
                 }
             }
@@ -162,7 +163,7 @@ open class Applications
                     realm.executeTransaction {
                         var entity = realm.where(App::class.java).equalTo(packageName(), pkg).findFirst()
                         if (entity == null) {
-                            entity = realm.createObject(App::class.java)
+                            entity = realm.createObject(App::class.java, pkg)
                         }
                         appConverter.setValues(realm, entity, applicationInfo)
                     }
@@ -179,7 +180,7 @@ open class Applications
             realm.use {
                 realm.executeTransaction {
                     val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
-                    entity.clear()
+                    entity.deleteAllFromRealm()
                 }
             }
             it.onCompleted()

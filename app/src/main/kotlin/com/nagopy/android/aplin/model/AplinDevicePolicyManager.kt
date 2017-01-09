@@ -20,16 +20,22 @@ import android.app.Application
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Build
+import android.os.IBinder
+import android.print.PrintManager
+import android.webkit.IWebViewUpdateService
 import timber.log.Timber
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.reflect.declaredMemberFunctions
+import kotlin.reflect.staticFunctions
+import kotlin.reflect.staticProperties
 
 @Singleton
-open class AplinDevicePolicyManager {
-
+open class AplinDevicePolicyManager @Inject constructor() {
 
     @Inject
     lateinit var application: Application
@@ -39,9 +45,6 @@ open class AplinDevicePolicyManager {
 
     @Inject
     lateinit var packageManager: PackageManager
-
-    @Inject
-    constructor()
 
     val mSystemPackageInfo: PackageInfo? by lazy {
         try {
@@ -59,6 +62,100 @@ open class AplinDevicePolicyManager {
             Timber.e(e, "リフレクション失敗")
             null
         }
+    }
+
+    val permissionControllerPackageName: String? by lazy {
+        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+            try {
+                val v = PackageManager::class.declaredMemberFunctions.filter {
+                    it.name == "getPermissionControllerPackageName"
+                }.firstOrNull()?.call(packageManager) as? String
+                Timber.d("permissionControllerPackageName = %s", v)
+                return@lazy v
+            } catch (e: Exception) {
+                Timber.e(e, "getPermissionControllerPackageName の実行に失敗")
+            }
+        }
+        return@lazy null
+    }
+
+    val servicesSystemSharedLibraryPackageName: String? by lazy {
+        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+            try {
+                val v = PackageManager::class.declaredMemberFunctions.filter {
+                    it.name == "getServicesSystemSharedLibraryPackageName"
+                }.firstOrNull()?.call(packageManager) as? String
+                Timber.d("servicesSystemSharedLibraryPackageName = %s", v)
+                return@lazy v
+            } catch (e: Exception) {
+                Timber.e(e, "getServicesSystemSharedLibraryPackageName の実行に失敗")
+            }
+        }
+        return@lazy null
+    }
+
+    val sharedSystemSharedLibraryPackageName: String? by lazy {
+        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+            try {
+                val v = PackageManager::class.declaredMemberFunctions.filter {
+                    it.name == "getSharedSystemSharedLibraryPackageName"
+                }.firstOrNull()?.call(packageManager) as? String
+                Timber.d("sharedSystemSharedLibraryPackageName = %s", v)
+                return@lazy v
+            } catch (e: Exception) {
+                Timber.e(e, "getSharedSystemSharedLibraryPackageName の実行に失敗")
+            }
+        }
+        return@lazy null
+    }
+
+    val PRINT_SPOOLER_PACKAGE_NAME: String? by lazy {
+        if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
+            try {
+                val v = PrintManager::class.staticProperties.filter {
+                    it.name == "PRINT_SPOOLER_PACKAGE_NAME"
+                }.firstOrNull()?.call() as? String
+                Timber.d("PRINT_SPOOLER_PACKAGE_NAME = %s", v)
+                return@lazy v
+            } catch (e: Exception) {
+                Timber.e(e, "PRINT_SPOOLER_PACKAGE_NAME の取得に失敗")
+            }
+        }
+        return@lazy null
+    }
+
+    val deviceProvisioningPackage: String? by lazy {
+        if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
+            try {
+                val r = Resources.getSystem()
+                val id = r.getIdentifier("config_deviceProvisioningPackage", "string", "android")
+                val v = r.getString(id)
+                Timber.d("deviceProvisioningPackage id = %d, value = %s", id, v)
+                return@lazy v
+            } catch (e: Exception) {
+                Timber.e(e, "deviceProvisioningPackage の取得に失敗")
+            }
+        }
+        return@lazy null
+    }
+
+    val webviewUpdateService: IWebViewUpdateService? by lazy {
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+            // 7.0-
+            try {
+                val clsServiceManager = Class.forName("android.os.ServiceManager").kotlin
+                val clsServiceManager_getService = clsServiceManager.staticFunctions.filter {
+                    it.name == "getService" && it.parameters.size == 1
+                }.first()
+                val ibinder = clsServiceManager_getService.call("webviewupdate") as? IBinder
+                val v = IWebViewUpdateService.Stub.asInterface(ibinder)
+                Timber.d("webviewUpdateService = %s", v)
+                return@lazy v
+            } catch (e: Exception) {
+                Timber.e(e, "webviewUpdateService の取得に失敗")
+            }
+        }
+        return@lazy null
     }
 
     /**
@@ -80,6 +177,21 @@ open class AplinDevicePolicyManager {
         return false
     }
 
+    open fun isSystemPackage(packageInfo: PackageInfo?): Boolean {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            return isThisASystemPackage(packageInfo)
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            // 6.0
+            return isSystemPackageApi23(packageInfo)
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+            // 7.0
+            return isSystemPackageApi24(packageInfo)
+        } else {
+            // 7.1-
+            return isSystemPackageApi25(packageInfo)
+        }
+    }
+
     /**
      * [DevicePolicyManager]のisThisASystemPackageメソッドと同じ内容.
      * 4.4以下で使用。
@@ -94,6 +206,35 @@ open class AplinDevicePolicyManager {
                 && packageInfo.signatures != null
                 && mSystemPackageInfo != null
                 && mSystemPackageInfo!!.signatures[0] == packageInfo.signatures[0])
+    }
+
+    // Utils#isSystemPackage
+    open fun isSystemPackageApi23(packageInfo: PackageInfo?): Boolean {
+        return packageInfo != null
+                && (isThisASystemPackage(packageInfo)
+                || packageInfo.packageName == permissionControllerPackageName
+                || packageInfo.packageName == servicesSystemSharedLibraryPackageName
+                || packageInfo.packageName == sharedSystemSharedLibraryPackageName
+                )
+    }
+
+    // Utils#isSystemPackage
+    open fun isSystemPackageApi24(packageInfo: PackageInfo?): Boolean {
+        return packageInfo != null
+                && (
+                isSystemPackageApi23(packageInfo)
+                        || webviewUpdateService?.isFallbackPackage(packageInfo.packageName) ?: false
+                )
+    }
+
+    // Utils#isSystemPackage
+    open fun isSystemPackageApi25(packageInfo: PackageInfo?): Boolean {
+        return packageInfo != null
+                && (
+                isSystemPackageApi24(packageInfo)
+                        || packageInfo.packageName == PRINT_SPOOLER_PACKAGE_NAME
+                        || packageInfo.packageName == deviceProvisioningPackage
+                )
     }
 
     open fun isProfileOrDeviceOwner(packageName: String): Boolean

@@ -25,7 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceChangeListener {
+open class SettingsPresenter @Inject constructor() : Presenter, SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject
     lateinit var application: Application
@@ -36,10 +36,6 @@ open class SettingsPresenter : Presenter, SharedPreferences.OnSharedPreferenceCh
     var settingChanged: Boolean = false
 
     lateinit var view: SettingsView
-
-    @Inject
-    constructor() {
-    }
 
     fun initialize(view: SettingsView) {
         this.view = view

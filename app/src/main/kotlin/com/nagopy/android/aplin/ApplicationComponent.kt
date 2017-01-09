@@ -27,11 +27,11 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(ApplicationModule::class))
 interface ApplicationComponent {
 
-    open fun inject(mainActivity: MainActivity)
+    fun inject(mainActivity: MainActivity)
 
     fun inject(appListFragment: AppListFragment)
 
     fun inject(settingsActivity: SettingsActivity)
 
-    open fun inject(packageChangedReceiver: PackageChangedReceiver)
+    fun inject(packageChangedReceiver: PackageChangedReceiver)
 }

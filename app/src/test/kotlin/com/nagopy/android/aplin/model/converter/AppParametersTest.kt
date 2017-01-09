@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable
 import com.nagopy.android.aplin.entity.App
 import io.realm.Realm
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Answers
@@ -49,6 +50,7 @@ class AppParametersTest {
         params.realm = PowerMockito.mock(Realm::class.java)
     }
 
+    @Ignore("PrimaryKeyはあとから設定しないのでテストも不要")
     @Test
     fun packageName() {
         params.applicationInfo.packageName = "com.nagopy.android.test"
@@ -101,8 +103,8 @@ class AppParametersTest {
     fun isThisASystemPackage() {
         Mockito.`when`(params.appConverter.aplinDevicePolicyManager.isThisASystemPackage(params.packageInfo)).thenReturn(true)
         val app = App()
-        AppParameters.isThisASystemPackage.setValue(app, params)
-        assertTrue(app.isThisASystemPackage)
+        AppParameters.isSystemPackage.setValue(app, params)
+        assertTrue(app.isSystemPackage)
     }
 
     @Test
