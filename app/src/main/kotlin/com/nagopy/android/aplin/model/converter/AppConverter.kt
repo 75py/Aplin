@@ -16,6 +16,7 @@
 
 package com.nagopy.android.aplin.model.converter
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -32,7 +33,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class AppConverter {
+open class AppConverter @Inject constructor() {
 
     @Inject
     open lateinit var application: Application
@@ -45,10 +46,6 @@ open class AppConverter {
 
     @Inject
     open lateinit var aplinDevicePolicyManager: AplinDevicePolicyManager
-
-    @Inject
-    constructor() {
-    }
 
     open fun setValues(realm: Realm, app: App, applicationInfo: ApplicationInfo, vararg appParameters: AppParameters = AppParameters.values()) {
         try {
@@ -69,7 +66,7 @@ open class AppConverter {
 
     fun App.removeFromRealmSilently() {
         try {
-            removeFromRealm()
+            this.deleteFromRealm()
         } catch(e: Exception) {
             // ignore
         }

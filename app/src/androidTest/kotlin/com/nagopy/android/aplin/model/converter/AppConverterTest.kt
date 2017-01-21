@@ -26,6 +26,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import javax.inject.Inject
 import kotlin.test.assertEquals
@@ -52,10 +53,12 @@ class AppConverterTest {
                 .build()
 
         (Aplin.getApplicationComponent() as ApplicationMockComponent).inject(this)
-        realm = Realm.getInstance(RealmConfiguration.Builder(application)
+        Realm.init(application)
+        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
                 .name(javaClass.name)
                 .inMemory()
                 .build())
+        realm = Realm.getDefaultInstance()
 
         val packageManager = application.packageManager
         packageManager.getInstalledApplications(0).forEach {
@@ -75,6 +78,7 @@ class AppConverterTest {
         realm.close()
     }
 
+    @Ignore("PrimaryKeyはsetValuesでは設定されないので、テスト不要")
     @Test
     fun packageName() {
         assertEquals(InstrumentationRegistry.getTargetContext().packageName, aplinApp.packageName)
@@ -97,7 +101,7 @@ class AppConverterTest {
 
     @Test
     fun isThisASystemPackage() {
-        assertEquals(false, aplinApp.isThisASystemPackage)
+        assertEquals(false, aplinApp.isSystemPackage)
     }
 
     @Test

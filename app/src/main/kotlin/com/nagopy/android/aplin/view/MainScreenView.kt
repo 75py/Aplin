@@ -24,23 +24,23 @@ interface MainScreenView {
     /**
      * インジケーターを表示する
      */
-    open fun showIndicator()
+    fun showIndicator()
 
     /**
      * インジケーターを非表示にする
      */
-    open fun hideIndicator()
+    fun hideIndicator()
 
     /**
      * カテゴリ別アプリ一覧を表示する
      */
-    open fun showAppList()
+    fun showAppList()
 
     /**
      * カテゴリ別アプリ一覧を非表示にする
      */
-    open fun hideAppList()
+    fun hideAppList()
 
-    open fun setToolbarSpinnerEnabled(enabled: Boolean)
+    fun setToolbarSpinnerEnabled(enabled: Boolean)
 
 }

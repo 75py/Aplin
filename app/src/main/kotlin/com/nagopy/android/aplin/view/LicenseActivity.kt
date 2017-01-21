@@ -37,7 +37,9 @@ class LicenseActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         webView = findViewById(R.id.web_view) as WebView
-        webView.loadUrl("file:///android_asset/license/license.html")
+        webView.settings.loadWithOverviewMode = true;
+        webView.settings.useWideViewPort = true;
+        webView.loadUrl("file:///android_asset/licenses.html")
     }
 
     override fun onDestroy() {

@@ -30,20 +30,15 @@ import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
-import com.nagopy.android.aplin.view.adapter.LegacyAppListAdapter
+import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import io.realm.Realm
 import io.realm.RealmResults
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * カテゴリ毎アプリ一覧のプレゼンター
  */
-open class AppListPresenter : Presenter {
-
-    @Inject
-    constructor() {
-    }
+open class AppListPresenter @Inject constructor() : Presenter {
 
     @Inject
     lateinit var application: Application
@@ -74,7 +69,6 @@ open class AppListPresenter : Presenter {
         this.category = category
 
         realmResults = applications.getApplicationList(category)
-        addRealmChangeListener()
     }
 
     override fun resume() {
@@ -84,32 +78,16 @@ open class AppListPresenter : Presenter {
     }
 
     override fun destroy() {
-        removeRealmChangeListeners()
         view = null
         parentView = null
         realm.close()
     }
 
-    fun addRealmChangeListener() {
-        realmResults.removeChangeListeners()
-        Timber.v("addChangeListener category=$category")
-        realmResults.addChangeListener {
-            view?.notifyDataSetChanged()
-        }
-    }
-
-    fun removeRealmChangeListeners() {
-        Timber.v("removeChangeListeners category=$category")
-        realmResults.removeChangeListeners()
-    }
-
-    open fun getItemCount(): Int = realmResults.size
-
     fun onOptionsItemSelected(item: MenuItem) {
         parentView?.onOptionsItemSelected(item, realmResults)
     }
 
-    fun onItemViewCreated(holder: LegacyAppListAdapter.ViewHolder, position: Int) {
+    fun onItemViewCreated(holder: AppListAdapter.ViewHolder, position: Int) {
         val entity = realmResults[position]
 
         val textColor = ContextCompat.getColor(application,
@@ -124,7 +102,7 @@ open class AppListPresenter : Presenter {
                 sb.append(Constants.LINE_SEPARATOR)
             }
         }
-        if (sb.length > 0) {
+        if (sb.isNotEmpty()) {
             sb.setLength(sb.length - 1)
             var infoString = sb.toString().trim()
             infoString = infoString.replace((Constants.LINE_SEPARATOR + "+").toRegex(), Constants.LINE_SEPARATOR)

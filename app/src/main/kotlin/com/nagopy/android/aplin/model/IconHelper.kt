@@ -39,28 +39,21 @@ open class IconHelper
  * コンストラクタ
  */
 @Inject
-constructor(var application: Application, var activityManager: ActivityManager) {
+constructor(var application: Application, activityManager: ActivityManager) {
 
     /**
      * デフォルト表示用のアプリケーションアイコン
      */
-    val defaultIcon: Drawable
+    val defaultIcon: Drawable = ResourcesCompat.getDrawable(application.resources, android.R.drawable.sym_def_app_icon, null)!!
 
-    val defaultIconByteArray: ByteArray
     /**
      * アイコン画像の大きさ（PX)
      */
-    open val iconSize: Int
+    open val iconSize: Int = activityManager.launcherLargeIconSize * 4 / 3
+
+    val defaultIconByteArray: ByteArray = toByteArray(defaultIcon)
 
     val cache: Map<String, Drawable> = HashMap()
-
-    init {
-        defaultIcon = ResourcesCompat.getDrawable(application.resources, android.R.drawable.sym_def_app_icon, null)!!
-        iconSize = activityManager.launcherLargeIconSize * 4 / 3
-
-        defaultIconByteArray = toByteArray(defaultIcon)
-    }
-
 
     open fun toByteArray(icon: Drawable): ByteArray {
         val image = Bitmap.createBitmap(iconSize, iconSize, Bitmap.Config.ARGB_8888);

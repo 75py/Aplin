@@ -32,7 +32,7 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
 
     internal val categories = Category.getAll()
 
-    val inflater = LayoutInflater.from(application)
+    val inflater = LayoutInflater.from(application)!!
 
     val screenWidth: Int
 
@@ -58,7 +58,7 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View
-        if (convertView == null || convertView.tag.toString().equals("DROPDOWN")) {
+        if (convertView == null || convertView.tag.toString() == "DROPDOWN") {
             view = inflater.inflate(R.layout.toolbar_spinner_item_dropdown, parent, false)
             view.tag = "DROPDOWN"
         } else {
@@ -84,8 +84,8 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view: View
-        if (convertView == null || convertView.tag.toString().equals("NON_DROPDOWN")) {
-            view = inflater.inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
+        if (convertView == null || convertView.tag.toString() == "NON_DROPDOWN") {
+            view = inflater.inflate(R.layout.toolbar_spinner_item_actionbar, parent, false)
             view.tag = "NON_DROPDOWN"
         } else {
             view = convertView

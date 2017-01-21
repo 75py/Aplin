@@ -29,7 +29,7 @@ import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AppListPresenter
-import com.nagopy.android.aplin.view.adapter.LegacyAppListAdapter
+import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,7 +46,7 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
     @Inject
     lateinit var application: Application
 
-    lateinit var adapter: LegacyAppListAdapter
+    lateinit var adapter: AppListAdapter
 
     val category: Category by lazy { Category.valueOf(arguments.getString("type")) }
 
@@ -57,10 +57,9 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
 
         Aplin.getApplicationComponent().inject(this)
 
-        adapter = LegacyAppListAdapter(presenter)
-
         val parentView = activity as AppListViewParent
         presenter.initialize(this, parentView, category)
+        adapter = AppListAdapter(application, presenter)
     }
 
     override fun onResume() {

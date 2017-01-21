@@ -107,7 +107,7 @@ constructor() : Presenter {
     }
 
     fun listItemClicked(activity: Activity, app: App, category: Category) {
-        val packageName = app.packageName.split(":")[0];
+        val packageName = app.packageName.split(":")[0]
         val intent = when (category) {
             Category.SYSTEM_ALERT_WINDOW_PERMISSION ->
                 Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))

@@ -114,7 +114,7 @@ enum class DisplayItem(
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             if (appData.permissions.isNotEmpty()) {
-                val core = appData.isThisASystemPackage or appData.hasActiveAdmins
+                val core = appData.isSystemPackage or appData.hasActiveAdmins
                 if (!appData.isSystem or !core) {
                     sb.append(appData.permissions.map { it.groupLabel }
                             .filterNotNull()

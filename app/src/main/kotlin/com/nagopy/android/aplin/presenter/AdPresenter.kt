@@ -26,10 +26,7 @@ import javax.inject.Singleton
  * 広告表示（AdMob）の処理を移譲するためのクラス
  */
 @Singleton
-open class AdPresenter : Presenter {
-
-    @Inject
-    constructor()
+open class AdPresenter @Inject constructor() : Presenter {
 
     var adView: AdView? = null
 

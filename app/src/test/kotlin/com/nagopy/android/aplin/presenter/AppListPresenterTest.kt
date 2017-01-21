@@ -27,7 +27,7 @@ import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
-import com.nagopy.android.aplin.view.adapter.LegacyAppListAdapter
+import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import io.realm.MockRealm
 import io.realm.Realm
 import io.realm.RealmResults
@@ -46,7 +46,9 @@ import org.powermock.modules.junit4.rule.PowerMockRule
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.util.*
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class
@@ -83,7 +85,7 @@ class AppListPresenterTest {
     lateinit var appListPresenter: AppListPresenter
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    lateinit var holder: LegacyAppListAdapter.ViewHolder
+    lateinit var holder: AppListAdapter.ViewHolder
 
     @Before
     fun setup() {

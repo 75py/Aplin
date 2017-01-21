@@ -1,6 +1,7 @@
 package io.realm;
 
 
+import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -27,7 +28,8 @@ public class MockRealm {
                 return data.get(arg);
             }
         });
-        results.realm = realm;
+        //results.realm = realm;
+        Whitebox.setInternalState(results, "realm", realm);
         //noinspection unchecked
         return results;
     }

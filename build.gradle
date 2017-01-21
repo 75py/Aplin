@@ -19,7 +19,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.19.1'
     }
 }
 

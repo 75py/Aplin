@@ -48,7 +48,7 @@ enum class Category(
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), true)
                     .beginGroup()
-                    .equalTo(isThisASystemPackage(), true)
+                    .equalTo(isSystemPackage(), true)
                     .or().equalTo(hasActiveAdmins(), true)
                     .or().equalTo(isProfileOrDeviceOwner(), true)
                     .or().equalTo(isHomeApp(), true)
@@ -61,7 +61,7 @@ enum class Category(
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery.equalTo(isSystem(), true)
                     .equalTo(isProfileOrDeviceOwner(), false)
-                    .equalTo(isThisASystemPackage(), false)
+                    .equalTo(isSystemPackage(), false)
                     .equalTo(hasActiveAdmins(), false)
                     .equalTo(isHomeApp(), false) // システムのHomeアプリは無効化不可
         }
@@ -99,7 +99,7 @@ enum class Category(
             , summaryResourceId = R.string.category_deniable_permissions_summary
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isThisASystemPackage(), false)
+            return realmQuery.equalTo(isSystemPackage(), false)
                     .isNotNull(permissions().groupLabel())
         }
     }
@@ -109,7 +109,7 @@ enum class Category(
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
             return realmQuery
-                    .equalTo(isThisASystemPackage(), false)
+                    .equalTo(isSystemPackage(), false)
                     .contains(permissions().name(), android.Manifest.permission.SYSTEM_ALERT_WINDOW)
         }
     }
