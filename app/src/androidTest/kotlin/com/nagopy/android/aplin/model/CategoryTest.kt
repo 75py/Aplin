@@ -16,83 +16,47 @@
 
 package com.nagopy.android.aplin.model
 
-import android.app.Application
-import android.support.test.InstrumentationRegistry
-import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.AppPermission
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmList
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertEquals
 
-@SmallTest
 class CategoryTest {
-
-    val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
-
-    lateinit var realm: Realm
 
     @Before
     fun setup() {
-        Realm.init(application)
-        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
-                .name(javaClass.name)
-                .inMemory()
-                .build())
-        Realm.getDefaultInstance().use {
-            it.where(App::class.java).findAll().deleteAllFromRealm()
-        }
-        realm = Realm.getDefaultInstance()
     }
 
     @After
     fun tearDown() {
-        realm.close()
     }
 
     @Test
     fun overlay_systemApp() {
-        realm.executeTransaction {
-            val app = it.createObject(App::class.java, "test")
-            app.label = "isSystemPackage = true"
-            app.isSystemPackage = true
-        }
-        val result = Category.SYSTEM_ALERT_WINDOW_PERMISSION.where(realm.where(App::class.java)).findAll()
-
-        assert(result.isEmpty())
-    }
-
-
-    @Test
-    fun overlay_noPermissions() {
-        realm.executeTransaction {
-            val app = it.createObject(App::class.java, "test")
-            app.label = "isSystemPackage = false , permission = empty"
-            app.isSystemPackage = false
-            app.permissions = RealmList()
-        }
-        val result = Category.SYSTEM_ALERT_WINDOW_PERMISSION.where(realm.where(App::class.java)).findAll()
-
-        assert(result.isEmpty())
-    }
-
-    @Test
-    fun overlay() {
-        realm.executeTransaction {
-            val app = it.createObject(App::class.java, "test")
-            app.label = "isSystemPackage = false , permission = SYSTEM_ALERT_WINDOW"
-            app.isSystemPackage = false
-            app.permissions = RealmList()
-            val p = it.createObject(AppPermission::class.java)
-            p.name = android.Manifest.permission.SYSTEM_ALERT_WINDOW
-            app.permissions.add(p)
-        }
-        val result = Category.SYSTEM_ALERT_WINDOW_PERMISSION.where(realm.where(App::class.java)).findAll()
-
-        assert(result.isNotEmpty())
+        val list = listOf(App().apply {
+            // false
+            isSystemPackage = true
+        }, App().apply {
+            // false
+            isSystemPackage = true
+            permissions.add(AppPermission().apply { name = android.Manifest.permission.SYSTEM_ALERT_WINDOW })
+        }, App().apply {
+            // false
+            isSystemPackage = false
+            permissions.clear()
+        }, App().apply {
+            // false
+            isSystemPackage = false
+            permissions.add(AppPermission().apply { name = android.Manifest.permission.INTERNET })
+        }, App().apply {
+            // true
+            isSystemPackage = false
+            permissions.add(AppPermission().apply { name = android.Manifest.permission.SYSTEM_ALERT_WINDOW })
+        })
+        val filtered = Category.SYSTEM_ALERT_WINDOW_PERMISSION.where(list)
+        assertEquals(1, filtered.count())
     }
 
 }

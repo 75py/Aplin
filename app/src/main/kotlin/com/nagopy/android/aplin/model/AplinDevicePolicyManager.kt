@@ -65,7 +65,7 @@ open class AplinDevicePolicyManager @Inject constructor() {
     }
 
     val permissionControllerPackageName: String? by lazy {
-        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
                 val v = PackageManager::class.declaredMemberFunctions.filter {
                     it.name == "getPermissionControllerPackageName"
@@ -80,7 +80,7 @@ open class AplinDevicePolicyManager @Inject constructor() {
     }
 
     val servicesSystemSharedLibraryPackageName: String? by lazy {
-        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
                 val v = PackageManager::class.declaredMemberFunctions.filter {
                     it.name == "getServicesSystemSharedLibraryPackageName"
@@ -95,7 +95,7 @@ open class AplinDevicePolicyManager @Inject constructor() {
     }
 
     val sharedSystemSharedLibraryPackageName: String? by lazy {
-        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
                 val v = PackageManager::class.declaredMemberFunctions.filter {
                     it.name == "getSharedSystemSharedLibraryPackageName"
@@ -178,11 +178,8 @@ open class AplinDevicePolicyManager @Inject constructor() {
     }
 
     open fun isSystemPackage(packageInfo: PackageInfo?): Boolean {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             return isThisASystemPackage(packageInfo)
-        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            // 6.0
-            return isSystemPackageApi23(packageInfo)
         } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
             // 7.0
             return isSystemPackageApi24(packageInfo)
@@ -209,21 +206,13 @@ open class AplinDevicePolicyManager @Inject constructor() {
     }
 
     // Utils#isSystemPackage
-    open fun isSystemPackageApi23(packageInfo: PackageInfo?): Boolean {
+    open fun isSystemPackageApi24(packageInfo: PackageInfo?): Boolean {
         return packageInfo != null
                 && (isThisASystemPackage(packageInfo)
                 || packageInfo.packageName == permissionControllerPackageName
                 || packageInfo.packageName == servicesSystemSharedLibraryPackageName
                 || packageInfo.packageName == sharedSystemSharedLibraryPackageName
-                )
-    }
-
-    // Utils#isSystemPackage
-    open fun isSystemPackageApi24(packageInfo: PackageInfo?): Boolean {
-        return packageInfo != null
-                && (
-                isSystemPackageApi23(packageInfo)
-                        || webviewUpdateService?.isFallbackPackage(packageInfo.packageName) ?: false
+                || webviewUpdateService?.isFallbackPackage(packageInfo.packageName) ?: false
                 )
     }
 

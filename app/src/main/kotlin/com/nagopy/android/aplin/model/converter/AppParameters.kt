@@ -24,15 +24,13 @@ import android.os.Build
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.AppPermission
-import io.realm.RealmList
 import timber.log.Timber
 import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
     packageName(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            // PrimaryKeyは最初に設定されるので、あとからの設定は不要
-            // app.packageName = params.applicationInfo.packageName
+            app.packageName = params.applicationInfo.packageName
         }
     },
     label(Constants.ALL_SDK_VERSION) {
@@ -90,17 +88,6 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             app.isHomeApp = params.homeActivities.contains(params.applicationInfo.packageName)
         }
     },
-    icon(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            if (params.applicationInfo.icon == 0) {
-                Timber.v(params.applicationInfo.packageName + ", icon=0x0")
-                app.iconByteArray = params.appConverter.iconHelper.defaultIconByteArray
-            } else {
-                app.iconByteArray = params.appConverter.iconHelper.toByteArray(params.applicationInfo.loadIcon(
-                        params.appConverter.packageManager))
-            }
-        }
-    },
     versionName(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
             app.versionName = params.packageInfo.versionName
@@ -108,9 +95,9 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
     },
     permissions(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.permissions = RealmList()
+            app.permissions = ArrayList()
             params.packageInfo.requestedPermissions?.forEach {
-                val permission = params.realm.createObject(AppPermission::class.java)
+                val permission = AppPermission()
                 permission.name = it
                 try {
                     val pi = params.appConverter.packageManager.getPermissionInfo(it, 0)
@@ -137,6 +124,15 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
     isLaunchable(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
             app.isLaunchable = params.launcherPkgs.contains(params.applicationInfo.packageName)
+        }
+    },
+    isDisabledUntilUsed(Build.VERSION_CODES.M..Int.MAX_VALUE) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // 6.0-
+                val enabledSetting = params.enabledSettingField.get(params.applicationInfo)
+                app.isDisabledUntilUsed = enabledSetting == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED
+            }
         }
     },
     ;

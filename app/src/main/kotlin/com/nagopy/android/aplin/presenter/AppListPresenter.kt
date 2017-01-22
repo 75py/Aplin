@@ -31,8 +31,9 @@ import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
-import io.realm.Realm
-import io.realm.RealmResults
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -52,9 +53,7 @@ open class AppListPresenter @Inject constructor() : Presenter {
     @Inject
     lateinit var iconHelper: IconHelper
 
-    lateinit var realm: Realm
-
-    lateinit var realmResults: RealmResults<App>
+    lateinit var realmResults: List<App>
 
     var view: AppListView? = null // onDestroyでnullにするため、NULL可
 
@@ -63,11 +62,13 @@ open class AppListPresenter @Inject constructor() : Presenter {
     lateinit var category: Category
 
     fun initialize(view: AppListView, parentView: AppListViewParent, category: Category) {
-        realm = Realm.getDefaultInstance()
         this.view = view
         this.parentView = parentView
         this.category = category
+        updateAppList()
+    }
 
+    fun updateAppList() {
         realmResults = applications.getApplicationList(category)
     }
 
@@ -80,7 +81,6 @@ open class AppListPresenter @Inject constructor() : Presenter {
     override fun destroy() {
         view = null
         parentView = null
-        realm.close()
     }
 
     fun onOptionsItemSelected(item: MenuItem) {
@@ -114,7 +114,24 @@ open class AppListPresenter @Inject constructor() : Presenter {
         }
         holder.status.setTextColor(textColor)
 
-        holder.icon.setImageDrawable(iconHelper.getIcon(entity))
+        synchronized(holder.icon) {
+            if (holder.icon.tag != entity.packageName) {
+                holder.icon.tag = entity.packageName
+                holder.icon.visibility = View.INVISIBLE
+                iconHelper.requestLoadIcon(entity.packageName)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ icon ->
+                            synchronized(holder.icon) {
+                                if (holder.icon.tag == entity.packageName) {
+                                    holder.icon.setImageDrawable(icon)
+                                    holder.icon.visibility = View.VISIBLE
+                                    Timber.v("Set icon. pkg=%s", entity.packageName)
+                                }
+                            }
+                        })
+            }
+        }
 
         holder.icon.scaleType = ImageView.ScaleType.FIT_CENTER
         holder.icon.layoutParams.width = iconHelper.iconSize

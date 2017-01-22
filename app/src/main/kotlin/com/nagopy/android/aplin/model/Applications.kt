@@ -21,20 +21,16 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.UserHandle
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.entity.names.AppNames
-import com.nagopy.android.aplin.entity.names.AppNames.packageName
 import com.nagopy.android.aplin.model.converter.AppConverter
 import com.nagopy.android.aplin.model.converter.AppParameters
-import com.nagopy.android.kotlinames.equalTo
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.AsyncSubject
-import io.realm.Realm
-import io.realm.RealmResults
+import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.lang.reflect.Field
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,56 +41,55 @@ open class Applications
         , val appConverter: AppConverter
         , val userSettings: UserSettings
 ) {
+    val appCache: ConcurrentHashMap<String, App> = ConcurrentHashMap()
 
-    val asyncSubject: Observable<Void> = AsyncSubject.create<Void>().apply {
-        Completable.create {
-            if (!isLoaded()) {
-                refresh()
-            }
-            onComplete()
-        }.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    onComplete()
-                }
-    }
+    val appObserver: PublishSubject<Int> = PublishSubject.create<Int>() // onNext(null)が不可になったので、ダミー引数Intを使う
 
     val enabledSettingField: Field = ApplicationInfo::class.java.getDeclaredField("enabledSetting").apply {
         isAccessible = true
     }
 
     open fun isLoaded(): Boolean {
-        Realm.getDefaultInstance().use {
-            return it.where(App::class.java).count() > 0
+        return appCache.isNotEmpty()
+    }
+
+    open fun initAppCache(): Completable {
+        return Completable.create {
+            if (!isLoaded()) {
+                refresh()
+            }
+            it.onComplete()
         }
     }
 
     open fun refresh() {
-        val realm = Realm.getDefaultInstance()
-        realm.use {
-            realm.executeTransaction {
-                realm.where(App::class.java).findAll().deleteAllFromRealm()
-                val allApps = getInstalledApplications()
-                allApps.forEach {
-                    if (shouldSkip(it)) {
-                        Timber.d("skip: %s", it.packageName)
-                        return@forEach
-                    }
-
-                    val entity = realm.createObject(App::class.java, it.packageName)
-                    appConverter.setValues(realm, entity, it)
+        appCache.clear()
+        val allApps = getInstalledApplications()
+        val executorService = Executors.newCachedThreadPool()
+        appConverter.prepare()
+        allApps.forEach {
+            Timber.d("LOAD start pkg=%s", it.packageName)
+            executorService.execute {
+                if (shouldSkip(it)) {
+                    Timber.d("skip: %s", it.packageName)
+                    //return@forEach
+                } else {
+                    val entity = App()
+                    appConverter.setValues(entity, it)
+                    appCache.put(it.packageName, entity)
+                    Timber.d("ADDCACHE pkg=%s", entity.packageName)
                 }
+                Timber.d("LOAD fin  pkg=%s", it.packageName)
             }
         }
+        executorService.shutdown()
+        executorService.awaitTermination(60, TimeUnit.SECONDS)
+
     }
 
-    open fun getApplicationList(category: Category): RealmResults<App> {
-        Realm.getDefaultInstance().use {
-            Timber.d("getApplicationList %s", category)
-            val query = it.where(App::class.java)
-            val result = userSettings.sort.findAllSortedAsync(category.where(query))
-            return result
-        }
+    open fun getApplicationList(category: Category): List<App> {
+        Timber.d("getApplicationList %s", category)
+        return userSettings.sort.orderBy(category.where(appCache.values)).toList()
     }
 
     /**
@@ -135,6 +130,9 @@ open class Applications
     }
 
     open fun shouldSkip(applicationInfo: ApplicationInfo): Boolean {
+        if (applicationInfo.packageName.isEmpty()) {
+            return true
+        }
         if (!applicationInfo.enabled) {
             // 無効になっていて、かつenabledSettingが3でないアプリは除外する
             val enabledSetting = enabledSettingField.get(applicationInfo)
@@ -159,51 +157,54 @@ open class Applications
         return Observable.create {
             val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
             if (!shouldSkip(applicationInfo)) {
-                val realm = Realm.getDefaultInstance()
-                realm.use {
-                    realm.executeTransaction {
-                        var entity = realm.where(App::class.java).equalTo(packageName(), pkg).findFirst()
-                        if (entity == null) {
-                            entity = realm.createObject(App::class.java, pkg)
-                        }
-                        appConverter.setValues(realm, entity, applicationInfo)
-                    }
-                }
+                val entity = App()
+                appConverter.prepare()
+                appConverter.setValues(entity, applicationInfo)
+                appCache.put(pkg, entity)
             }
             it.onComplete()
+
+            appObserver.onNext(0)
         }
     }
 
     open fun delete(pkg: String): Observable<Void> {
         Timber.d("delete %s", pkg)
         return Observable.create {
-            val realm = Realm.getDefaultInstance()
-            realm.use {
-                realm.executeTransaction {
-                    val entity = realm.where(App::class.java).equalTo(packageName(), pkg).findAll()
-                    entity.deleteAllFromRealm()
-                }
-            }
+            appCache.remove(pkg)
             it.onComplete()
+
+            appObserver.onNext(0)
         }
     }
 
     open fun updatePoco(): Observable<Void> {
         return Observable.create {
             val all = getInstalledApplications()
-            val realm = Realm.getDefaultInstance()
-            realm.use {
+            var updated = false
+            appConverter.prepare()
+            synchronized(appCache) {
                 all.forEach { applicationInfo ->
-                    realm.executeTransaction {
-                        val apps = realm.where(App::class.java).equalTo(AppNames.packageName(), applicationInfo.packageName).findAll()
-                        if (apps.isNotEmpty()) {
-                            val app = apps[0]
-                            appConverter.setValues(realm, app, applicationInfo, AppParameters.isDefaultApp)
+                    val app = appCache[applicationInfo.packageName]
+                    if (app != null) {
+                        val newApp = App()
+                        appConverter.setValues(newApp, applicationInfo, AppParameters.isDefaultApp, AppParameters.isEnabled)
+
+                        if (newApp.isDefaultApp != app.isDefaultApp || newApp.isEnabled != app.isEnabled) {
+                            app.isDefaultApp = newApp.isDefaultApp
+                            app.isEnabled = app.isEnabled
+                            appCache.put(applicationInfo.packageName, app)
+                            updated = true
                         }
                     }
                 }
             }
             it.onComplete()
+
+            if (updated) {
+                Timber.d("Updated!")
+                appObserver.onNext(0)
+            }
         }
     }
 }

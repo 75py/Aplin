@@ -19,19 +19,15 @@ package com.nagopy.android.aplin.model
 import android.app.Application
 import android.os.Build
 import android.support.test.InstrumentationRegistry
-import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
 import com.nagopy.android.aplin.DaggerApplicationMockComponent
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import javax.inject.Inject
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 
-@SmallTest
 class AplinDevicePolicyManagerTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
@@ -56,20 +52,21 @@ class AplinDevicePolicyManagerTest {
         assertNotNull(aplinDevicePolicyManager.packageManager)
         assertNotNull(aplinDevicePolicyManager.packageHasActiveAdmins)
         assertNotNull(aplinDevicePolicyManager.mSystemPackageInfo)
-    }
 
-    @Test
-    fun isProfileOrDeviceOwner() {
-        aplinDevicePolicyManager.devicePolicyManager = Mockito.spy(aplinDevicePolicyManager.devicePolicyManager)
-        Mockito.`when`(aplinDevicePolicyManager.devicePolicyManager.isDeviceOwnerApp("testpkg")).thenReturn(false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Mockito.`when`(aplinDevicePolicyManager.devicePolicyManager.isProfileOwnerApp("testpkg")).thenReturn(false)
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+            assertNotNull(aplinDevicePolicyManager.permissionControllerPackageName)
         }
-        assertFalse(aplinDevicePolicyManager.isProfileOrDeviceOwner("testpkg"))
-
-        Mockito.verify(aplinDevicePolicyManager.devicePolicyManager, Mockito.times(1)).isDeviceOwnerApp("testpkg")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Mockito.verify(aplinDevicePolicyManager.devicePolicyManager, Mockito.times(1)).isProfileOwnerApp("testpkg")
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+            assertNotNull(aplinDevicePolicyManager.servicesSystemSharedLibraryPackageName)
+        }
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+            assertNotNull(aplinDevicePolicyManager.sharedSystemSharedLibraryPackageName)
+        }
+        if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
+            assertNotNull(aplinDevicePolicyManager.PRINT_SPOOLER_PACKAGE_NAME)
+        }
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+            assertNotNull(aplinDevicePolicyManager.webviewUpdateService)
         }
     }
 }

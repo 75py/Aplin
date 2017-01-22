@@ -19,11 +19,6 @@ import android.os.Build
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.entity.names.AppNames.*
-import com.nagopy.android.kotlinames.contains
-import com.nagopy.android.kotlinames.equalTo
-import com.nagopy.android.kotlinames.isNotNull
-import io.realm.RealmQuery
 
 enum class Category(
         val titleResourceId: Int
@@ -31,92 +26,91 @@ enum class Category(
         , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION) {
 
     ALL(titleResourceId = R.string.category_all
-            , summaryResourceId = R.string.category_all_summary)
+            , summaryResourceId = R.string.category_all_summary) {
+        override fun where(list: Collection<App>): Collection<App> = list
+    }
 
     ,
     SYSTEM(
             titleResourceId = R.string.category_system
             , summaryResourceId = R.string.category_system_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isSystem(), true)
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter(App::isSystem)
         }
     }
     ,
     SYSTEM_UNDISABLABLE(
             titleResourceId = R.string.category_system_undisablable
             , summaryResourceId = R.string.category_system_undisablable_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isSystem(), true)
-                    .beginGroup()
-                    .equalTo(isSystemPackage(), true)
-                    .or().equalTo(hasActiveAdmins(), true)
-                    .or().equalTo(isProfileOrDeviceOwner(), true)
-                    .or().equalTo(isHomeApp(), true)
-                    .endGroup()
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter {
+                it.isSystem && (it.isSystemPackage || it.hasActiveAdmins || it.isProfileOrDeviceOwner || it.isHomeApp)
+            }
         }
     }
     ,
     SYSTEM_DISABLABLE(titleResourceId = R.string.category_system_disablable
             , summaryResourceId = R.string.category_system_disablable_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isSystem(), true)
-                    .equalTo(isProfileOrDeviceOwner(), false)
-                    .equalTo(isSystemPackage(), false)
-                    .equalTo(hasActiveAdmins(), false)
-                    .equalTo(isHomeApp(), false) // システムのHomeアプリは無効化不可
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter {
+                it.isSystem && !it.isProfileOrDeviceOwner && !it.isSystemPackage && !it.hasActiveAdmins && !it.isHomeApp
+            }
         }
     }
     ,
     DISABLED(titleResourceId = R.string.category_disabled
             , summaryResourceId = R.string.category_disabled_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isEnabled(), false)
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter { !it.isEnabled }
         }
     }
     ,
     DEFAULT(titleResourceId = R.string.category_default
             , summaryResourceId = R.string.category_default_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isDefaultApp(), true)
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter(App::isDefaultApp)
         }
     }
     ,
     USER(titleResourceId = R.string.category_user
             , summaryResourceId = R.string.category_user_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isSystem(), false)
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter { !it.isSystem }
         }
     }
     ,
     INTERNET_PERMISSIONS(titleResourceId = R.string.category_internet_permissions
             , summaryResourceId = R.string.category_internet_permissions_summary) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.contains(permissions().name(), "android.permission.INTERNET")
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter { it.permissions.map { it.name }.contains(android.Manifest.permission.INTERNET) }
         }
     }
     ,
     DENIABLE_PERMISSIONS(titleResourceId = R.string.category_deniable_permissions
             , summaryResourceId = R.string.category_deniable_permissions_summary
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery.equalTo(isSystemPackage(), false)
-                    .isNotNull(permissions().groupLabel())
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter {
+                !it.isSystemPackage
+                        && it.permissions.map { it.groupLabel }.filter { it.isNullOrEmpty() }.isNotEmpty()
+            }
         }
     }
     ,
     SYSTEM_ALERT_WINDOW_PERMISSION(titleResourceId = R.string.category_system_alert_window_permission
             , summaryResourceId = R.string.category_system_alert_window_permission_summary
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
-        override fun where(realmQuery: RealmQuery<App>): RealmQuery<App> {
-            return realmQuery
-                    .equalTo(isSystemPackage(), false)
-                    .contains(permissions().name(), android.Manifest.permission.SYSTEM_ALERT_WINDOW)
+        override fun where(list: Collection<App>): Collection<App> {
+            return list.filter {
+                !it.isSystemPackage
+                        && it.permissions.map { it.name }.contains(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
+            }
         }
     }
     ,
     ;
 
-    open fun where(realmQuery: RealmQuery<App>): RealmQuery<App> = realmQuery
+    abstract fun where(list: Collection<App>): Collection<App>
 
     companion object {
         fun getAll() = Category.values().filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
