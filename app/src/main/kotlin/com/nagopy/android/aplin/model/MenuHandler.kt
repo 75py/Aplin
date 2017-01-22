@@ -25,21 +25,18 @@ import android.net.Uri
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
-import rx.Observable
+import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class MenuHandler {
+open class MenuHandler @Inject constructor() {
 
     @Inject
     lateinit var application: Application
 
     @Inject
     lateinit var packageManager: PackageManager
-
-    @Inject
-    constructor()
 
     fun search(app: App): Observable<Void> {
         return Observable.create { s ->
@@ -48,14 +45,14 @@ open class MenuHandler {
 
             if (isLaunchable(actionWebSearch)) {
                 application.startActivity(actionWebSearch)
-                s.onCompleted()
+                s.onComplete()
             } else {
                 val url = "https://www.google.com/search?q=${app.label}%20${app.packageName}"
                 val actionView = Intent(Intent.ACTION_VIEW)
                         .setData(Uri.parse(url))
                 if (isLaunchable(actionView)) {
                     application.startActivity(actionView)
-                    s.onCompleted()
+                    s.onComplete()
                 } else {
                     s.onError(ActivityNotFoundException("Searchable application is not found."))
                 }
@@ -71,7 +68,7 @@ open class MenuHandler {
                     .putExtra(Intent.EXTRA_TEXT, text)
             if (isLaunchable(intent)) {
                 application.startActivity(intent)
-                s.onCompleted()
+                s.onComplete()
             } else {
                 s.onError(ActivityNotFoundException("Shareable application is not found."))
             }

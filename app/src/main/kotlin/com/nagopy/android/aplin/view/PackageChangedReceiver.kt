@@ -21,7 +21,7 @@ import android.content.Context
 import android.content.Intent
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.model.Applications
-import rx.schedulers.Schedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
