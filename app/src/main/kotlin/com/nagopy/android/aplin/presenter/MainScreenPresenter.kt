@@ -28,10 +28,9 @@ import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.*
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
-import rx.Observer
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -58,24 +57,7 @@ constructor() : Presenter {
 
     var view: MainScreenView? = null
 
-
-    val observer = object : Observer<Void> {
-        override fun onNext(t: Void?) {
-        }
-
-        override fun onError(e: Throwable?) {
-            Timber.e(e, "Error occurred")
-        }
-
-        override fun onCompleted() {
-            view?.hideIndicator()
-            view?.showAppList()
-            view?.setToolbarSpinnerEnabled(true)
-
-            subscription?.unsubscribe()
-        }
-    }
-    var subscription: Subscription? = null
+    var subscription: Disposable? = null
 
     open fun initialize(view: MainScreenView) {
         this.view = view
@@ -84,7 +66,15 @@ constructor() : Presenter {
         view.showIndicator()
         view.setToolbarSpinnerEnabled(false)
 
-        subscription = applications.asyncSubject.subscribe(observer)
+        subscription = applications.asyncSubject.subscribe({
+        }, { e ->
+            Timber.e(e, "Error occurred")
+        }, {
+            view.hideIndicator()
+            view.showAppList()
+            view.setToolbarSpinnerEnabled(true)
+            subscription?.dispose()
+        })
     }
 
     override fun resume() {
@@ -103,7 +93,7 @@ constructor() : Presenter {
 
     override fun destroy() {
         view = null
-        subscription?.unsubscribe()
+        subscription?.dispose()
     }
 
     fun listItemClicked(activity: Activity, app: App, category: Category) {

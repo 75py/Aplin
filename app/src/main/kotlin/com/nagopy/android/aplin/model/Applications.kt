@@ -26,12 +26,13 @@ import com.nagopy.android.aplin.entity.names.AppNames.packageName
 import com.nagopy.android.aplin.model.converter.AppConverter
 import com.nagopy.android.aplin.model.converter.AppParameters
 import com.nagopy.android.kotlinames.equalTo
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.AsyncSubject
 import io.realm.Realm
 import io.realm.RealmResults
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subjects.AsyncSubject
 import timber.log.Timber
 import java.lang.reflect.Field
 import javax.inject.Inject
@@ -46,15 +47,15 @@ open class Applications
 ) {
 
     val asyncSubject: Observable<Void> = AsyncSubject.create<Void>().apply {
-        Observable.create<Void> {
+        Completable.create {
             if (!isLoaded()) {
                 refresh()
             }
-            it.onNext(null)
+            onComplete()
         }.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    onCompleted()
+                    onComplete()
                 }
     }
 
@@ -169,7 +170,7 @@ open class Applications
                     }
                 }
             }
-            it.onCompleted()
+            it.onComplete()
         }
     }
 
@@ -183,7 +184,7 @@ open class Applications
                     entity.deleteAllFromRealm()
                 }
             }
-            it.onCompleted()
+            it.onComplete()
         }
     }
 
@@ -202,7 +203,7 @@ open class Applications
                     }
                 }
             }
-            it.onCompleted()
+            it.onComplete()
         }
     }
 }
