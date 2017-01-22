@@ -17,8 +17,8 @@
 package com.nagopy.android.aplin.presenter
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
-import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.BuildConfig
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Applications
@@ -28,22 +28,26 @@ import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
-import io.realm.MockRealm
-import io.realm.Realm
-import io.realm.RealmResults
+import io.realm.*
+import io.realm.internal.RealmCore
+import io.realm.log.RealmLog
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Answers
+import org.mockito.Matchers.any
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.powermock.api.mockito.PowerMockito
+import org.powermock.api.mockito.PowerMockito.*
 import org.powermock.core.classloader.annotations.PowerMockIgnore
 import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor
 import org.powermock.modules.junit4.rule.PowerMockRule
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import java.util.*
 import kotlin.test.assertEquals
@@ -56,8 +60,8 @@ import kotlin.test.assertNull
         //        , manifest = "src/main/AndroidManifest.xml"
 )
 @PowerMockIgnore("org.mockito.*", "org.robolectric.*", "android.*", "org.json.*")
-@PrepareForTest(Realm::class, RealmResults::class)
-@SmallTest
+@PrepareForTest(Realm::class, RealmConfiguration::class, RealmQuery::class, RealmResults::class, RealmCore::class, RealmLog::class)
+@SuppressStaticInitializationFor("io.realm.internal.Util")
 class AppListPresenterTest {
 
     @Rule
@@ -89,21 +93,36 @@ class AppListPresenterTest {
 
     @Before
     fun setup() {
+        // Setup Realm to be mocked. The order of these matters
+        mockStatic(RealmCore::class.java)
+        mockStatic(RealmLog::class.java)
+        mockStatic(Realm::class.java)
+        mockStatic(RealmConfiguration::class.java)
+        Realm.init(RuntimeEnvironment.application);
+
+        // Create the mock
+        val mockRealm = PowerMockito.mock(Realm::class.java)
+        val mockRealmConfig = mock(RealmConfiguration::class.java)
+
+        doNothing().`when`(RealmCore::class.java)
+        RealmCore.loadLibrary(any(Context::class.java))
+
+        whenNew(RealmConfiguration::class.java).withAnyArguments().thenReturn(mockRealmConfig)
+
+        `when`(Realm.getDefaultInstance()).thenReturn(mockRealm)
+
+
         MockitoAnnotations.initMocks(this)
+        val list = ArrayList<App>()
+        val mockResult: RealmResults<App> = MockRealm.mockRealmResult(mockRealm, list)
+        Mockito.`when`(applications.getApplicationList(Category.ALL)).thenReturn(mockResult)
+        PowerMockito.doNothing().`when`(mockRealm).close()
+
         appListPresenter = AppListPresenter()
         appListPresenter.application = application
         appListPresenter.applications = applications
         appListPresenter.userSettings = userSettings
         appListPresenter.iconHelper = iconHelper
-
-        val list = ArrayList<App>()
-        val mockRealm = MockRealm.mockRealm()
-        val mockResult: RealmResults<App> = MockRealm.mockRealmResult(mockRealm, list)
-        Mockito.`when`(applications.getApplicationList(Category.ALL)).thenReturn(mockResult)
-        PowerMockito.doNothing().`when`(mockRealm).close()
-
-        PowerMockito.mockStatic(Realm::class.java)
-        PowerMockito.`when`(Realm.getDefaultInstance()).thenReturn(mockRealm)
     }
 
     @Test
