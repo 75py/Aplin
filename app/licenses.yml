@@ -6,12 +6,8 @@
 - artifact: com.google.android.gms:+:+
   skip: true
 
-- artifact: com.getkeepsafe.relinker:relinker:+
-  name: ReLinker
-  copyrightHolder: Keepsafe Software Inc.
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://github.com/KeepSafe/ReLinker
+- artifact: com.google.firebase:+:+
+  skip: true
 
 - artifact: com.google.dagger:dagger:+
   name: Dagger
@@ -25,54 +21,28 @@
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://github.com/JakeWharton/timber
 
-- artifact: com.nagopy.android:kotlinames-common:+
-  name: kotlinames-common
-  copyrightHolder: 75py
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://github.com/75py/KotliNames
 
-- artifact: com.nagopy.android:kotlinames:+
-  name: kotlinames
-  copyrightHolder: 75py
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://github.com/75py/KotliNames
-
-- artifact: io.reactivex:rxandroid:+
+- artifact: io.reactivex.rxjava2:rxandroid:+
   name: RxAndroid
   copyrightHolder: The RxAndroid authors
   license: The Apache Software License, Version 2.0
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://github.com/ReactiveX/RxAndroid
 
-- artifact: io.reactivex:rxjava:+
+- artifact: io.reactivex.rxjava2:rxjava:+
   name: rxjava
   copyrightHolder: Netflix, Inc.
   license: The Apache Software License, Version 2.0
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://github.com/ReactiveX/RxJava
 
-- artifact: io.realm:android-adapters:+
-  name: android-adapters
-  copyrightHolder: Realm Inc.
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://github.com/realm/realm-android-adapters
-
-- artifact: io.realm:realm-android-library:+
-  name: realm-android-library
-  copyrightHolder: Realm Inc.
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://github.com/realm/realm-java
-
-- artifact: io.realm:realm-annotations:+
-  name: realm-annotations
-  copyrightHolder: Realm Inc.
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://github.com/realm/realm-java
+- artifact: org.reactivestreams:reactive-streams:+
+  name: reactive-streams
+  copyrightHolder: CC0
+  license: CC0
+  licenseUrl: http://creativecommons.org/publicdomain/zero/1.0/
+  url: http://www.reactive-streams.org/
+  skip: true
 
 - artifact: javax.inject:javax.inject:+
   name: javax.inject
@@ -89,4 +59,7 @@
   name: kotlin-stdlib
   copyrightHolder: JetBrains
   license:  The Apache Software License, Version 2.0
-
+- artifact: org.jetbrains.kotlin:kotlin-reflect:+
+  name: kotlin-reflect
+  copyrightHolder: JetBrains
+  license:  The Apache Software License, Version 2.0
