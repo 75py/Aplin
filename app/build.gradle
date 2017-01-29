@@ -37,6 +37,8 @@ android {
         resValue "string", "version_name", "$publish_version_name ($publish_version_code, $gitSha, $buildTime)"
         testInstrumentationRunner "com.nagopy.android.aplin.AplinTestRunner"
         multiDexEnabled true
+
+        buildConfigField "String", "AD_APP_ID", "\"ca-app-pub-2998260208076899~7954619765\""
     }
     signingConfigs {
         debug {
@@ -112,8 +114,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.google.android.gms:play-services-analytics:10.0.1'
-    compile 'com.google.android.gms:play-services-ads:10.0.1'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.google.firebase:firebase-ads:10.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.jakewharton.timber:timber:4.5.0'
@@ -174,3 +176,5 @@ repositories {
 kapt {
     generateStubs = true
 }
+
+apply plugin: 'com.google.gms.google-services'
