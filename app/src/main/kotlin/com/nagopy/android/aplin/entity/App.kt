@@ -16,27 +16,20 @@
 
 package com.nagopy.android.aplin.entity
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
+import java.util.*
 
 /**
  * アプリケーションを表すエンティティ
  */
-class App : RealmObject() {
+class App {
 
-    @PrimaryKey
     var packageName: String = ""
 
-    @Required
     var label: String = ""
 
     var isEnabled: Boolean = false
 
     var isSystem: Boolean = false
-
-    var iconByteArray: ByteArray? = null
 
     var isInstalled: Boolean = true // 実行ユーザーでインストールされているか、API17以上で使用するフラグ。
 
@@ -54,9 +47,15 @@ class App : RealmObject() {
 
     var versionName: String? = null
 
-    var permissions: RealmList<AppPermission> = RealmList()
+    var permissions: MutableList<AppPermission> = ArrayList()
 
     var isProfileOrDeviceOwner: Boolean = false // 6.0以降
 
     var isLaunchable: Boolean = false // ランチャーから起動可能か。権限拒否可能判定で使用する
+
+    var isDisabledUntilUsed: Boolean = false // 6.0-
+
+    override fun toString(): String {
+        return "$packageName    $label"
+    }
 }

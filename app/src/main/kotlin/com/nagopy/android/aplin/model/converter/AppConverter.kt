@@ -16,7 +16,6 @@
 
 package com.nagopy.android.aplin.model.converter
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -27,8 +26,8 @@ import android.os.Build
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.AplinDevicePolicyManager
 import com.nagopy.android.aplin.model.IconHelper
-import io.realm.Realm
 import timber.log.Timber
+import java.lang.reflect.Field
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,9 +46,33 @@ open class AppConverter @Inject constructor() {
     @Inject
     open lateinit var aplinDevicePolicyManager: AplinDevicePolicyManager
 
-    open fun setValues(realm: Realm, app: App, applicationInfo: ApplicationInfo, vararg appParameters: AppParameters = AppParameters.values()) {
+    lateinit var allPermissionGroups: List<PermissionGroupInfo>
+    lateinit var homeActivities: List<String>
+    lateinit var launcherPkgs: List<String>
+    val enabledSettingField: Field = ApplicationInfo::class.java.getDeclaredField("enabledSetting").apply {
+        isAccessible = true
+    }
+
+    open fun prepare() {
+        allPermissionGroups = packageManager.getAllPermissionGroups(0)
+        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        homeActivities = packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
+                .map { it.activityInfo.packageName }
+                .plus("com.google.android.launcher") // 仕組みが未確認だが、これはホームアプリ判定になっているっぽい
+
+        val launcherIntent = Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER)
+        launcherPkgs =
+                try {
+                    packageManager.queryIntentActivities(launcherIntent, 0).map { it.activityInfo.packageName }
+                } catch(e: Exception) {
+                    Timber.w(e, "Error: queryIntentActivities")
+                    emptyList<String>()
+                }
+    }
+
+    open fun setValues(app: App, applicationInfo: ApplicationInfo, vararg appParameters: AppParameters = AppParameters.values()) {
         try {
-            val params = prepare(realm, applicationInfo)
+            val params = prepareForApp(applicationInfo)
             appParameters
                     .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                     .forEach { param ->
@@ -57,23 +80,12 @@ open class AppConverter @Inject constructor() {
                     }
         } catch(e: PackageManager.NameNotFoundException) {
             Timber.w(e, "Not found. pkg=%s", applicationInfo.packageName)
-            app.removeFromRealmSilently()
         } catch(e: Exception) {
             Timber.e(e, "Error occurred. pkg=%s", applicationInfo.packageName)
-            app.removeFromRealmSilently()
         }
     }
 
-    fun App.removeFromRealmSilently() {
-        try {
-            this.deleteFromRealm()
-        } catch(e: Exception) {
-            // ignore
-        }
-    }
-
-    open fun prepare(realm: Realm, applicationInfo: ApplicationInfo): Params {
-        val allPermissionGroups = packageManager.getAllPermissionGroups(0)
+    open fun prepareForApp(applicationInfo: ApplicationInfo): Params {
         val packageInfo = packageManager.getPackageInfo(
                 applicationInfo.packageName,
                 PackageManager.GET_PERMISSIONS
@@ -82,21 +94,7 @@ open class AppConverter @Inject constructor() {
                         or PackageManager.GET_UNINSTALLED_PACKAGES
                         or PackageManager.GET_SIGNATURES
         )
-        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-        val homeActivities = packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
-                .map { it.activityInfo.packageName }
-                .plus("com.google.android.launcher") // 仕組みが未確認だが、これはホームアプリ判定になっているっぽい
-
-        val launcherIntent = Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER)
-        val launcherPkgs =
-                try {
-                    packageManager.queryIntentActivities(launcherIntent, 0).map { it.activityInfo.packageName }
-                } catch(e: Exception) {
-                    Timber.w(e, "Error: queryIntentActivities")
-                    emptyList<String>()
-                }
-
-        return Params(applicationInfo, packageInfo, realm, allPermissionGroups, homeActivities, launcherPkgs, this)
+        return Params(applicationInfo, packageInfo, allPermissionGroups, homeActivities, launcherPkgs, enabledSettingField, this)
     }
 
     interface Converter {
@@ -104,12 +102,13 @@ open class AppConverter @Inject constructor() {
         fun setValue(app: App, params: Params)
     }
 
+    // dataクラスにしないのは、Mockitoで置き換えるため
     open class Params(open var applicationInfo: ApplicationInfo
                       , open var packageInfo: PackageInfo
-                      , open var realm: Realm
                       , open var allPermissionGroups: List<PermissionGroupInfo>
                       , open var homeActivities: List<String>
                       , open var launcherPkgs: List<String>
+                      , open var enabledSettingField: Field
                       , open var appConverter: AppConverter
     )
 

@@ -20,17 +20,13 @@ import android.content.ComponentName
 import android.content.pm.ApplicationInfo
 import android.graphics.drawable.Drawable
 import com.nagopy.android.aplin.entity.App
-import io.realm.Realm
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 import kotlin.test.assertEquals
@@ -38,7 +34,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(Realm::class)
 class AppParametersTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -47,10 +42,8 @@ class AppParametersTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        params.realm = PowerMockito.mock(Realm::class.java)
     }
 
-    @Ignore("PrimaryKeyはあとから設定しないのでテストも不要")
     @Test
     fun packageName() {
         params.applicationInfo.packageName = "com.nagopy.android.test"
@@ -101,7 +94,7 @@ class AppParametersTest {
 
     @Test
     fun isThisASystemPackage() {
-        Mockito.`when`(params.appConverter.aplinDevicePolicyManager.isThisASystemPackage(params.packageInfo)).thenReturn(true)
+        Mockito.`when`(params.appConverter.aplinDevicePolicyManager.isSystemPackage(params.packageInfo)).thenReturn(true)
         val app = App()
         AppParameters.isSystemPackage.setValue(app, params)
         assertTrue(app.isSystemPackage)
@@ -168,26 +161,6 @@ class AppParametersTest {
         val app = App()
         AppParameters.isDefaultApp.setValue(app, params)
         assertFalse(app.isDefaultApp)
-    }
-
-    @Test
-    fun icon_0() {
-        params.applicationInfo.icon = 0
-        val app = App()
-        AppParameters.icon.setValue(app, params)
-        assertEquals(params.appConverter.iconHelper.defaultIconByteArray, app.iconByteArray)
-    }
-
-    @Test
-    fun icon() {
-        val mockDrawable = Mockito.mock(Drawable::class.java)
-        val mock = ByteArray(1)
-        params.applicationInfo.icon = 1
-        Mockito.`when`(params.applicationInfo.loadIcon(Mockito.any())).thenReturn(mockDrawable)
-        Mockito.`when`(params.appConverter.iconHelper.toByteArray(mockDrawable)).thenReturn(mock)
-        val app = App()
-        AppParameters.icon.setValue(app, params)
-        assertEquals(mock, app.iconByteArray)
     }
 
     @Test

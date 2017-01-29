@@ -4,15 +4,18 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.nagopy.android.aplin.R
-import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.presenter.AppListPresenter
-import io.realm.RealmBaseAdapter
 
-class AppListAdapter(context: Context, val appListPresenter: AppListPresenter)
-    : RealmBaseAdapter<App>(context, appListPresenter.realmResults) {
+class AppListAdapter(val context: Context, val appListPresenter: AppListPresenter) : BaseAdapter() {
+    override fun getItem(position: Int): Any = appListPresenter.realmResults[position]
+
+    override fun getItemId(position: Int): Long = position.toLong()
+
+    override fun getCount(): Int = appListPresenter.realmResults.count()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)

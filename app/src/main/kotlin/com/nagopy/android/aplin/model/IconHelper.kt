@@ -18,15 +18,13 @@ package com.nagopy.android.aplin.model
 
 import android.app.ActivityManager
 import android.app.Application
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
-import com.nagopy.android.aplin.entity.App
-import java.io.ByteArrayOutputStream
-import java.util.*
+import android.support.v4.util.LruCache
+import io.reactivex.Single
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,7 +37,10 @@ open class IconHelper
  * コンストラクタ
  */
 @Inject
-constructor(var application: Application, activityManager: ActivityManager) {
+constructor(val application: Application, activityManager: ActivityManager) {
+
+    @Inject
+    lateinit var packageManager: PackageManager
 
     /**
      * デフォルト表示用のアプリケーションアイコン
@@ -51,34 +52,42 @@ constructor(var application: Application, activityManager: ActivityManager) {
      */
     open val iconSize: Int = activityManager.launcherLargeIconSize * 4 / 3
 
-    val defaultIconByteArray: ByteArray = toByteArray(defaultIcon)
+    val iconCache: IconLruCache = IconLruCache(1024 * 1024 * activityManager.memoryClass / 6)
 
-    val cache: Map<String, Drawable> = HashMap()
-
-    open fun toByteArray(icon: Drawable): ByteArray {
-        val image = Bitmap.createBitmap(iconSize, iconSize, Bitmap.Config.ARGB_8888);
-        val canvas = Canvas(image)
-        icon.setBounds(0, 0, iconSize, iconSize)
-        icon.draw(canvas)
-        val stream = ByteArrayOutputStream()
-        stream.use {
-            image.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            image.recycle()
-            return stream.toByteArray()
+    fun requestLoadIcon(pkg: String): Single<Drawable> {
+        return Single.create<Drawable> {
+            var icon: Drawable? = iconCache.getOrNull(pkg)
+            if (icon == null) {
+                val d: BitmapDrawable?
+                try {
+                    d = packageManager.getApplicationIcon(pkg) as? BitmapDrawable
+                } catch (e: PackageManager.NameNotFoundException) {
+                    Timber.d(e, "Error pkg=%s", pkg)
+                    it.onSuccess(defaultIcon)
+                    return@create
+                }
+                if (d != null) {
+                    icon = d
+                } else {
+                    icon = defaultIcon
+                }
+                iconCache.put(pkg, icon as BitmapDrawable)
+                Timber.d("Add cache. pkg=s%s", pkg)
+            } else {
+                Timber.d("Cached. pkg=%s", pkg)
+            }
+            it.onSuccess(icon)
         }
     }
 
-    open fun toDrawable(iconArray: ByteArray): BitmapDrawable {
-        return BitmapDrawable(application.resources, BitmapFactory.decodeByteArray(iconArray, 0, iconArray.size))
-    }
+    class IconLruCache(maxSize: Int) : LruCache<String, BitmapDrawable>(maxSize) {
 
-    @Synchronized
-    open fun getIcon(app: App): Drawable {
-        var icon = cache[app.packageName]
-        if (icon == null) {
-            icon = toDrawable(app.iconByteArray!!)
-            cache.plus(Pair(app.packageName, icon))
+        fun getOrNull(key: String): BitmapDrawable? {
+            return get(key)
         }
-        return icon
+
+        override fun sizeOf(key: String?, value: BitmapDrawable): Int {
+            return value.bitmap.byteCount / 1024
+        }
     }
 }

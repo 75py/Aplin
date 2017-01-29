@@ -18,10 +18,7 @@ package com.nagopy.android.aplin.model
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.entity.names.AppNames.*
-import com.nagopy.android.kotlinames.findAllSortedAsync
-import io.realm.RealmQuery
-import io.realm.RealmResults
+import kotlin.comparisons.compareBy
 
 /**
  * ソート順の定義クラス
@@ -42,10 +39,8 @@ enum class Sort(
     DEFAULT(titleResourceId = R.string.sort_default,
             summaryResourceId = R.string.sort_default_summary,
             defaultValue = true) {
-        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
-            return realmQuery.findAllSortedAsync(isInstalled() to io.realm.Sort.ASCENDING,
-                    label() to io.realm.Sort.ASCENDING,
-                    packageName() to io.realm.Sort.ASCENDING)
+        override fun orderBy(list: Collection<App>): Collection<App> {
+            return list.sortedWith(compareBy(App::isInstalled, App::label, App::packageName))
         }
     },
     /**
@@ -53,9 +48,8 @@ enum class Sort(
      */
     PACKAGE_NAME(titleResourceId = R.string.sort_package_name
             , summaryResourceId = R.string.sort_package_name_summary) {
-        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
-            return realmQuery.findAllSortedAsync(isInstalled() to io.realm.Sort.ASCENDING,
-                    packageName() to io.realm.Sort.ASCENDING)
+        override fun orderBy(list: Collection<App>): Collection<App> {
+            return list.sortedWith(compareBy(App::isInstalled, App::packageName))
         }
     },
     /**
@@ -63,11 +57,8 @@ enum class Sort(
      */
     FIRST_INSTALL_TIME_DESC(titleResourceId = R.string.sort_install_time_desc
             , summaryResourceId = R.string.sort_install_time_desc_summary) {
-        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
-            return realmQuery.findAllSortedAsync(firstInstallTime() to io.realm.Sort.DESCENDING,
-                    isInstalled() to io.realm.Sort.ASCENDING,
-                    label() to io.realm.Sort.ASCENDING,
-                    packageName() to io.realm.Sort.ASCENDING)
+        override fun orderBy(list: Collection<App>): Collection<App> {
+            return list.sortedWith(compareBy({ it.firstInstallTime * -1 }, App::isInstalled, App::label, App::packageName))
         }
     },
     /**
@@ -75,15 +66,12 @@ enum class Sort(
      */
     UPDATE_DATE_DESC(titleResourceId = R.string.sort_update_time_desc
             , summaryResourceId = R.string.sort_update_time_desc_summary) {
-        override fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App> {
-            return realmQuery.findAllSortedAsync(lastUpdateTime() to io.realm.Sort.DESCENDING,
-                    isInstalled() to io.realm.Sort.ASCENDING,
-                    label() to io.realm.Sort.ASCENDING,
-                    packageName() to io.realm.Sort.ASCENDING)
+        override fun orderBy(list: Collection<App>): Collection<App> {
+            return list.sortedWith(compareBy({ it.lastUpdateTime * -1 }, App::isInstalled, App::label, App::packageName))
         }
     };
 
-    abstract fun findAllSortedAsync(realmQuery: RealmQuery<App>): RealmResults<App>
+    abstract fun orderBy(list: Collection<App>): Collection<App>
 
     val key: String = "${javaClass.name}_$name"
 }

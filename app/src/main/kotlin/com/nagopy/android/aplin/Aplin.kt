@@ -25,8 +25,6 @@ import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.StandardExceptionParser
 import com.google.android.gms.analytics.Tracker
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import timber.log.Timber
 
 open class Aplin : Application() {
@@ -56,13 +54,6 @@ open class Aplin : Application() {
             Aplin.tracker = tracker
             Timber.plant(AnalyticsTree(this))
         }
-
-        Realm.init(this)
-        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
-                .name(Realm.DEFAULT_REALM_NAME)
-                .schemaVersion(BuildConfig.VERSION_CODE.toLong())
-                .deleteRealmIfMigrationNeeded()
-                .build())
     }
 
     override fun startActivity(intent: Intent) {

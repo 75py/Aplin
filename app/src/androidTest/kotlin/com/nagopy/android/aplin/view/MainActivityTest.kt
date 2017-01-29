@@ -17,61 +17,51 @@
 package com.nagopy.android.aplin.view
 
 import android.content.SharedPreferences
-import android.os.Build
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.AdapterViewProtocol
+import android.support.test.espresso.action.AdapterViewProtocols
 import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.swipeDown
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.filters.SdkSuppress
+import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.By
 import android.support.test.uiautomator.UiDevice
 import android.support.test.uiautomator.UiSelector
 import android.support.test.uiautomator.Until
-import android.test.suitebuilder.annotation.LargeTest
-import android.test.suitebuilder.annotation.MediumTest
+import android.widget.Adapter
+import android.widget.AdapterView
 import android.widget.ProgressBar
-import com.nagopy.android.aplin.AplinTestRule
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.TestResources
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
-import io.realm.Realm
 import org.hamcrest.CoreMatchers.*
-import org.hamcrest.Matchers.containsString
-import org.hamcrest.Matchers.hasToString
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import timber.log.Timber
-import java.util.*
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import org.hamcrest.CoreMatchers.`is` as _is
 
 @RunWith(AndroidJUnit4::class)
-@LargeTest
 class MainActivityTest {
 
     @Rule
     @JvmField
     val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, false, false)
-
-    @Rule
-    @JvmField
-    val aplinRule = AplinTestRule()
 
     val timeout = 500L
 
@@ -92,7 +82,6 @@ class MainActivityTest {
 
     private fun startActivity(): MainActivity = rule.launchActivity(null)
 
-    @MediumTest
     @Test
     fun testLaunch() {
         startActivity()
@@ -109,288 +98,100 @@ class MainActivityTest {
     @LargeTest
     @Test
     fun all() {
-        startActivity()
-
-        uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
-
-        onView(withId(R.id.spinner)).perform(click())
-        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.ALL)))
-                .perform(click())
-
-        waitForIdle()
-
-        // なぜか最初が動かないときがあるので、一度スクロール
-        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
-        waitForIdle()
-
-        for (index in 1..5) {
-            var packageName: String = ""
-            var label: String = ""
-            InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                val realm = Realm.getDefaultInstance()
-                realm.use {
-                    val apps = realm.where(App::class.java).findAll()
-                    val app = apps[Random().nextInt(apps.size)]
-                    packageName = app.packageName
-                    label = app.label
-                    assertTrue(packageName.isNotEmpty())
-                    assertTrue(label.isNotEmpty())
-                }
-            }
-            aplinRule.setMessages(packageName, label)
-
-            intentBlock {
-                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
-                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
-                        .perform(click())
-                waitForIdle()
-                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
-            }
-
-            // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
-
-            // 設定画面からバックキーで戻る
-            uiDevice.pressBack()
-            waitForIdle()
+        clickAll(Category.ALL) { app ->
+            // アプリ名が表示されていることを確認
+            assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
         }
     }
 
     @LargeTest
     @Test
-    fun system() {
-        startActivity()
+    fun SYSTEM_DISABLABLE() {
+        clickAll(Category.SYSTEM_DISABLABLE) { app ->
+            // アプリ名が表示されていることを確認
+            assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
 
-        uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
-
-        onView(withId(R.id.spinner)).perform(click())
-        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.SYSTEM)))
-                .perform(click())
-
-        waitForIdle()
-
-        // なぜか最初が動かないときがあるので、一度スクロール
-        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
-        waitForIdle()
-
-        for (index in 1..5) {
-            var packageName: String = ""
-            var label: String = ""
-            InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                val realm = Realm.getDefaultInstance()
-                realm.use {
-                    val apps = Category.SYSTEM.where(realm.where(App::class.java)).findAll()
-                    val app = apps[Random().nextInt(apps.size)]
-                    packageName = app.packageName
-                    label = app.label
-                    assertTrue(packageName.isNotEmpty())
-                    assertTrue(label.isNotEmpty())
-                }
-            }
-            aplinRule.setMessages(packageName, label)
-
-            // タップしてみて、Intentを確認
-            intentBlock {
-                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
-                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
-                        .perform(click())
-                waitForIdle()
-                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
-            }
-
-            // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
-
-            // 設定画面からバックキーで戻る
-            uiDevice.pressBack()
-            waitForIdle()
+            val disableButtonLabel =
+                    if (app.isEnabled && !app.isDisabledUntilUsed) {
+                        TestResources.string.test_btn_disable
+                    } else {
+                        TestResources.string.test_btn_enable
+                    }
+            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
+            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
         }
     }
 
     @LargeTest
     @Test
-    fun undisablable() {
-        startActivity()
+    fun SYSTEM_UNDISABLABLE() {
+        clickAll(Category.SYSTEM_UNDISABLABLE) { app ->
+            // アプリ名が表示されていることを確認
+            assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
 
-        uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
-
-        onView(withId(R.id.spinner)).perform(click())
-        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.SYSTEM_UNDISABLABLE)))
-                .perform(click())
-
-        waitForIdle()
-
-        // なぜか最初が動かないときがあるので、一度スクロール
-        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
-        waitForIdle()
-
-        for (index in 1..5) {
-            var packageName: String = ""
-            var label: String = ""
-            InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                val realm = Realm.getDefaultInstance()
-                realm.use {
-                    val apps = Category.SYSTEM_UNDISABLABLE.where(realm.where(App::class.java)).findAll()
-                    val app = apps[Random().nextInt(apps.size)]
-                    packageName = app.packageName
-                    label = app.label
-                    assertTrue(packageName.isNotEmpty())
-                    assertTrue(label.isNotEmpty())
-                }
-            }
-            aplinRule.setMessages(packageName, label)
-
-            // タップしてみて、Intentを確認
-            intentBlock {
-                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
-                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
-                        .perform(click())
-                waitForIdle()
-                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
-            }
-
-            // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
-
-            val disableButtonExists = uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).waitForExists(1000)
-            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).waitForExists(1000)
-            assertTrue(disableButtonExists || enableButtonExists)
-            if (disableButtonExists) {
-                assertFalse(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).isEnabled)
-            } else {
-                assertFalse(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).isEnabled)
-            }
-
-            // 設定画面からバックキーで戻る
-            uiDevice.pressBack()
-            waitForIdle()
+            val disableButtonLabel =
+                    if (app.isEnabled && !app.isDisabledUntilUsed) {
+                        TestResources.string.test_btn_disable
+                    } else {
+                        TestResources.string.test_btn_enable
+                    }
+            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
+            assertFalse(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
         }
     }
 
-    @LargeTest
-    @Test
-    fun disablable() {
+    fun clickAll(category: Category, validator: (app: App) -> Unit) {
         startActivity()
 
         uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
+        uiDevice.waitForIdle()
 
+        Thread.sleep(5000) // Wait for loading
+
+        // Choose category
         onView(withId(R.id.spinner)).perform(click())
-        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.SYSTEM_DISABLABLE)))
+        onData(allOf(_is(instanceOf(Category::class.java)), _is(category)))
+                .atPosition(0)
                 .perform(click())
+        uiDevice.waitForIdle()
 
-        waitForIdle()
-
-        // なぜか最初が動かないときがあるので、一度スクロール
-        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
-        waitForIdle()
-
-        for (index in 1..5) {
-            var packageName: String = ""
-            var label: String = ""
-            InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                val realm = Realm.getDefaultInstance()
-                realm.use {
-                    val apps = Category.SYSTEM_DISABLABLE.where(realm.where(App::class.java)).findAll()
-                    val app = apps[Random().nextInt(apps.size)]
-                    packageName = app.packageName
-                    label = app.label
-                    assertTrue(packageName.isNotEmpty())
-                    assertTrue(label.isNotEmpty())
-                }
-            }
-            Timber.d("disablable() pkg=%s, label=%s", packageName, label)
-            aplinRule.setMessages(packageName, label)
-
-            // タップしてみて、Intentを確認
+        val appListViewProtocol = AppListViewProtocol()
+        var i = 0
+        do {
             intentBlock {
-                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
+                onData(instanceOf(App::class.java))
                         .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
-                        .atPosition(0)
+                        .atPosition(i)
+                        .usingAdapterViewProtocol(appListViewProtocol)
                         .perform(click())
-                waitForIdle()
-                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
+                uiDevice.waitForIdle()
+                val packageName = appListViewProtocol.apps[i].packageName
+                Timber.d("packageName=%s", packageName)
+                Intents.intended(allOf(
+                        IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        , IntentMatchers.hasData("package:$packageName")
+                ))
             }
 
-            // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
+            // validation
+            validator(appListViewProtocol.apps[i])
 
-            val disableButtonExists = uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).waitForExists(1000)
-            val enableButtonExists = !disableButtonExists && uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).waitForExists(1000)
-            assertTrue(disableButtonExists || enableButtonExists)
-            if (disableButtonExists) {
-                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_disable)).isEnabled)
-            } else {
-                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(TestResources.string.test_btn_enable)).isEnabled)
-            }
-
-            // 設定画面からバックキーで戻る
+            // Back to Aplin
             uiDevice.pressBack()
-            waitForIdle()
+            uiDevice.waitForIdle()
+            i++
+        } while (i < appListViewProtocol.apps.count())
+    }
+
+    class AppListViewProtocol : AdapterViewProtocol by AdapterViewProtocols.standardProtocol() {
+
+        var apps: List<App> = emptyList()
+
+        override fun getDataInAdapterView(adapterView: AdapterView<out Adapter>?): MutableIterable<AdapterViewProtocol.AdaptedData> {
+            val result = AdapterViewProtocols.standardProtocol().getDataInAdapterView(adapterView)
+            apps = result.map { it.getData() as App }.toList()
+            return result
         }
     }
 
-    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.M)
-    @LargeTest
-    @Test
-    fun runtimePermissions() {
-        startActivity()
-
-        uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
-
-        onView(withId(R.id.spinner)).perform(click())
-        onData(allOf(_is(instanceOf(Category::class.java)), _is(Category.DENIABLE_PERMISSIONS)))
-                .perform(click())
-
-        waitForIdle()
-
-        // なぜか最初が動かないときがあるので、一度スクロール
-        onView(allOf(withId(R.id.list), isDisplayed())).perform(swipeDown())
-        waitForIdle()
-
-        for (index in 1..5) {
-            var packageName: String = ""
-            var label: String = ""
-            InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                val realm = Realm.getDefaultInstance()
-                realm.use {
-                    val apps = Category.DENIABLE_PERMISSIONS.where(realm.where(App::class.java)).findAll()
-                    val app = apps[Random().nextInt(apps.size)]
-                    packageName = app.packageName
-                    label = app.label
-                    assertTrue(packageName.isNotEmpty())
-                    assertTrue(label.isNotEmpty())
-                }
-            }
-            aplinRule.setMessages(packageName, label)
-
-            // タップしてみて、Intentを確認
-            intentBlock {
-                onData(allOf(hasToString(containsString("{packageName:$packageName}"))))
-                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
-                        .perform(click())
-                waitForIdle()
-                Intents.intended(IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
-                Intents.intended(IntentMatchers.hasData("package:${packageName}"))
-            }
-
-            // ラベル名が表示されていることをuiautomatorで確認
-            assertTrue(uiDevice.findObject(UiSelector().text(label)).waitForExists(timeout))
-
-            val permissionButton = uiDevice.findObject(UiSelector().textStartsWith("リクエストされた権限はありません")).waitForExists(1000)
-            assertFalse(permissionButton)
-
-            // 設定画面からバックキーで戻る
-            uiDevice.pressBack()
-            waitForIdle()
-        }
-    }
-
-    private fun waitForIdle() {
-        uiDevice.waitForIdle(timeout)
-        Thread.sleep(timeout)
-    }
 }

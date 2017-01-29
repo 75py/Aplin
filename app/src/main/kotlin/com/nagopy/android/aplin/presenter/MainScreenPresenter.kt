@@ -66,20 +66,21 @@ constructor() : Presenter {
         view.showIndicator()
         view.setToolbarSpinnerEnabled(false)
 
-        subscription = applications.asyncSubject.subscribe({
-        }, { e ->
-            Timber.e(e, "Error occurred")
-        }, {
-            view.hideIndicator()
-            view.showAppList()
-            view.setToolbarSpinnerEnabled(true)
-            subscription?.dispose()
-        })
+        subscription = applications.initAppCache()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    view.hideIndicator()
+                    view.showAppList()
+                    view.setToolbarSpinnerEnabled(true)
+                }, { e ->
+                    Timber.e(e, "Error occurred")
+                })
     }
 
     override fun resume() {
         applications.updatePoco()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.computation())
                 .subscribe({
                     // do nothing
                 }, { t ->
@@ -93,7 +94,9 @@ constructor() : Presenter {
 
     override fun destroy() {
         view = null
-        subscription?.dispose()
+        if (subscription?.isDisposed == true) {
+            subscription?.dispose()
+        }
     }
 
     fun listItemClicked(activity: Activity, app: App, category: Category) {

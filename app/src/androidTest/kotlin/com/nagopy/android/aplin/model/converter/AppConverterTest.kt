@@ -19,11 +19,8 @@ package com.nagopy.android.aplin.model.converter
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.support.test.InstrumentationRegistry
-import android.test.suitebuilder.annotation.SmallTest
 import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.App
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -32,7 +29,6 @@ import javax.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-@SmallTest
 class AppConverterTest {
 
     val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
@@ -41,8 +37,6 @@ class AppConverterTest {
     lateinit var appConverter: AppConverter
 
     lateinit var aplinApplicationInfo: ApplicationInfo
-
-    lateinit var realm: Realm
 
     lateinit var aplinApp: App
 
@@ -53,12 +47,6 @@ class AppConverterTest {
                 .build()
 
         (Aplin.getApplicationComponent() as ApplicationMockComponent).inject(this)
-        Realm.init(application)
-        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
-                .name(javaClass.name)
-                .inMemory()
-                .build())
-        realm = Realm.getDefaultInstance()
 
         val packageManager = application.packageManager
         packageManager.getInstalledApplications(0).forEach {
@@ -68,17 +56,14 @@ class AppConverterTest {
         }
 
         aplinApp = App()
-        realm.executeTransaction {
-            appConverter.setValues(realm, aplinApp, aplinApplicationInfo)
-        }
+        appConverter.prepare()
+        appConverter.setValues(aplinApp, aplinApplicationInfo)
     }
 
     @After
     fun tearDown() {
-        realm.close()
     }
 
-    @Ignore("PrimaryKeyはsetValuesでは設定されないので、テスト不要")
     @Test
     fun packageName() {
         assertEquals(InstrumentationRegistry.getTargetContext().packageName, aplinApp.packageName)
@@ -127,11 +112,6 @@ class AppConverterTest {
     @Test
     fun isDefaultApp() {
         assertEquals(false, aplinApp.hasActiveAdmins)
-    }
-
-    @Test
-    fun icon() {
-        assertNotNull(aplinApp.iconByteArray)
     }
 
     @Test

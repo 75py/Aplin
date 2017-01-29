@@ -30,6 +30,9 @@ import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.model.Category
 import com.nagopy.android.aplin.presenter.AppListPresenter
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -48,6 +51,8 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
 
     lateinit var adapter: AppListAdapter
 
+    var disposer: Disposable? = null
+
     val category: Category by lazy { Category.valueOf(arguments.getString("type")) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +65,18 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
         val parentView = activity as AppListViewParent
         presenter.initialize(this, parentView, category)
         adapter = AppListAdapter(application, presenter)
+
+        disposer = presenter.applications.appObserver
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Timber.d("App changed. category = %s", category)
+                    presenter.updateAppList()
+                    adapter.notifyDataSetChanged()
+                }, { e ->
+                    Timber.e(e, "Error")
+                })
+
     }
 
     override fun onResume() {
@@ -79,6 +96,9 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
+        if (disposer?.isDisposed == false) {
+            disposer?.dispose()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
