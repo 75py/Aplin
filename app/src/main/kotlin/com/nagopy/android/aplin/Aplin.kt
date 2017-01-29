@@ -19,13 +19,14 @@ package com.nagopy.android.aplin
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.multidex.MultiDex
 import android.util.Log
-import com.google.android.gms.analytics.GoogleAnalytics
-import com.google.android.gms.analytics.HitBuilders
-import com.google.android.gms.analytics.StandardExceptionParser
-import com.google.android.gms.analytics.Tracker
+import com.google.android.gms.ads.MobileAds
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crash.FirebaseCrash
 import timber.log.Timber
+
 
 open class Aplin : Application() {
 
@@ -46,13 +47,24 @@ open class Aplin : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {
-            val ga = GoogleAnalytics.getInstance(this)
-            val tracker = ga.newTracker(getString(R.string.ga_trackingId))
-            tracker.enableExceptionReporting(true)
-            tracker.enableAdvertisingIdCollection(true)
-            tracker.enableAutoActivityTracking(true)
-            Aplin.tracker = tracker
-            Timber.plant(AnalyticsTree(this))
+            MobileAds.initialize(this, BuildConfig.AD_APP_ID)
+            Timber.plant(object : Timber.Tree() {
+                override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
+                    when (priority) {
+                        Log.INFO -> {
+                            val b = Bundle()
+                            b.putString("message", message)
+                            FirebaseAnalytics.getInstance(this@Aplin).logEvent("INFO", b)
+                        }
+                        Log.WARN -> {
+                            FirebaseCrash.log(message)
+                        }
+                        Log.ERROR -> {
+                            FirebaseCrash.report(t)
+                        }
+                    }
+                }
+            })
         }
     }
 
@@ -67,24 +79,6 @@ open class Aplin : Application() {
         fun getApplicationComponent(): ApplicationComponent {
             return component!!
         }
-
-        var tracker: Tracker? = null
     }
 
-    class AnalyticsTree(val application: Application) : Timber.Tree() {
-
-        val exceptionParser = StandardExceptionParser(application, null)
-
-        override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-            if (priority == Log.ERROR) {
-                Aplin.tracker?.send(
-                        HitBuilders.ExceptionBuilder()
-                                .setDescription(exceptionParser.getDescription(Thread.currentThread().name, t))
-                                .setFatal(false)
-                                .build()
-                )
-            }
-        }
-
-    }
 }
