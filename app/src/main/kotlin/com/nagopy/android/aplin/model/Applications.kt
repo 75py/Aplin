@@ -98,35 +98,7 @@ open class Applications
      * /packages/apps/Settings/src/com/android/settings/applications/ApplicationsState.java
      */
     fun getInstalledApplications(): List<ApplicationInfo> {
-        return packageManager.getInstalledApplications(getFlags())
-    }
-
-    open fun getFlags(): Int {
-        val ownerRetrieveFlags = PackageManager.GET_UNINSTALLED_PACKAGES or
-                PackageManager.GET_DISABLED_COMPONENTS or
-                PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
-
-        val retrieveFlags = PackageManager.GET_DISABLED_COMPONENTS or
-                PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
-
-        val flags: Int
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            val myUserIdMethod = UserHandle::class.java.getDeclaredMethod("myUserId")
-            flags = if (myUserIdMethod.invoke(null) == 0) {
-                ownerRetrieveFlags
-            } else {
-                retrieveFlags
-            }
-        } else {
-            val myUserHandle = android.os.Process.myUserHandle()
-            val isOwnerMethod = UserHandle::class.java.getDeclaredMethod("isOwner")
-            flags = if (isOwnerMethod.invoke(myUserHandle) as Boolean) {
-                ownerRetrieveFlags
-            } else {
-                retrieveFlags
-            }
-        }
-        return flags or PackageManager.GET_SIGNATURES
+        return packageManager.getInstalledApplications(flags)
     }
 
     open fun shouldSkip(applicationInfo: ApplicationInfo): Boolean {
@@ -155,7 +127,7 @@ open class Applications
 
     private fun upsert(pkg: String): Observable<Void> {
         return Observable.create {
-            val applicationInfo = packageManager.getApplicationInfo(pkg, getFlags())
+            val applicationInfo = packageManager.getApplicationInfo(pkg, flags)
             if (!shouldSkip(applicationInfo)) {
                 val entity = App()
                 appConverter.prepare()
@@ -204,6 +176,38 @@ open class Applications
             if (updated) {
                 Timber.d("Updated!")
                 appObserver.onNext(0)
+            }
+        }
+    }
+
+    companion object {
+        /**
+         * [android.content.pm.PackageManager.getInstalledApplications]の引数に使うフラグ。以下のクラスを参照
+         * /packages/apps/Settings/src/com/android/settings/applications/ApplicationsState.java
+         */
+        val flags: Int by lazy {
+            val ownerRetrieveFlags = PackageManager.GET_UNINSTALLED_PACKAGES or
+                    PackageManager.GET_DISABLED_COMPONENTS or
+                    PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
+
+            val retrieveFlags = PackageManager.GET_DISABLED_COMPONENTS or
+                    PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                val myUserIdMethod = UserHandle::class.java.getDeclaredMethod("myUserId")
+                if (myUserIdMethod.invoke(null) == 0) {
+                    return@lazy ownerRetrieveFlags
+                } else {
+                    return@lazy retrieveFlags
+                }
+            } else {
+                val myUserHandle = android.os.Process.myUserHandle()
+                val isOwnerMethod = UserHandle::class.java.getDeclaredMethod("isOwner")
+                if (isOwnerMethod.invoke(myUserHandle) as Boolean) {
+                    return@lazy ownerRetrieveFlags
+                } else {
+                    return@lazy retrieveFlags
+                }
             }
         }
     }

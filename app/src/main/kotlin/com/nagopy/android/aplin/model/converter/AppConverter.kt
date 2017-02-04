@@ -25,6 +25,7 @@ import android.content.pm.PermissionGroupInfo
 import android.os.Build
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.AplinDevicePolicyManager
+import com.nagopy.android.aplin.model.Applications
 import com.nagopy.android.aplin.model.IconHelper
 import timber.log.Timber
 import java.lang.reflect.Field
@@ -56,7 +57,7 @@ open class AppConverter @Inject constructor() {
     open fun prepare() {
         allPermissionGroups = packageManager.getAllPermissionGroups(0)
         val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-        homeActivities = packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
+        homeActivities = packageManager.queryIntentActivities(intent, 0)
                 .map { it.activityInfo.packageName }
                 .plus("com.google.android.launcher") // 仕組みが未確認だが、これはホームアプリ判定になっているっぽい
 
@@ -86,14 +87,17 @@ open class AppConverter @Inject constructor() {
     }
 
     open fun prepareForApp(applicationInfo: ApplicationInfo): Params {
+        // 一度に取得する量が多いとエラーになるらしいので、細かく分けて取得する
         val packageInfo = packageManager.getPackageInfo(
                 applicationInfo.packageName,
-                PackageManager.GET_PERMISSIONS
-                        or PackageManager.GET_META_DATA
-                        or PackageManager.GET_DISABLED_COMPONENTS
-                        or PackageManager.GET_UNINSTALLED_PACKAGES
-                        or PackageManager.GET_SIGNATURES
+                PackageManager.GET_PERMISSIONS or Applications.flags
         )
+        val sig = packageManager.getPackageInfo(
+                applicationInfo.packageName,
+                PackageManager.GET_SIGNATURES or Applications.flags
+        )
+        packageInfo.signatures = sig.signatures
+
         return Params(applicationInfo, packageInfo, allPermissionGroups, homeActivities, launcherPkgs, enabledSettingField, this)
     }
 
