@@ -16,7 +16,6 @@
 
 package com.nagopy.android.aplin.model
 
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.UserHandle
@@ -27,7 +26,8 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
-import java.lang.reflect.Field
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -45,10 +45,6 @@ open class Applications
 
     val appObserver: PublishSubject<Int> = PublishSubject.create<Int>() // onNext(null)が不可になったので、ダミー引数Intを使う
 
-    val enabledSettingField: Field = ApplicationInfo::class.java.getDeclaredField("enabledSetting").apply {
-        isAccessible = true
-    }
-
     open fun isLoaded(): Boolean {
         return appCache.isNotEmpty()
     }
@@ -64,22 +60,16 @@ open class Applications
 
     open fun refresh() {
         appCache.clear()
-        val allApps = getInstalledApplications()
+        val all = getInstalledPackageNames()
         val executorService = Executors.newCachedThreadPool()
         appConverter.prepare()
-        allApps.forEach {
-            Timber.d("LOAD start pkg=%s", it.packageName)
+        all.forEach { packageName ->
+            Timber.d("LOAD start pkg=%s", packageName)
             executorService.execute {
-                if (shouldSkip(it)) {
-                    Timber.d("skip: %s", it.packageName)
-                    //return@forEach
-                } else {
-                    val entity = App()
-                    appConverter.setValues(entity, it)
-                    appCache.put(it.packageName, entity)
-                    Timber.d("ADDCACHE pkg=%s", entity.packageName)
-                }
-                Timber.d("LOAD fin  pkg=%s", it.packageName)
+                val entity = App()
+                appConverter.setValues(entity, packageName)
+                appCache.put(packageName, entity)
+                Timber.d("LOAD fin  pkg=%s", packageName)
             }
         }
         executorService.shutdown()
@@ -92,27 +82,49 @@ open class Applications
         return userSettings.sort.orderBy(category.where(appCache.values)).toList()
     }
 
-    /**
-     * アプリケーション一覧を取得する.<br>
-     * [android.content.pm.PackageManager.getInstalledApplications]の引数については、以下のクラスを参照
-     * /packages/apps/Settings/src/com/android/settings/applications/ApplicationsState.java
-     */
-    fun getInstalledApplications(): List<ApplicationInfo> {
-        return packageManager.getInstalledApplications(flags)
+    fun getInstalledPackageNames(): List<String> {
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+            // 24-
+            return getInstalledPackageNames24()
+        } else {
+            return getInstalledPackageNames23()
+        }
     }
 
-    open fun shouldSkip(applicationInfo: ApplicationInfo): Boolean {
-        if (applicationInfo.packageName.isEmpty()) {
-            return true
-        }
-        if (!applicationInfo.enabled) {
-            // 無効になっていて、かつenabledSettingが3でないアプリは除外する
-            val enabledSetting = enabledSettingField.get(applicationInfo)
-            if (enabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER) {
-                return true
+    fun getInstalledPackageNames23(): List<String> {
+        try {
+            val pb = ProcessBuilder("pm", "list", "packages")
+            val p = pb.start()
+            val isr = InputStreamReader(p.inputStream)
+            val br = BufferedReader(isr)
+            br.useLines {
+                return it.filter(String::isNotBlank)
+                        .filter { it.startsWith("package:") }
+                        .map { it.replace("package:", "") }
+                        .toList()
             }
+        } catch (e: Exception) {
+            Timber.e(e)
+            return emptyList()
         }
-        return false
+    }
+
+    fun getInstalledPackageNames24(): List<String> {
+        try {
+            val pb = ProcessBuilder("cmd", "package", "list", "packages")
+            val p = pb.start()
+            val isr = InputStreamReader(p.inputStream)
+            val br = BufferedReader(isr)
+            br.useLines {
+                return it.filter(String::isNotBlank)
+                        .filter { it.startsWith("package:") }
+                        .map { it.replace("package:", "") }
+                        .toList()
+            }
+        } catch (e: Exception) {
+            Timber.e(e)
+            return emptyList()
+        }
     }
 
     open fun insert(pkg: String): Observable<Void> {
@@ -127,13 +139,10 @@ open class Applications
 
     private fun upsert(pkg: String): Observable<Void> {
         return Observable.create {
-            val applicationInfo = packageManager.getApplicationInfo(pkg, flags)
-            if (!shouldSkip(applicationInfo)) {
-                val entity = App()
-                appConverter.prepare()
-                appConverter.setValues(entity, applicationInfo)
-                appCache.put(pkg, entity)
-            }
+            val entity = App()
+            appConverter.prepare()
+            appConverter.setValues(entity, pkg)
+            appCache.put(pkg, entity)
             it.onComplete()
 
             appObserver.onNext(0)
@@ -152,20 +161,20 @@ open class Applications
 
     open fun updatePoco(): Observable<Void> {
         return Observable.create {
-            val all = getInstalledApplications()
+            val all = getInstalledPackageNames()
             var updated = false
             appConverter.prepare()
             synchronized(appCache) {
-                all.forEach { applicationInfo ->
-                    val app = appCache[applicationInfo.packageName]
+                all.forEach { packageName ->
+                    val app = appCache[packageName]
                     if (app != null) {
                         val newApp = App()
-                        appConverter.setValues(newApp, applicationInfo, AppParameters.isDefaultApp, AppParameters.isEnabled)
+                        appConverter.setValues(newApp, packageName, AppParameters.isDefaultApp, AppParameters.isEnabled)
 
                         if (newApp.isDefaultApp != app.isDefaultApp || newApp.isEnabled != app.isEnabled) {
                             app.isDefaultApp = newApp.isDefaultApp
                             app.isEnabled = app.isEnabled
-                            appCache.put(applicationInfo.packageName, app)
+                            appCache.put(packageName, app)
                             updated = true
                         }
                     }

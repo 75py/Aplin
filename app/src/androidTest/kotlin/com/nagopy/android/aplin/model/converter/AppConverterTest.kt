@@ -17,17 +17,14 @@
 package com.nagopy.android.aplin.model.converter
 
 import android.app.Application
-import android.content.pm.ApplicationInfo
 import android.support.test.InstrumentationRegistry
 import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.App
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import javax.inject.Inject
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 class AppConverterTest {
 
@@ -35,8 +32,6 @@ class AppConverterTest {
 
     @Inject
     lateinit var appConverter: AppConverter
-
-    lateinit var aplinApplicationInfo: ApplicationInfo
 
     lateinit var aplinApp: App
 
@@ -48,16 +43,9 @@ class AppConverterTest {
 
         (Aplin.getApplicationComponent() as ApplicationMockComponent).inject(this)
 
-        val packageManager = application.packageManager
-        packageManager.getInstalledApplications(0).forEach {
-            if (it.packageName == application.packageName) {
-                aplinApplicationInfo = it
-            }
-        }
-
         aplinApp = App()
         appConverter.prepare()
-        appConverter.setValues(aplinApp, aplinApplicationInfo)
+        appConverter.setValues(aplinApp, application.packageName)
     }
 
     @After

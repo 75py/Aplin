@@ -71,34 +71,49 @@ open class AppConverter @Inject constructor() {
                 }
     }
 
-    open fun setValues(app: App, applicationInfo: ApplicationInfo, vararg appParameters: AppParameters = AppParameters.values()) {
+    open fun setValues(app: App, packageName: String, vararg appParameters: AppParameters = AppParameters.values()) {
         try {
-            val params = prepareForApp(applicationInfo)
+            val params = prepareForApp(packageName)
             appParameters
                     .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                     .forEach { param ->
                         param.setValue(app, params)
                     }
         } catch(e: PackageManager.NameNotFoundException) {
-            Timber.w(e, "Not found. pkg=%s", applicationInfo.packageName)
+            Timber.w(e, "Not found. pkg=%s", packageName)
         } catch(e: Exception) {
-            Timber.e(e, "Error occurred. pkg=%s", applicationInfo.packageName)
+            Timber.e(e, "Error occurred. pkg=%s", packageName)
         }
     }
 
-    open fun prepareForApp(applicationInfo: ApplicationInfo): Params {
+    open fun prepareForApp(packageName: String): Params {
         // 一度に取得する量が多いとエラーになるらしいので、細かく分けて取得する
         val packageInfo = packageManager.getPackageInfo(
-                applicationInfo.packageName,
-                PackageManager.GET_PERMISSIONS or Applications.flags
+                packageName,
+                Applications.flags
         )
-        val sig = packageManager.getPackageInfo(
-                applicationInfo.packageName,
-                PackageManager.GET_SIGNATURES or Applications.flags
-        )
-        packageInfo.signatures = sig.signatures
 
-        return Params(applicationInfo, packageInfo, allPermissionGroups, homeActivities, launcherPkgs, enabledSettingField, this)
+        try {
+            val pkg = packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_PERMISSIONS or Applications.flags
+            )
+            packageInfo.requestedPermissions = pkg.requestedPermissions
+        } catch (e: Exception) {
+            Timber.w(e)
+        }
+
+        try {
+            val sig = packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_SIGNATURES or Applications.flags
+            )
+            packageInfo.signatures = sig.signatures
+        } catch (e: Exception) {
+            Timber.w(e)
+        }
+
+        return Params(packageInfo.applicationInfo, packageInfo, allPermissionGroups, homeActivities, launcherPkgs, enabledSettingField, this)
     }
 
     interface Converter {
