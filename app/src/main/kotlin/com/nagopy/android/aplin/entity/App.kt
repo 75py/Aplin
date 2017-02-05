@@ -55,6 +55,8 @@ class App {
 
     var isDisabledUntilUsed: Boolean = false // 6.0-
 
+    var shouldSkip: Boolean = false
+
     override fun toString(): String {
         return "$packageName    $label"
     }

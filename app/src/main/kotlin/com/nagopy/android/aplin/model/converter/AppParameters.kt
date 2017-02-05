@@ -135,6 +135,20 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             }
         }
     },
+    shouldSkip(Constants.ALL_SDK_VERSION) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            app.shouldSkip = false
+            if (params.applicationInfo.packageName.isEmpty()) {
+                app.shouldSkip = true
+            } else if (!params.applicationInfo.enabled) {
+                // 無効になっていて、かつenabledSettingが3でないアプリは除外する
+                val enabledSetting = params.enabledSettingField.get(params.applicationInfo)
+                if (enabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER) {
+                    app.shouldSkip = true
+                }
+            }
+        }
+    },
     ;
 
     override fun targetSdkVersion(): IntRange = targetSdkVersion
