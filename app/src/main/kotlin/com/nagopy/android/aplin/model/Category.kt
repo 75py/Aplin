@@ -92,7 +92,7 @@ enum class Category(
         override fun filter(list: Collection<App>): Collection<App> {
             return list.filter {
                 !it.isSystemPackage
-                        && it.permissions.map { it.groupLabel }.filter { it.isNullOrEmpty() }.isNotEmpty()
+                        && it.permissions.map { it.groupLabel }.filter { !it.isNullOrEmpty() }.isNotEmpty()
             }
         }
     }
