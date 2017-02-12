@@ -109,6 +109,7 @@ class AppConverterTest {
 
     @Test
     fun permissions() {
-        assertEquals(true, aplinApp.permissions.isNotEmpty())
+        assertEquals(true, aplinApp.requestedPermissions.isNotEmpty())
+        assertEquals(true, aplinApp.requestedPermissions.contains(android.Manifest.permission.INTERNET))
     }
 }

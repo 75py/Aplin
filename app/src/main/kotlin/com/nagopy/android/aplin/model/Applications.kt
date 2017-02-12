@@ -26,8 +26,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -35,12 +33,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class Applications
-@Inject constructor(
-        val packageManager: PackageManager
-        , val appConverter: AppConverter
-        , val userSettings: UserSettings
-) {
+open class Applications @Inject constructor() {
+
+    @Inject
+    lateinit var packageManager: PackageManager
+
+    @Inject
+    lateinit var appConverter: AppConverter
+
+    @Inject
+    lateinit var userSettings: UserSettings
+
+    @Inject
+    lateinit var shellCmd: ShellCmd
+
     val appCache: ConcurrentHashMap<String, App> = ConcurrentHashMap()
 
     val appObserver: PublishSubject<Int> = PublishSubject.create<Int>() // onNext(null)が不可になったので、ダミー引数Intを使う
@@ -92,39 +98,21 @@ open class Applications
     }
 
     fun getInstalledPackageNames23(): List<String> {
-        try {
-            val pb = ProcessBuilder("pm", "list", "packages")
-            val p = pb.start()
-            val isr = InputStreamReader(p.inputStream)
-            val br = BufferedReader(isr)
-            br.useLines {
-                return it.filter(String::isNotBlank)
-                        .filter { it.startsWith("package:") }
-                        .map { it.replace("package:", "") }
-                        .toList()
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-            return emptyList()
-        }
+        return shellCmd.exec(listOf("pm", "list", "packages"), { seq ->
+            seq.filter(String::isNotBlank)
+                    .filter { it.startsWith("package:") }
+                    .map { it.replace("package:", "") }
+                    .toList()
+        }, emptyList())
     }
 
     fun getInstalledPackageNames24(): List<String> {
-        try {
-            val pb = ProcessBuilder("cmd", "package", "list", "packages")
-            val p = pb.start()
-            val isr = InputStreamReader(p.inputStream)
-            val br = BufferedReader(isr)
-            br.useLines {
-                return it.filter(String::isNotBlank)
-                        .filter { it.startsWith("package:") }
-                        .map { it.replace("package:", "") }
-                        .toList()
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-            return emptyList()
-        }
+        return shellCmd.exec(listOf("cmd", "package", "list", "packages"), { seq ->
+            seq.filter(String::isNotBlank)
+                    .filter { it.startsWith("package:") }
+                    .map { it.replace("package:", "") }
+                    .toList()
+        }, emptyList())
     }
 
     open fun insert(pkg: String): Observable<Void> {

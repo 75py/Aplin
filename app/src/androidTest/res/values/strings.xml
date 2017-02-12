@@ -17,4 +17,5 @@
 <resources>
     <string name="test_btn_enable">Enable</string>
     <string name="test_btn_disable">Disable</string>
+    <string name="test_permissions">Permissions</string>
 </resources>

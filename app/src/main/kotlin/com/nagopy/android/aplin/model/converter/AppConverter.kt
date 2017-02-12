@@ -21,12 +21,13 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.content.pm.PermissionGroupInfo
 import android.os.Build
 import com.nagopy.android.aplin.entity.App
+import com.nagopy.android.aplin.entity.PermissionGroup
 import com.nagopy.android.aplin.model.AplinDevicePolicyManager
 import com.nagopy.android.aplin.model.Applications
 import com.nagopy.android.aplin.model.IconHelper
+import com.nagopy.android.aplin.model.PermissionGroups
 import timber.log.Timber
 import java.lang.reflect.Field
 import javax.inject.Inject
@@ -47,7 +48,10 @@ open class AppConverter @Inject constructor() {
     @Inject
     open lateinit var aplinDevicePolicyManager: AplinDevicePolicyManager
 
-    lateinit var allPermissionGroups: List<PermissionGroupInfo>
+    @Inject
+    lateinit var permissionGroups: PermissionGroups
+
+    lateinit var allPermissionGroups: List<PermissionGroup>
     lateinit var homeActivities: List<String>
     lateinit var launcherPkgs: List<String>
     val enabledSettingField: Field = ApplicationInfo::class.java.getDeclaredField("enabledSetting").apply {
@@ -55,7 +59,9 @@ open class AppConverter @Inject constructor() {
     }
 
     open fun prepare() {
-        allPermissionGroups = packageManager.getAllPermissionGroups(0)
+        allPermissionGroups = permissionGroups.getAllPermissionGroups()
+        Timber.v("allPermissionGroups %s", allPermissionGroups)
+
         val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
         homeActivities = packageManager.queryIntentActivities(intent, 0)
                 .map { it.activityInfo.packageName }
@@ -124,7 +130,7 @@ open class AppConverter @Inject constructor() {
     // dataクラスにしないのは、Mockitoで置き換えるため
     open class Params(open var applicationInfo: ApplicationInfo
                       , open var packageInfo: PackageInfo
-                      , open var allPermissionGroups: List<PermissionGroupInfo>
+                      , open var allPermissionGroups: List<PermissionGroup>
                       , open var homeActivities: List<String>
                       , open var launcherPkgs: List<String>
                       , open var enabledSettingField: Field

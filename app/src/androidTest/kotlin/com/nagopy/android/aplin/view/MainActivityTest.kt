@@ -17,6 +17,7 @@
 package com.nagopy.android.aplin.view
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.test.InstrumentationRegistry
@@ -30,6 +31,7 @@ import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.filters.LargeTest
+import android.support.test.filters.SdkSuppress
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.By
@@ -51,6 +53,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import timber.log.Timber
+import java.util.*
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -138,6 +141,44 @@ class MainActivityTest {
             assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
             assertFalse(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
         }
+    }
+
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.M)
+    @LargeTest
+    @Test
+    fun DENIABLE_PERMISSIONS() {
+        val errors = HashSet<String>()
+
+        clickAll(Category.DENIABLE_PERMISSIONS) { app ->
+            // アプリ名が表示されていることを確認
+            assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
+
+            // 「権限」が表示されている
+            assertTrue(uiDevice.findObject(UiSelector().text(TestResources.string.test_permissions)).waitForExists(timeout), app.toString())
+
+            if (uiDevice.findObject(UiSelector().text(TestResources.string.test_permissions)).isEnabled) {
+                // 「権限」がクリックできる
+                //  クリックして次の画面へ
+                uiDevice.findObject(UiSelector().text(TestResources.string.test_permissions)).clickAndWaitForNewWindow(timeout)
+
+                app.permissionGroups.forEach {
+                    val exists = uiDevice.findObject(UiSelector().text(it.label)).waitForExists(timeout)
+                    if (!exists) {
+                        Timber.d("pkg=%s cannot deny permission %s", app.packageName, it)
+                        errors.add(app.packageName)
+                    }
+                }
+
+                uiDevice.pressBack()
+            } else {
+                // 「権限」がクリックできない
+                Timber.d("pkg=%s cannot deny any permissions.", app.packageName)
+                errors.add(app.packageName)
+            }
+        }
+
+        assertTrue(errors.size < 10, "Too many errors. " + errors.toString())
+        assertTrue(errors.filter { !it.startsWith("com.android") }.count() < 3, "Too many errors. " + errors.toString())
     }
 
     fun clickAll(category: Category, validator: (app: App) -> Unit) {

@@ -96,8 +96,8 @@ enum class DisplayItem(
             titleResourceId = R.string.display_item_internet_permission
             , summaryResourceId = R.string.display_item_internet_permission_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
-            if (appData.permissions.isNotEmpty()) {
-                val internet = appData.permissions.map { it.name }.contains("android.permission.INTERNET")
+            if (appData.requestedPermissions.isNotEmpty()) {
+                val internet = appData.requestedPermissions.contains("android.permission.INTERNET")
                 if (internet) {
                     sb.append(context.getString(R.string.display_item_internet_permission_label))
                 }
@@ -113,12 +113,11 @@ enum class DisplayItem(
             , summaryResourceId = R.string.display_item_deniable_permissions_summary
             , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
-            if (appData.permissions.isNotEmpty()) {
+            if (appData.requestedPermissions.isNotEmpty()) {
                 val core = appData.isSystemPackage or appData.hasActiveAdmins
                 if (!appData.isSystem or !core) {
-                    sb.append(appData.permissions.map { it.groupLabel }
-                            .filterNotNull()
-                            .distinct()
+                    sb.append(appData.permissionGroups
+                            .map { it.label }
                             .joinToString(context.getString(R.string.display_item_deniable_permissions_separator))
                     )
                 }
