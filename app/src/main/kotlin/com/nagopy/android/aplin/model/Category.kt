@@ -82,7 +82,7 @@ enum class Category(
     INTERNET_PERMISSIONS(titleResourceId = R.string.category_internet_permissions
             , summaryResourceId = R.string.category_internet_permissions_summary) {
         override fun filter(list: Collection<App>): Collection<App> {
-            return list.filter { it.permissions.map { it.name }.contains(android.Manifest.permission.INTERNET) }
+            return list.filter { it.requestedPermissions.contains(android.Manifest.permission.INTERNET) }
         }
     }
     ,
@@ -92,7 +92,7 @@ enum class Category(
         override fun filter(list: Collection<App>): Collection<App> {
             return list.filter {
                 !it.isSystemPackage
-                        && it.permissions.map { it.groupLabel }.filter { !it.isNullOrEmpty() }.isNotEmpty()
+                        && it.permissionGroups.isNotEmpty()
             }
         }
     }
@@ -103,7 +103,7 @@ enum class Category(
         override fun filter(list: Collection<App>): Collection<App> {
             return list.filter {
                 !it.isSystemPackage
-                        && it.permissions.map { it.name }.contains(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
+                        && it.requestedPermissions.contains(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
             }
         }
     }

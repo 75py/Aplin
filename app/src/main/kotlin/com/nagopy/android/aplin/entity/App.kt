@@ -47,7 +47,9 @@ class App {
 
     var versionName: String? = null
 
-    var permissions: MutableList<AppPermission> = ArrayList()
+    var requestedPermissions: MutableList<String> = ArrayList()
+
+    var permissionGroups: MutableList<PermissionGroup> = ArrayList()
 
     var isProfileOrDeviceOwner: Boolean = false // 6.0以降
 

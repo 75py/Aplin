@@ -41,19 +41,18 @@ class CategoryTest {
         }, App().apply {
             // false
             isSystemPackage = true
-            permissions.add(AppPermission().apply { name = android.Manifest.permission.SYSTEM_ALERT_WINDOW })
+            requestedPermissions.add(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
         }, App().apply {
             // false
             isSystemPackage = false
-            permissions.clear()
         }, App().apply {
             // false
             isSystemPackage = false
-            permissions.add(AppPermission().apply { name = android.Manifest.permission.INTERNET })
+            requestedPermissions.add(android.Manifest.permission.INTERNET)
         }, App().apply {
             // true
             isSystemPackage = false
-            permissions.add(AppPermission().apply { name = android.Manifest.permission.SYSTEM_ALERT_WINDOW })
+            requestedPermissions.add(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
         })
         val filtered = Category.SYSTEM_ALERT_WINDOW_PERMISSION.where(list)
         assertEquals(1, filtered.count())

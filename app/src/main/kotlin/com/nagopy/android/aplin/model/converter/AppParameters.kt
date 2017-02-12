@@ -23,8 +23,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.entity.AppPermission
-import timber.log.Timber
 import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
@@ -93,9 +91,24 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             app.versionName = params.packageInfo.versionName
         }
     },
-    permissions(Constants.ALL_SDK_VERSION) {
+    requestedPermissions(Constants.ALL_SDK_VERSION) {
         override fun setValue(app: App, params: AppConverter.Params) {
-            app.permissions = ArrayList()
+            params.packageInfo.requestedPermissions?.forEach {
+                app.requestedPermissions.add(it)
+            }
+        }
+    },
+    permissionGroups(Constants.ALL_SDK_VERSION) {
+        override fun setValue(app: App, params: AppConverter.Params) {
+            params.packageInfo.requestedPermissions?.map { p ->
+                params.allPermissionGroups.filter { it.permissions.contains(p) }
+            }?.flatMap { it }
+                    ?.distinct()
+                    ?.sortedBy { it.label }
+                    ?.forEach {
+                        app.permissionGroups.add(it)
+                    }
+            /*
             params.packageInfo.requestedPermissions?.forEach {
                 val permission = AppPermission()
                 permission.name = it
@@ -113,6 +126,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                 }
                 app.permissions.add(permission)
             }
+            */
         }
     },
     isProfileOrDeviceOwner(Build.VERSION_CODES.M..Int.MAX_VALUE) {
