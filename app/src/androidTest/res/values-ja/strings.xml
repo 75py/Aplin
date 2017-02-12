@@ -17,4 +17,5 @@
 <resources>
     <string name="test_btn_enable">有効にする</string>
     <string name="test_btn_disable">無効にする</string>
+    <string name="test_permissions">権限</string>
 </resources>
