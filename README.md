@@ -1,4 +1,4 @@
-Aplin
+Aplin [![Build Status](https://travis-ci.org/75py/Aplin.svg?branch=master)](https://travis-ci.org/75py/Aplin)
 =====
 
 Application manager for Android!
@@ -13,7 +13,7 @@ https://play.google.com/store/apps/details?id=com.nagopy.android.aplin
 Latest version
 --------------
 
-3.1.2
+3.1.3
 
 
 License
