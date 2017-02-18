@@ -19,6 +19,7 @@ package com.nagopy.android.aplin.model.converter
 import android.content.ComponentName
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import com.nagopy.android.aplin.constants.Constants
@@ -27,136 +28,117 @@ import java.util.*
 
 enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converter {
     packageName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.packageName = params.applicationInfo.packageName
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.packageName = packageInfo.applicationInfo.packageName
         }
     },
     label(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.label = params.applicationInfo.loadLabel(params.appConverter.packageManager).toString()
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.label = packageInfo.applicationInfo.loadLabel(appConverter.packageManager).toString()
         }
     },
     isEnabled(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.isEnabled = params.applicationInfo.enabled
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.isEnabled = packageInfo.applicationInfo.enabled
         }
     },
     isSystem(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
             app.isSystem =
-                    (params.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                            || (params.applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+                    (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                            || (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
         }
     },
     isSystemPackage(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.isSystemPackage = params.appConverter.aplinDevicePolicyManager.isSystemPackage(params.packageInfo)
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.isSystemPackage = appConverter.aplinDevicePolicyManager.isSystemPackage(packageInfo)
         }
     },
     firstInstallTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.firstInstallTime = params.packageInfo.firstInstallTime
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.firstInstallTime = packageInfo.firstInstallTime
         }
     },
     lastUpdateTime(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.lastUpdateTime = params.packageInfo.lastUpdateTime
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.lastUpdateTime = packageInfo.lastUpdateTime
         }
     },
     hasActiveAdmins(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.hasActiveAdmins = params.appConverter.aplinDevicePolicyManager.packageHasActiveAdmins(params.applicationInfo.packageName)
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.hasActiveAdmins = appConverter.aplinDevicePolicyManager.packageHasActiveAdmins(packageInfo.applicationInfo.packageName)
         }
     },
     isInstalled(IntRange(Build.VERSION_CODES.JELLY_BEAN_MR1, Int.MAX_VALUE)) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.isInstalled = (params.applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.isInstalled = (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED) != 0
         }
     },
     isDefaultApp(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
             val outFilters = ArrayList<IntentFilter>()
             val outActivities = ArrayList<ComponentName>()
-            params.appConverter.packageManager.getPreferredActivities(outFilters, outActivities, params.applicationInfo.packageName)
+            appConverter.packageManager.getPreferredActivities(outFilters, outActivities, packageInfo.applicationInfo.packageName)
             app.isDefaultApp = !outActivities.isEmpty()
         }
     },
     isHomeApp(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.isHomeApp = params.homeActivities.contains(params.applicationInfo.packageName)
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.isHomeApp = appConverter.homeActivities.contains(packageInfo.applicationInfo.packageName)
         }
     },
     versionName(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.versionName = params.packageInfo.versionName
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.versionName = packageInfo.versionName
         }
     },
     requestedPermissions(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            params.packageInfo.requestedPermissions?.forEach {
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            packageInfo.requestedPermissions?.forEach {
                 app.requestedPermissions.add(it)
             }
         }
     },
     permissionGroups(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            params.packageInfo.requestedPermissions?.map { p ->
-                params.allPermissionGroups.filter { it.permissions.contains(p) }
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            packageInfo.requestedPermissions?.map { p ->
+                appConverter.allPermissionGroups.filter { it.permissions.contains(p) }
             }?.flatMap { it }
                     ?.distinct()
                     ?.sortedBy { it.label }
                     ?.forEach {
                         app.permissionGroups.add(it)
                     }
-            /*
-            params.packageInfo.requestedPermissions?.forEach {
-                val permission = AppPermission()
-                permission.name = it
-                try {
-                    val pi = params.appConverter.packageManager.getPermissionInfo(it, 0)
-                    // permission.label = pi.loadLabel(params.appConverter.packageManager).toString()
-                    permission.group = pi.group
-                    params.allPermissionGroups.forEach {
-                        if (it.name == pi.group) {
-                            permission.groupLabel = it.loadLabel(params.appConverter.packageManager).toString()
-                        }
-                    }
-                } catch(e: PackageManager.NameNotFoundException) {
-                    Timber.d("ignore %s", e.message)
-                }
-                app.permissions.add(permission)
-            }
-            */
         }
     },
     isProfileOrDeviceOwner(Build.VERSION_CODES.M..Int.MAX_VALUE) {
-        override fun setValue(app: App, params: AppConverter.Params) {
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
             app.isProfileOrDeviceOwner = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && params.appConverter.aplinDevicePolicyManager.isProfileOrDeviceOwner(params.applicationInfo.packageName)
+                    && appConverter.aplinDevicePolicyManager.isProfileOrDeviceOwner(packageInfo.applicationInfo.packageName)
         }
     },
     isLaunchable(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
-            app.isLaunchable = params.launcherPkgs.contains(params.applicationInfo.packageName)
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.isLaunchable = appConverter.launcherPkgs.contains(packageInfo.applicationInfo.packageName)
         }
     },
     isDisabledUntilUsed(Build.VERSION_CODES.M..Int.MAX_VALUE) {
-        override fun setValue(app: App, params: AppConverter.Params) {
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // 6.0-
-                val enabledSetting = params.enabledSettingField.get(params.applicationInfo)
+                val enabledSetting = appConverter.enabledSettingField.get(packageInfo.applicationInfo)
                 app.isDisabledUntilUsed = enabledSetting == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED
             }
         }
     },
     shouldSkip(Constants.ALL_SDK_VERSION) {
-        override fun setValue(app: App, params: AppConverter.Params) {
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
             app.shouldSkip = false
-            if (params.applicationInfo.packageName.isEmpty()) {
+            if (packageInfo.applicationInfo.packageName.isEmpty()) {
                 app.shouldSkip = true
-            } else if (!params.applicationInfo.enabled) {
+            } else if (!packageInfo.applicationInfo.enabled) {
                 // 無効になっていて、かつenabledSettingが3でないアプリは除外する
-                val enabledSetting = params.enabledSettingField.get(params.applicationInfo)
+                val enabledSetting = appConverter.enabledSettingField.get(packageInfo.applicationInfo)
                 if (enabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER) {
                     app.shouldSkip = true
                 }
