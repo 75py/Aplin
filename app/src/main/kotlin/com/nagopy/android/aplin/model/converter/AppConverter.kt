@@ -26,7 +26,6 @@ import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.PermissionGroup
 import com.nagopy.android.aplin.model.AplinDevicePolicyManager
 import com.nagopy.android.aplin.model.Applications
-import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.PermissionGroups
 import timber.log.Timber
 import java.lang.reflect.Field
@@ -41,9 +40,6 @@ open class AppConverter @Inject constructor() {
 
     @Inject
     open lateinit var packageManager: PackageManager
-
-    @Inject
-    open lateinit var iconHelper: IconHelper
 
     @Inject
     open lateinit var aplinDevicePolicyManager: AplinDevicePolicyManager
@@ -79,11 +75,11 @@ open class AppConverter @Inject constructor() {
 
     open fun setValues(app: App, packageName: String, vararg appParameters: AppParameters = AppParameters.values()) {
         try {
-            val params = prepareForApp(packageName)
+            val pi = getPackageInfo(packageName)
             appParameters
                     .filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
                     .forEach { param ->
-                        param.setValue(app, params)
+                        param.setValue(app, pi, this@AppConverter)
                     }
         } catch(e: PackageManager.NameNotFoundException) {
             Timber.w(e, "Not found. pkg=%s", packageName)
@@ -92,7 +88,7 @@ open class AppConverter @Inject constructor() {
         }
     }
 
-    open fun prepareForApp(packageName: String): Params {
+    fun getPackageInfo(packageName: String): PackageInfo {
         // 一度に取得する量が多いとエラーになるらしいので、細かく分けて取得する
         val packageInfo = packageManager.getPackageInfo(
                 packageName,
@@ -119,22 +115,12 @@ open class AppConverter @Inject constructor() {
             Timber.w(e)
         }
 
-        return Params(packageInfo.applicationInfo, packageInfo, allPermissionGroups, homeActivities, launcherPkgs, enabledSettingField, this)
+        return packageInfo
     }
 
     interface Converter {
         fun targetSdkVersion(): IntRange
-        fun setValue(app: App, params: Params)
+        fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter)
     }
-
-    // dataクラスにしないのは、Mockitoで置き換えるため
-    open class Params(open var applicationInfo: ApplicationInfo
-                      , open var packageInfo: PackageInfo
-                      , open var allPermissionGroups: List<PermissionGroup>
-                      , open var homeActivities: List<String>
-                      , open var launcherPkgs: List<String>
-                      , open var enabledSettingField: Field
-                      , open var appConverter: AppConverter
-    )
 
 }

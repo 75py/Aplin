@@ -27,7 +27,7 @@ android:
     - extra-android-m2repository
 
     # Emulator
-    - sys-img-armeabi-v7a-android-21
+#    - sys-img-armeabi-v7a-android-21
   licenses:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
@@ -51,11 +51,16 @@ before_script:
 #    - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
 #    - emulator -avd test -no-skin -no-audio -no-window &
 #    - android-wait-for-emulator
+#    - adb shell settings put global window_animation_scale 0 &
+#    - adb shell settings put global transition_animation_scale 0 &
+#    - adb shell settings put global animator_duration_scale 0 &
 #    - adb shell input keyevent 82 &
 
 script:
-    - echo 'build & test'
-    - ./gradlew assembleDebug testDebug -PdisablePreDex ${BUILD_OPTIONS}
+    - echo 'build'
+    - ./gradlew assembleDebug -PdisablePreDex ${BUILD_OPTIONS}
+    - echo 'test'
+    - ./gradlew testDebug -PdisablePreDex ${BUILD_OPTIONS}
 #    - echo 'connectedDebugAndroidTest small'
 #    - ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=small -PdisablePreDex ${BUILD_OPTIONS}
 #    - echo 'connectedDebugAndroidTest medium'
@@ -64,3 +69,12 @@ script:
 #    - ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=large -PdisablePreDex ${BUILD_OPTIONS}
 
 after_success:
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache

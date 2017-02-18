@@ -85,6 +85,7 @@ class MainActivityTest {
 
     private fun startActivity(): MainActivity = rule.launchActivity(null)
 
+    @LargeTest
     @Test
     fun testLaunch() {
         startActivity()

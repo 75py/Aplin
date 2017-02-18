@@ -102,6 +102,7 @@ open class AppListPresenter @Inject constructor() : Presenter {
                 sb.append(Constants.LINE_SEPARATOR)
             }
         }
+
         if (sb.isNotEmpty()) {
             sb.setLength(sb.length - 1)
             var infoString = sb.toString().trim()

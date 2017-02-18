@@ -36,9 +36,6 @@ import javax.inject.Singleton
 open class Applications @Inject constructor() {
 
     @Inject
-    lateinit var packageManager: PackageManager
-
-    @Inject
     lateinit var appConverter: AppConverter
 
     @Inject
@@ -183,10 +180,12 @@ open class Applications @Inject constructor() {
          * /packages/apps/Settings/src/com/android/settings/applications/ApplicationsState.java
          */
         val flags: Int by lazy {
+            @Suppress("DEPRECATION")
             val ownerRetrieveFlags = PackageManager.GET_UNINSTALLED_PACKAGES or
                     PackageManager.GET_DISABLED_COMPONENTS or
                     PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
 
+            @Suppress("DEPRECATION")
             val retrieveFlags = PackageManager.GET_DISABLED_COMPONENTS or
                     PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS
 

@@ -23,6 +23,7 @@ import android.provider.Settings
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.matcher.IntentMatchers
+import android.support.test.filters.MediumTest
 import android.support.test.filters.SdkSuppress
 import android.support.test.rule.ActivityTestRule
 import android.support.test.uiautomator.UiDevice
@@ -73,6 +74,7 @@ class MainScreenPresenterTest {
         uiDevice.waitForIdle(1000)
     }
 
+    @MediumTest
     @Test
     fun listItemClicked_ALL() {
         activity = rule.launchActivity(null)
@@ -87,6 +89,7 @@ class MainScreenPresenterTest {
         }
     }
 
+    @MediumTest
     @Test
     @SdkSuppress(minSdkVersion = Build.VERSION_CODES.M)
     fun listItemClicked_OVERLAY() {

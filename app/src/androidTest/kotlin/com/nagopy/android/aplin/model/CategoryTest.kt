@@ -16,8 +16,8 @@
 
 package com.nagopy.android.aplin.model
 
+import android.support.test.filters.SmallTest
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.entity.AppPermission
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -33,6 +33,7 @@ class CategoryTest {
     fun tearDown() {
     }
 
+    @SmallTest
     @Test
     fun overlay_systemApp() {
         val list = listOf(App().apply {

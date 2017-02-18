@@ -76,7 +76,7 @@ open class MenuHandler @Inject constructor() {
     }
 
     private fun isLaunchable(intent: Intent): Boolean {
-        return !packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty()
+        return intent.resolveActivity(packageManager) != null
     }
 
 

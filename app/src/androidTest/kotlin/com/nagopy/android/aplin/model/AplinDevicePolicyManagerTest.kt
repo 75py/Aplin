@@ -19,6 +19,7 @@ package com.nagopy.android.aplin.model
 import android.app.Application
 import android.os.Build
 import android.support.test.InstrumentationRegistry
+import android.support.test.filters.SmallTest
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
@@ -44,10 +45,10 @@ class AplinDevicePolicyManagerTest {
         (Aplin.getApplicationComponent() as ApplicationMockComponent).inject(this)
     }
 
+    @SmallTest
     @Test
     fun reflectionEnabled() {
         assertNotNull(aplinDevicePolicyManager)
-        assertNotNull(aplinDevicePolicyManager.application)
         assertNotNull(aplinDevicePolicyManager.devicePolicyManager)
         assertNotNull(aplinDevicePolicyManager.packageManager)
         assertNotNull(aplinDevicePolicyManager.packageHasActiveAdmins)

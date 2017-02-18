@@ -16,7 +16,6 @@
 
 package com.nagopy.android.aplin.model
 
-import android.app.Application
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -36,9 +35,6 @@ import kotlin.reflect.staticProperties
 
 @Singleton
 open class AplinDevicePolicyManager @Inject constructor() {
-
-    @Inject
-    lateinit var application: Application
 
     @Inject
     lateinit var devicePolicyManager: DevicePolicyManager

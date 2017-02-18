@@ -37,8 +37,8 @@ class LicenseActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         webView = findViewById(R.id.web_view) as WebView
-        webView.settings.loadWithOverviewMode = true;
-        webView.settings.useWideViewPort = true;
+        webView.settings.loadWithOverviewMode = true
+        webView.settings.useWideViewPort = true
         webView.loadUrl("file:///android_asset/licenses.html")
     }
 
