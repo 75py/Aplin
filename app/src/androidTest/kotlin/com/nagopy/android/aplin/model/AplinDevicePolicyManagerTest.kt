@@ -47,7 +47,6 @@ class AplinDevicePolicyManagerTest {
     @Test
     fun reflectionEnabled() {
         assertNotNull(aplinDevicePolicyManager)
-        assertNotNull(aplinDevicePolicyManager.application)
         assertNotNull(aplinDevicePolicyManager.devicePolicyManager)
         assertNotNull(aplinDevicePolicyManager.packageManager)
         assertNotNull(aplinDevicePolicyManager.packageHasActiveAdmins)

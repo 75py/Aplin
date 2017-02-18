@@ -25,7 +25,10 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.model.*
+import com.nagopy.android.aplin.model.Applications
+import com.nagopy.android.aplin.model.Category
+import com.nagopy.android.aplin.model.MenuHandler
+import com.nagopy.android.aplin.model.SharingMethod
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,13 +41,7 @@ import javax.inject.Singleton
 /**
  * メイン画面用プレゼンター
  */
-@Singleton
-open class MainScreenPresenter
-@Inject
-constructor() : Presenter {
-
-    @Inject
-    lateinit var userSettings: UserSettings
+@Singleton open class MainScreenPresenter @Inject constructor() : Presenter {
 
     @Inject
     lateinit var menuHandler: MenuHandler
@@ -101,6 +98,7 @@ constructor() : Presenter {
 
     fun listItemClicked(activity: Activity, app: App, category: Category) {
         val packageName = app.packageName.split(":")[0]
+
         val intent = when (category) {
             Category.SYSTEM_ALERT_WINDOW_PERMISSION ->
                 Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))

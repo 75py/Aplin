@@ -17,7 +17,6 @@
 package com.nagopy.android.aplin
 
 import android.app.ActivityManager
-import android.app.AppOpsManager
 import android.app.Application
 import android.app.admin.DevicePolicyManager
 import android.content.Context
@@ -48,11 +47,6 @@ open class ApplicationModule(val application: Application) {
     @Provides
     open fun provideActivityManager(application: Application): ActivityManager
             = application.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-
-    @Singleton
-    @Provides
-    open fun provideAppOpsManager(application: Application): AppOpsManager
-            = application.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
 
     @Singleton
     @Provides

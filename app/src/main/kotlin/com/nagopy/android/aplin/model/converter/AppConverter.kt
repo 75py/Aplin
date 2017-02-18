@@ -26,7 +26,6 @@ import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.entity.PermissionGroup
 import com.nagopy.android.aplin.model.AplinDevicePolicyManager
 import com.nagopy.android.aplin.model.Applications
-import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.PermissionGroups
 import timber.log.Timber
 import java.lang.reflect.Field
@@ -41,9 +40,6 @@ open class AppConverter @Inject constructor() {
 
     @Inject
     open lateinit var packageManager: PackageManager
-
-    @Inject
-    open lateinit var iconHelper: IconHelper
 
     @Inject
     open lateinit var aplinDevicePolicyManager: AplinDevicePolicyManager
