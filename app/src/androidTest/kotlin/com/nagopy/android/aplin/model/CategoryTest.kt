@@ -17,7 +17,6 @@
 package com.nagopy.android.aplin.model
 
 import com.nagopy.android.aplin.entity.App
-import com.nagopy.android.aplin.entity.AppPermission
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
