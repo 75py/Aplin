@@ -2,6 +2,7 @@ package com.nagopy.android.aplin.presenter
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.support.test.filters.SmallTest
 import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Before
 import org.junit.Test
@@ -32,6 +33,7 @@ class SettingsPresenterTest {
         target.sharedPreferences = sharedPreferences
     }
 
+    @SmallTest
     @Test
     fun initialize() {
         target.settingChanged = true
@@ -39,6 +41,7 @@ class SettingsPresenterTest {
         assertFalse(target.settingChanged)
     }
 
+    @SmallTest
     @Test
     fun resume() {
         Mockito.doNothing().`when`(sharedPreferences).registerOnSharedPreferenceChangeListener(
@@ -50,6 +53,7 @@ class SettingsPresenterTest {
         Mockito.verify(sharedPreferences, Mockito.times(1)).registerOnSharedPreferenceChangeListener(target)
     }
 
+    @SmallTest
     @Test
     fun pause() {
         Mockito.doNothing().`when`(sharedPreferences).unregisterOnSharedPreferenceChangeListener(
@@ -60,6 +64,7 @@ class SettingsPresenterTest {
         Mockito.verify(sharedPreferences, Mockito.times(1)).unregisterOnSharedPreferenceChangeListener(target)
     }
 
+    @SmallTest
     @Test
     fun flag() {
         assertFalse(target.settingChanged)
@@ -68,17 +73,20 @@ class SettingsPresenterTest {
     }
 
 
+    @SmallTest
     @Test
     fun destroy() {
         target.destroy()
     }
 
+    @SmallTest
     @Test
     fun finish_1() {
         target.settingChanged = false
         assertFalse(target.finish())
     }
 
+    @SmallTest
     @Test
     fun finish_2() {
         target.settingChanged = true
