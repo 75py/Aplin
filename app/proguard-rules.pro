@@ -12,6 +12,8 @@
    public *;
 }
 
+-keep class android.support.v7.widget.SearchView { *; }
+
 # Kotlin
 -dontwarn kotlin.**
 

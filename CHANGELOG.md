@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 3.2.0 *(2017-02-26)*
+Version 3.2.1 *(2017-02-26)*
 ----------------------------
 
 * Add text filter feature
