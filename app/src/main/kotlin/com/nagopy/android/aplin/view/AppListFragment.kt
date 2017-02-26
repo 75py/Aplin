@@ -52,6 +52,7 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
     lateinit var adapter: AppListAdapter
 
     var disposer: Disposable? = null
+    var searchTextDisposer: Disposable? = null
 
     val category: Category by lazy { Category.valueOf(arguments.getString("type")) }
 
@@ -62,9 +63,9 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
 
         Aplin.getApplicationComponent().inject(this)
 
-        val parentView = activity as AppListViewParent
-        presenter.initialize(this, parentView, category)
         adapter = AppListAdapter(application, presenter)
+
+        presenter.initialize(this, activity as AppListViewParent, category)
 
         disposer = presenter.applications.appObserver
                 .subscribeOn(Schedulers.computation())
@@ -72,11 +73,16 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
                 .subscribe({
                     Timber.d("App changed. category = %s", category)
                     presenter.updateAppList()
-                    adapter.notifyDataSetChanged()
                 }, { e ->
                     Timber.e(e, "Error")
                 })
 
+        searchTextDisposer = MainActivity.searchTextObserver
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { t ->
+                    Timber.v("searchTextObserver %s", t)
+                    presenter.updateFilter(t)
+                }
     }
 
     override fun onResume() {
@@ -98,6 +104,9 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
         presenter.destroy()
         if (disposer?.isDisposed == false) {
             disposer?.dispose()
+        }
+        if (searchTextDisposer?.isDisposed == false) {
+            searchTextDisposer?.dispose()
         }
     }
 
@@ -135,7 +144,6 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
         presenter.onItemLongClicked(position)
         return true
     }
-
 
     companion object {
         fun newInstance(category: Category): AppListFragment {

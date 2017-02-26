@@ -25,6 +25,7 @@ import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.AdapterViewProtocol
 import android.support.test.espresso.action.AdapterViewProtocols
+import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.intent.matcher.IntentMatchers
@@ -99,10 +100,31 @@ class MainActivityTest {
         assertNotNull(activity.progressBar)
     }
 
+
+    @LargeTest
+    @Test
+    fun textFilter() {
+        start()
+        switchCategory(Category.ALL)
+
+        onView(withId(R.id.action_search))
+                .perform(click())
+
+        onView(withId(R.id.search_src_text))
+                .perform(ViewActions.typeText("nagopy"))
+
+        clickAll { app ->
+            assertTrue(app.packageName.contains("nagopy"), app.toString())
+        }
+    }
+
+
     @LargeTest
     @Test
     fun all() {
-        clickAll(Category.ALL) { app ->
+        start()
+        switchCategory(Category.ALL)
+        clickAll { app ->
             // アプリ名が表示されていることを確認
             assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
         }
@@ -111,7 +133,9 @@ class MainActivityTest {
     @LargeTest
     @Test
     fun SYSTEM_DISABLABLE() {
-        clickAll(Category.SYSTEM_DISABLABLE) { app ->
+        start()
+        switchCategory(Category.SYSTEM_DISABLABLE)
+        clickAll { app ->
             // アプリ名が表示されていることを確認
             assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
 
@@ -129,7 +153,9 @@ class MainActivityTest {
     @LargeTest
     @Test
     fun SYSTEM_UNDISABLABLE() {
-        clickAll(Category.SYSTEM_UNDISABLABLE) { app ->
+        start()
+        switchCategory(Category.SYSTEM_UNDISABLABLE)
+        clickAll { app ->
             // アプリ名が表示されていることを確認
             assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
 
@@ -150,7 +176,9 @@ class MainActivityTest {
     fun DENIABLE_PERMISSIONS() {
         val errors = HashSet<String>()
 
-        clickAll(Category.DENIABLE_PERMISSIONS) { app ->
+        start()
+        switchCategory(Category.DENIABLE_PERMISSIONS)
+        clickAll { app ->
             // アプリ名が表示されていることを確認
             assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
 
@@ -182,21 +210,24 @@ class MainActivityTest {
         assertTrue(errors.filter { !it.startsWith("com.android") }.count() < 3, "Too many errors. " + errors.toString())
     }
 
-    fun clickAll(category: Category, validator: (app: App) -> Unit) {
+    private fun start() {
         startActivity()
 
         uiDevice.wait(Until.gone(By.clazz(ProgressBar::class.java)), timeout)
         uiDevice.waitForIdle()
 
         Thread.sleep(5000) // Wait for loading
+    }
 
-        // Choose category
+    private fun switchCategory(category: Category) {
         onView(withId(R.id.spinner)).perform(click())
         onData(allOf(_is(instanceOf(Category::class.java)), _is(category)))
                 .atPosition(0)
                 .perform(click())
         uiDevice.waitForIdle()
+    }
 
+    private fun clickAll(validator: (app: App) -> Unit) {
         val appListViewProtocol = AppListViewProtocol()
         var i = 0
         do {

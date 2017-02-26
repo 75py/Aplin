@@ -34,6 +34,7 @@ import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -53,13 +54,17 @@ open class AppListPresenter @Inject constructor() : Presenter {
     @Inject
     lateinit var iconHelper: IconHelper
 
-    lateinit var realmResults: List<App>
+    private lateinit var defList: List<App>
+
+    val filteredList: MutableList<App> = ArrayList()
 
     var view: AppListView? = null // onDestroyでnullにするため、NULL可
 
     var parentView: AppListViewParent? = null // onDestroyでnullにするため、NULL可
 
     lateinit var category: Category
+
+    var searchText: String = ""
 
     fun initialize(view: AppListView, parentView: AppListViewParent, category: Category) {
         this.view = view
@@ -69,7 +74,21 @@ open class AppListPresenter @Inject constructor() : Presenter {
     }
 
     fun updateAppList() {
-        realmResults = applications.getApplicationList(category)
+        defList = applications.getApplicationList(category)
+        updateFilter(searchText)
+    }
+
+    fun updateFilter(searchText: String) {
+        this.searchText = searchText
+        filteredList.clear()
+        defList.forEach {
+            if (it.packageName.contains(searchText, ignoreCase = true)
+                    || it.label.contains(searchText, ignoreCase = true)) {
+                Timber.v("Hit: %s", it)
+                filteredList.add(it)
+            }
+        }
+        view?.notifyDataSetChanged()
     }
 
     override fun resume() {
@@ -84,11 +103,11 @@ open class AppListPresenter @Inject constructor() : Presenter {
     }
 
     fun onOptionsItemSelected(item: MenuItem) {
-        parentView?.onOptionsItemSelected(item, realmResults)
+        parentView?.onOptionsItemSelected(item, filteredList)
     }
 
     fun onItemViewCreated(holder: AppListAdapter.ViewHolder, position: Int) {
-        val entity = realmResults[position]
+        val entity = filteredList[position]
 
         val textColor = ContextCompat.getColor(application,
                 if (entity.isEnabled) R.color.text_color else R.color.textColorTertiary)
@@ -140,12 +159,12 @@ open class AppListPresenter @Inject constructor() : Presenter {
     }
 
     fun onItemClicked(position: Int) {
-        val app = realmResults[position]
+        val app = filteredList[position]
         parentView?.onListItemClicked(app, category)
     }
 
     fun onItemLongClicked(position: Int) {
-        val app = realmResults[position]
+        val app = filteredList[position]
         parentView?.onListItemLongClicked(app)
     }
 
