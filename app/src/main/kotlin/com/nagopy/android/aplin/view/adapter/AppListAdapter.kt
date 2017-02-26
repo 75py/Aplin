@@ -11,11 +11,12 @@ import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.presenter.AppListPresenter
 
 class AppListAdapter(val context: Context, val appListPresenter: AppListPresenter) : BaseAdapter() {
-    override fun getItem(position: Int): Any = appListPresenter.realmResults[position]
+
+    override fun getItem(position: Int): Any = appListPresenter.filteredList[position]
 
     override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun getCount(): Int = appListPresenter.realmResults.count()
+    override fun getCount(): Int = appListPresenter.filteredList.count()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
@@ -32,4 +33,5 @@ class AppListAdapter(val context: Context, val appListPresenter: AppListPresente
         open val label: TextView = parentView.findViewById(R.id.label) as TextView
         open val status: TextView = parentView.findViewById(R.id.status) as TextView
     }
+
 }

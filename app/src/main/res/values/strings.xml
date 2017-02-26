@@ -25,6 +25,8 @@
     <string name="action_share_label_and_package_name">App name &amp; Package name</string>
     <string name="action_preference">Preference</string>
     <string name="action_open_source_license" translatable="false">@string/open_source_license</string>
+    <string name="action_search">Search</string>
+    <string name="action_search_hint">Search app or package names</string>
 
     <string name="category">Categories</string>
     <string name="category_all">All</string>

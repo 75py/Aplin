@@ -17,8 +17,10 @@
 package com.nagopy.android.aplin.view
 
 import android.os.Bundle
+import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -35,7 +37,10 @@ import com.nagopy.android.aplin.presenter.AdPresenter
 import com.nagopy.android.aplin.presenter.MainScreenPresenter
 import com.nagopy.android.aplin.view.adapter.AppCategoryAdapter
 import com.nagopy.android.aplin.view.adapter.MainScreenPagerAdapter
+import io.reactivex.subjects.BehaviorSubject
+import timber.log.Timber
 import javax.inject.Inject
+
 
 /**
  * メインになる画面用のActivity
@@ -127,6 +132,39 @@ class MainActivity : AppCompatActivity(),
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.main, menu)
+
+        val searchMenu = menu.findItem(R.id.action_search)
+        val searchView = MenuItemCompat.getActionView(searchMenu) as SearchView
+        searchView.queryHint = getString(R.string.action_search_hint)
+        searchView.setOnQueryTextFocusChangeListener { view, b ->
+            Timber.d("onFocusChange")
+        }
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Timber.d("onQueryTextSubmit %s", query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    Timber.d("onQueryTextChange %s", newText)
+                    searchTextObserver.onNext(newText)
+                }
+                return true
+            }
+        })
+
+        MenuItemCompat.setOnActionExpandListener(searchMenu, object : MenuItemCompat.OnActionExpandListener {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                Timber.d("onMenuItemActionCollapse")
+                return true
+            }
+
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                Timber.d("onMenuItemActionExpand")
+                return true
+            }
+        })
         return true
     }
 
@@ -164,5 +202,9 @@ class MainActivity : AppCompatActivity(),
         spinner.setSelection(position)
     }
 
+    companion object {
+        val searchTextObserver = BehaviorSubject.create<String>()
+
+    }
 
 }

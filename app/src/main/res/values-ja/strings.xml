@@ -22,6 +22,8 @@
     <string name="action_share_label_and_package_name">アプリ名・パッケージ名</string>
     <string name="action_share_package_name">パッケージ名</string>
     <string name="action_preference">設定</string>
+    <string name="action_search">検索</string>
+    <string name="action_search_hint">アプリ名・パッケージ名で絞り込み</string>
 
     <string name="category">カテゴリ</string>
     <string name="category_all">全て</string>
