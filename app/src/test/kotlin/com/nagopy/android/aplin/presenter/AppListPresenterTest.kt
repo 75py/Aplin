@@ -18,6 +18,7 @@ package com.nagopy.android.aplin.presenter
 
 import android.app.Application
 import android.os.Build
+import android.view.MenuItem
 import com.nagopy.android.aplin.BuildConfig
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Applications
@@ -26,14 +27,15 @@ import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
-import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.*
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.*
+import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -65,14 +67,19 @@ class AppListPresenterTest {
     @InjectMocks
     lateinit var appListPresenter: AppListPresenter
 
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    lateinit var holder: AppListAdapter.ViewHolder
+    @Mock
+    lateinit var item: MenuItem
+
+    val mockList = ArrayList<App>().apply {
+        add(App().apply {
+            packageName = BuildConfig.APPLICATION_ID
+        })
+    }
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val list = ArrayList<App>()
-        Mockito.`when`(applications.getApplicationList(Category.ALL)).thenReturn(list)
+        `when`(applications.getApplicationList(Category.ALL)).thenReturn(mockList)
     }
 
     @Test
@@ -82,7 +89,7 @@ class AppListPresenterTest {
         assertEquals(appListView, appListPresenter.view)
         assertEquals(appListViewParent, appListPresenter.parentView)
         assertEquals(Category.ALL, appListPresenter.category)
-        Mockito.verify(applications, Mockito.times(1)).getApplicationList(Category.ALL)
+        verify(applications, times(1)).getApplicationList(Category.ALL)
     }
 
     private fun callInitialize() {
@@ -106,6 +113,34 @@ class AppListPresenterTest {
 
         assertNull(appListPresenter.view)
         assertNull(appListPresenter.parentView)
+    }
+
+    @Test
+    fun onOptionsItemSelected() {
+        callInitialize()
+
+        appListPresenter.onOptionsItemSelected(item)
+        verify(appListViewParent, times(1))
+                .onOptionsItemSelected(item, mockList)
+    }
+
+    @Test
+    fun onItemClicked() {
+        callInitialize()
+
+        appListPresenter.onItemClicked(0)
+        verify(appListViewParent, times(1))
+                .onListItemClicked(mockList[0], Category.ALL)
+    }
+
+
+    @Test
+    fun onItemLongClicked() {
+        callInitialize()
+
+        appListPresenter.onItemLongClicked(0)
+        verify(appListViewParent, times(1))
+                .onListItemLongClicked(mockList[0])
     }
 
 }
