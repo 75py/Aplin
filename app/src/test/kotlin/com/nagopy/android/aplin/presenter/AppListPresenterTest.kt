@@ -28,16 +28,9 @@ import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Answers
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PowerMockIgnore
-import org.powermock.modules.junit4.rule.PowerMockRule
+import org.mockito.*
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.util.*
@@ -49,12 +42,7 @@ import kotlin.test.assertNull
         , sdk = intArrayOf(Build.VERSION_CODES.LOLLIPOP)
         //        , manifest = "src/main/AndroidManifest.xml"
 )
-@PowerMockIgnore("org.mockito.*", "org.robolectric.*", "android.*", "org.json.*")
 class AppListPresenterTest {
-
-    @Rule
-    @JvmField
-    val rule = PowerMockRule()
 
     @Mock
     lateinit var application: Application
@@ -74,6 +62,7 @@ class AppListPresenterTest {
     @Mock
     lateinit var appListViewParent: AppListViewParent
 
+    @InjectMocks
     lateinit var appListPresenter: AppListPresenter
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -84,12 +73,6 @@ class AppListPresenterTest {
         MockitoAnnotations.initMocks(this)
         val list = ArrayList<App>()
         Mockito.`when`(applications.getApplicationList(Category.ALL)).thenReturn(list)
-
-        appListPresenter = AppListPresenter()
-        appListPresenter.application = application
-        appListPresenter.applications = applications
-        appListPresenter.userSettings = userSettings
-        appListPresenter.iconHelper = iconHelper
     }
 
     @Test

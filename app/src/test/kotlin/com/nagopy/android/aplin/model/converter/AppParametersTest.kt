@@ -27,13 +27,11 @@ import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-@RunWith(PowerMockRunner::class)
 class AppParametersTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
