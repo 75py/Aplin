@@ -28,20 +28,16 @@ import com.nagopy.android.aplin.model.DisplayItem
 class DisplayItemPreference : PreferenceCategory {
 
     @SuppressWarnings("unused")
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-    }
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
     @SuppressWarnings("unused")
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-    }
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     @SuppressWarnings("unused")
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-    }
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     @SuppressWarnings("unused")
-    constructor(context: Context) : super(context) {
-    }
+    constructor(context: Context) : super(context)
 
     override fun onAttachedToHierarchy(preferenceManager: PreferenceManager) {
         super.onAttachedToHierarchy(preferenceManager)

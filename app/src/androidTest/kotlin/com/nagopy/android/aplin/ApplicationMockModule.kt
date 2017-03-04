@@ -20,6 +20,4 @@ import android.app.Application
 import dagger.Module
 
 @Module
-open class ApplicationMockModule(val a: Application) : ApplicationModule(a) {
-
-}
+open class ApplicationMockModule(val a: Application) : ApplicationModule(a)
