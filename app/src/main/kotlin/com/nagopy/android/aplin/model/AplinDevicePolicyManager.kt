@@ -29,9 +29,9 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.reflect.declaredMemberFunctions
-import kotlin.reflect.staticFunctions
-import kotlin.reflect.staticProperties
+import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.full.staticFunctions
+import kotlin.reflect.full.staticProperties
 
 @Singleton
 open class AplinDevicePolicyManager @Inject constructor() {
