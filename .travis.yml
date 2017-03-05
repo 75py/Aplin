@@ -57,10 +57,9 @@ before_script:
 #    - adb shell input keyevent 82 &
 
 script:
-    - echo 'build'
-    - ./gradlew assembleDebug -PdisablePreDex ${BUILD_OPTIONS}
-    - echo 'test'
-    - ./gradlew testDebug -PdisablePreDex ${BUILD_OPTIONS}
+    - ./gradlew assembleDebug jacocoTestDebugUnitTestReport -PdisablePreDex ${BUILD_OPTIONS}
+#    - echo 'test'
+#    - ./gradlew testDebug -PdisablePreDex ${BUILD_OPTIONS}
 #    - echo 'connectedDebugAndroidTest small'
 #    - ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=small -PdisablePreDex ${BUILD_OPTIONS}
 #    - echo 'connectedDebugAndroidTest medium'
@@ -69,6 +68,7 @@ script:
 #    - ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.size=large -PdisablePreDex ${BUILD_OPTIONS}
 
 after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

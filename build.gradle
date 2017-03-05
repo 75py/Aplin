@@ -22,6 +22,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.19.1'
         classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
     }
 }
 
@@ -47,7 +48,7 @@ task bumpMajor << {
         entry(key: 'patch', type: 'int', operation: '=', value: 0)
         entry(key: 'id', type: 'int', operation: '+', value: 1)
     }
-    generateReadMe()
+    generateReadme()
 }
 
 task bumpMinor << {
@@ -56,7 +57,7 @@ task bumpMinor << {
         entry(key: 'patch', type: 'int', operation: '=', value: 0)
         entry(key: 'id', type: 'int', operation: '+', value: 1)
     }
-    generateReadMe()
+    generateReadme()
 }
 
 task bumpPatch << {
@@ -64,7 +65,7 @@ task bumpPatch << {
         entry(key: 'patch', type: 'int', operation: '+', value: 1)
         entry(key: 'id', type: 'int', operation: '+', value: 1)
     }
-    generateReadMe()
+    generateReadme()
 }
 
 task version << {
@@ -84,7 +85,11 @@ Integer versionCode() {
     return Integer.valueOf(properties['id'].toString())
 }
 
-void generateReadMe() {
+task generateReadme << {
+    generateReadme()
+}
+
+void generateReadme() {
     def template = file('README.md.template').text
     def result = template.replaceAll("%%version%%", versionName())
     file("README.md").withWriter { it << result }
