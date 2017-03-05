@@ -51,10 +51,6 @@
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: http://code.google.com/p/atinject/
 
-- artifact: org.jetbrains.kotlin:kotlin-runtime:+
-  name: kotlin-runtime
-  copyrightHolder: JetBrains
-  license:  The Apache Software License, Version 2.0
 - artifact: org.jetbrains.kotlin:kotlin-stdlib:+
   name: kotlin-stdlib
   copyrightHolder: JetBrains
@@ -63,3 +59,10 @@
   name: kotlin-reflect
   copyrightHolder: JetBrains
   license:  The Apache Software License, Version 2.0
+
+- artifact: org.jetbrains:annotations:+
+  name: IntelliJ IDEA Annotations
+  copyrightHolder: JetBrains
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: http://www.jetbrains.org

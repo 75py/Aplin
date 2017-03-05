@@ -1,4 +1,4 @@
-Aplin [![Build Status](https://travis-ci.org/75py/Aplin.svg?branch=master)](https://travis-ci.org/75py/Aplin)
+Aplin [![Build Status](https://travis-ci.org/75py/Aplin.svg?branch=master)](https://travis-ci.org/75py/Aplin) [![codecov](https://codecov.io/gh/75py/Aplin/branch/master/graph/badge.svg)](https://codecov.io/gh/75py/Aplin)
 =====
 
 Application manager for Android!

@@ -28,33 +28,41 @@ import javax.inject.Singleton
 @Singleton
 open class AdPresenter @Inject constructor() : Presenter {
 
+    // Show release build only
+    var showAds = !BuildConfig.DEBUG
+
     var adView: AdView? = null
 
     open fun initialize(adView: AdView) {
-        this.adView = adView
-        val adRequest = AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("2E21E51466C94A2960FCB4E0BB5DB388")
-                .addTestDevice("561DC184323F7A23F20080805D44083C")
-                .addTestDevice("0FDB3E1E20DE9A1E911A85F87903A069")
-                .addTestDevice("F3D630FD4B16A430A0CB29123A096F71")
-                .addTestDevice("4EB260715A6D70807B32DAAC473002C9")
-                .build()
-        if (!BuildConfig.DEBUG) {
-            adView.loadAd(adRequest)
+        if (showAds) {
+            this.adView = adView
+            adView.loadAd(AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice("2E21E51466C94A2960FCB4E0BB5DB388")
+                    .addTestDevice("561DC184323F7A23F20080805D44083C")
+                    .addTestDevice("0FDB3E1E20DE9A1E911A85F87903A069")
+                    .addTestDevice("F3D630FD4B16A430A0CB29123A096F71")
+                    .addTestDevice("4EB260715A6D70807B32DAAC473002C9")
+                    .build())
         }
     }
 
     override fun resume() {
-        adView?.resume()
+        showAds.let {
+            adView?.resume()
+        }
     }
 
     override fun pause() {
-        adView?.pause()
+        showAds.let {
+            adView?.pause()
+        }
     }
 
     override fun destroy() {
-        adView?.destroy()
-        adView = null
+        showAds.let {
+            adView?.destroy()
+            adView = null
+        }
     }
 }
