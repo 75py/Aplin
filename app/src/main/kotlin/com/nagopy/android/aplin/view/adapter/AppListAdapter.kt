@@ -29,9 +29,9 @@ class AppListAdapter(val context: Context, val appListPresenter: AppListPresente
     }
 
     open class ViewHolder(parentView: View) {
-        open val icon: ImageView = parentView.findViewById(R.id.icon) as ImageView
-        open val label: TextView = parentView.findViewById(R.id.label) as TextView
-        open val status: TextView = parentView.findViewById(R.id.status) as TextView
+        open val icon: ImageView = parentView.findViewById(R.id.icon)
+        open val label: TextView = parentView.findViewById(R.id.label)
+        open val status: TextView = parentView.findViewById(R.id.status)
     }
 
 }

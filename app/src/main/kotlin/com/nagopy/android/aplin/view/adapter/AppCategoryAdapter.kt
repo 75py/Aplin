@@ -67,10 +67,10 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
 
         val category = getItem(position)
 
-        val titleView = view.findViewById(android.R.id.text1) as TextView
+        val titleView = view.findViewById<TextView>(android.R.id.text1)
         titleView.setText(category.titleResourceId)
 
-        val summaryTextView: TextView = view.findViewById(android.R.id.text2) as TextView
+        val summaryTextView = view.findViewById<TextView>(android.R.id.text2)
         summaryTextView.setText(category.summaryResourceId)
         summaryTextView.visibility = if (summaryTextView.text.isEmpty()) {
             View.GONE
@@ -90,7 +90,7 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
         } else {
             view = convertView
         }
-        val textView: TextView = view.findViewById(android.R.id.text1) as TextView
+        val textView = view.findViewById<TextView>(android.R.id.text1)
         val category = getItem(position)
         textView.setText(category.titleResourceId)
 

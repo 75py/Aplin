@@ -117,7 +117,7 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listView = view!!.findViewById(R.id.list) as AbsListView
+        listView = view!!.findViewById(R.id.list)
         listView.adapter = adapter
     }
 

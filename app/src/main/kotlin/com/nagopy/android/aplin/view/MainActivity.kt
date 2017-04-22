@@ -52,16 +52,16 @@ class MainActivity : AppCompatActivity(),
         , ViewPager.OnPageChangeListener {
 
     val toolbar: Toolbar by lazy {
-        findViewById(R.id.toolbar) as Toolbar
+        findViewById<Toolbar>(R.id.toolbar)
     }
 
-    val spinner: Spinner by lazy { findViewById(R.id.spinner) as Spinner }
+    val spinner: Spinner by lazy { findViewById<Spinner>(R.id.spinner) }
 
-    val viewPager: ViewPager by lazy { findViewById(R.id.pager) as ViewPager }
+    val viewPager: ViewPager by lazy { findViewById<ViewPager>(R.id.pager) }
 
-    val adView: AdView by lazy { findViewById(R.id.adView) as AdView }
+    val adView: AdView by lazy { findViewById<AdView>(R.id.adView) }
 
-    val progressBar: ProgressBar by lazy { findViewById(R.id.progress) as ProgressBar }
+    val progressBar: ProgressBar by lazy { findViewById<ProgressBar>(R.id.progress) }
 
     @Inject
     lateinit var presenter: MainScreenPresenter

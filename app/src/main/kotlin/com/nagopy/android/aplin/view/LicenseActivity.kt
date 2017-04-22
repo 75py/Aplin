@@ -31,12 +31,12 @@ class LicenseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_license)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        webView = findViewById(R.id.web_view) as WebView
+        webView = findViewById(R.id.web_view)
         webView.settings.loadWithOverviewMode = true
         webView.settings.useWideViewPort = true
         webView.loadUrl("file:///android_asset/licenses.html")

@@ -41,7 +41,7 @@ class SettingsActivity : AppCompatActivity(), SettingsView {
 
         setContentView(R.layout.activity_settings)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_action_back)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
