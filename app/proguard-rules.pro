@@ -15,6 +15,7 @@
 -keep class android.support.v7.widget.SearchView { *; }
 
 # Kotlin
+-keep class kotlin.reflect.jvm.internal.impl.** { *; }
 -dontwarn kotlin.**
 
 # Timber
