@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 3.2.2 *(2017-08-20)*
+----------------------------
+
+* Fix #115
+* Support Android O
+353fd519dcc85ee0bd3d64c6e0c17b6a9e9931a9
+* Update dependencies
+
+
 Version 3.2.1 *(2017-02-26)*
 ----------------------------
 
