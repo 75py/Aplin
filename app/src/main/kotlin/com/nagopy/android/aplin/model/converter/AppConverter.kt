@@ -69,7 +69,7 @@ open class AppConverter @Inject constructor() {
                     packageManager.queryIntentActivities(launcherIntent, 0).map { it.activityInfo.packageName }
                 } catch(e: Exception) {
                     Timber.w(e, "Error: queryIntentActivities")
-                    emptyList<String>()
+                    emptyList()
                 }
     }
 

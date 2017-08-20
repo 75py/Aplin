@@ -44,17 +44,11 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
         screenWidth = point.x
     }
 
-    override fun getCount(): Int {
-        return categories.size
-    }
+    override fun getCount(): Int = categories.size
 
-    override fun getItem(position: Int): Category {
-        return categories[position]
-    }
+    override fun getItem(position: Int): Category = categories[position]
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View

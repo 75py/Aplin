@@ -59,7 +59,5 @@ class App {
 
     var shouldSkip: Boolean = false
 
-    override fun toString(): String {
-        return "$packageName    $label"
-    }
+    override fun toString(): String = "$packageName    $label"
 }

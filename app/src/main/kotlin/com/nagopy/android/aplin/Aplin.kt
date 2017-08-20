@@ -76,9 +76,7 @@ open class Aplin : Application() {
 
     companion object {
         var component: ApplicationComponent? = null
-        fun getApplicationComponent(): ApplicationComponent {
-            return component!!
-        }
+        fun getApplicationComponent(): ApplicationComponent = component!!
     }
 
 }

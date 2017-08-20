@@ -31,11 +31,10 @@ class MainScreenPagerAdapter(
         fragmentManager: FragmentManager,
         val categories: List<Category> = Category.getAll()) : FragmentPagerAdapter(fragmentManager) {
 
-    override fun getItem(position: Int): Fragment {
-        return AppListFragment.newInstance(categories.get(position))
-    }
+    override fun getItem(position: Int): Fragment =
+            AppListFragment.newInstance(categories[position])
 
     override fun getCount(): Int = categories.size
 
-    override fun getPageTitle(position: Int): CharSequence = context.getString(categories.get(position).titleResourceId)
+    override fun getPageTitle(position: Int): CharSequence = context.getString(categories[position].titleResourceId)
 }

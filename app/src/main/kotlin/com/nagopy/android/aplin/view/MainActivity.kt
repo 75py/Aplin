@@ -17,7 +17,6 @@
 package com.nagopy.android.aplin.view
 
 import android.os.Bundle
-import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity(),
         findViewById<Toolbar>(R.id.toolbar)
     }
 
-    val spinner: Spinner by lazy { findViewById<Spinner>(R.id.spinner) }
+    private val spinner: Spinner by lazy { findViewById<Spinner>(R.id.spinner) }
 
     val viewPager: ViewPager by lazy { findViewById<ViewPager>(R.id.pager) }
 
@@ -134,9 +133,9 @@ class MainActivity : AppCompatActivity(),
         menuInflater.inflate(R.menu.main, menu)
 
         val searchMenu = menu.findItem(R.id.action_search)
-        val searchView = MenuItemCompat.getActionView(searchMenu) as SearchView
+        val searchView = searchMenu.actionView as SearchView
         searchView.queryHint = getString(R.string.action_search_hint)
-        searchView.setOnQueryTextFocusChangeListener { view, b ->
+        searchView.setOnQueryTextFocusChangeListener { _, _ ->
             Timber.d("onFocusChange")
         }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -154,7 +153,7 @@ class MainActivity : AppCompatActivity(),
             }
         })
 
-        MenuItemCompat.setOnActionExpandListener(searchMenu, object : MenuItemCompat.OnActionExpandListener {
+        searchMenu.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 Timber.d("onMenuItemActionCollapse")
                 return true
@@ -203,7 +202,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     companion object {
-        val searchTextObserver = BehaviorSubject.create<String>()
+        val searchTextObserver: BehaviorSubject<String> = BehaviorSubject.create<String>()
 
     }
 

@@ -63,9 +63,9 @@ open class AplinDevicePolicyManager @Inject constructor() {
     val permissionControllerPackageName: String? by lazy {
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
-                val v = PackageManager::class.declaredMemberFunctions.filter {
+                val v = PackageManager::class.declaredMemberFunctions.firstOrNull {
                     it.name == "getPermissionControllerPackageName"
-                }.firstOrNull()?.call(packageManager) as? String
+                }?.call(packageManager) as? String
                 Timber.d("permissionControllerPackageName = %s", v)
                 return@lazy v
             } catch (e: Exception) {
@@ -78,9 +78,9 @@ open class AplinDevicePolicyManager @Inject constructor() {
     val servicesSystemSharedLibraryPackageName: String? by lazy {
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
-                val v = PackageManager::class.declaredMemberFunctions.filter {
+                val v = PackageManager::class.declaredMemberFunctions.firstOrNull {
                     it.name == "getServicesSystemSharedLibraryPackageName"
-                }.firstOrNull()?.call(packageManager) as? String
+                }?.call(packageManager) as? String
                 Timber.d("servicesSystemSharedLibraryPackageName = %s", v)
                 return@lazy v
             } catch (e: Exception) {
@@ -93,9 +93,9 @@ open class AplinDevicePolicyManager @Inject constructor() {
     val sharedSystemSharedLibraryPackageName: String? by lazy {
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
-                val v = PackageManager::class.declaredMemberFunctions.filter {
+                val v = PackageManager::class.declaredMemberFunctions.firstOrNull {
                     it.name == "getSharedSystemSharedLibraryPackageName"
-                }.firstOrNull()?.call(packageManager) as? String
+                }?.call(packageManager) as? String
                 Timber.d("sharedSystemSharedLibraryPackageName = %s", v)
                 return@lazy v
             } catch (e: Exception) {
@@ -108,9 +108,9 @@ open class AplinDevicePolicyManager @Inject constructor() {
     val PRINT_SPOOLER_PACKAGE_NAME: String? by lazy {
         if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
             try {
-                val v = PrintManager::class.staticProperties.filter {
+                val v = PrintManager::class.staticProperties.firstOrNull {
                     it.name == "PRINT_SPOOLER_PACKAGE_NAME"
-                }.firstOrNull()?.call() as? String
+                }?.call() as? String
                 Timber.d("PRINT_SPOOLER_PACKAGE_NAME = %s", v)
                 return@lazy v
             } catch (e: Exception) {
@@ -140,9 +140,9 @@ open class AplinDevicePolicyManager @Inject constructor() {
             // 7.0-
             try {
                 val clsServiceManager = Class.forName("android.os.ServiceManager").kotlin
-                val clsServiceManager_getService = clsServiceManager.staticFunctions.filter {
+                val clsServiceManager_getService = clsServiceManager.staticFunctions.first {
                     it.name == "getService" && it.parameters.size == 1
-                }.first()
+                }
                 val ibinder = clsServiceManager_getService.call("webviewupdate") as? IBinder
                 val v = IWebViewUpdateService.Stub.asInterface(ibinder)
                 Timber.d("webviewUpdateService = %s", v)
@@ -173,16 +173,14 @@ open class AplinDevicePolicyManager @Inject constructor() {
         return false
     }
 
-    open fun isSystemPackage(packageInfo: PackageInfo?): Boolean {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            return isThisASystemPackage(packageInfo)
-        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+    open fun isSystemPackage(packageInfo: PackageInfo?): Boolean = when {
+        Build.VERSION.SDK_INT <= Build.VERSION_CODES.M -> isThisASystemPackage(packageInfo)
+        Build.VERSION.SDK_INT <= Build.VERSION_CODES.N ->
             // 7.0
-            return isSystemPackageApi24(packageInfo)
-        } else {
+            isSystemPackageApi24(packageInfo)
+        else ->
             // 7.1-
-            return isSystemPackageApi25(packageInfo)
-        }
+            isSystemPackageApi25(packageInfo)
     }
 
     /**
@@ -195,8 +193,7 @@ open class AplinDevicePolicyManager @Inject constructor() {
      * * エラーがあった場合はfalseを返す。
      */
     open fun isThisASystemPackage(packageInfo: PackageInfo?): Boolean {
-        return (packageInfo != null
-                && packageInfo.signatures != null
+        return (packageInfo?.signatures != null
                 && mSystemPackageInfo != null
                 && mSystemPackageInfo!!.signatures[0] == packageInfo.signatures[0])
     }

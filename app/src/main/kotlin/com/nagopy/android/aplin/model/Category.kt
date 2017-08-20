@@ -34,9 +34,7 @@ enum class Category(
     SYSTEM(
             titleResourceId = R.string.category_system
             , summaryResourceId = R.string.category_system_summary) {
-        override fun filter(list: Collection<App>): Collection<App> {
-            return list.filter(App::isSystem)
-        }
+        override fun filter(list: Collection<App>): Collection<App> = list.filter(App::isSystem)
     }
     ,
     SYSTEM_UNDISABLABLE(
@@ -60,30 +58,23 @@ enum class Category(
     ,
     DISABLED(titleResourceId = R.string.category_disabled
             , summaryResourceId = R.string.category_disabled_summary) {
-        override fun filter(list: Collection<App>): Collection<App> {
-            return list.filter { !it.isEnabled }
-        }
+        override fun filter(list: Collection<App>): Collection<App> = list.filter { !it.isEnabled }
     }
     ,
     DEFAULT(titleResourceId = R.string.category_default
             , summaryResourceId = R.string.category_default_summary) {
-        override fun filter(list: Collection<App>): Collection<App> {
-            return list.filter(App::isDefaultApp)
-        }
+        override fun filter(list: Collection<App>): Collection<App> = list.filter(App::isDefaultApp)
     }
     ,
     USER(titleResourceId = R.string.category_user
             , summaryResourceId = R.string.category_user_summary) {
-        override fun filter(list: Collection<App>): Collection<App> {
-            return list.filter { !it.isSystem }
-        }
+        override fun filter(list: Collection<App>): Collection<App> = list.filter { !it.isSystem }
     }
     ,
     INTERNET_PERMISSIONS(titleResourceId = R.string.category_internet_permissions
             , summaryResourceId = R.string.category_internet_permissions_summary) {
-        override fun filter(list: Collection<App>): Collection<App> {
-            return list.filter { it.requestedPermissions.contains(android.Manifest.permission.INTERNET) }
-        }
+        override fun filter(list: Collection<App>): Collection<App> =
+                list.filter { it.requestedPermissions.contains(android.Manifest.permission.INTERNET) }
     }
     ,
     DENIABLE_PERMISSIONS(titleResourceId = R.string.category_deniable_permissions
@@ -112,9 +103,7 @@ enum class Category(
 
     abstract fun filter(list: Collection<App>): Collection<App>
 
-    fun where(list: Collection<App>): Collection<App> {
-        return filter(list).filter { !it.shouldSkip }
-    }
+    fun where(list: Collection<App>): Collection<App> = filter(list).filter { !it.shouldSkip }
 
     companion object {
         fun getAll() = Category.values().filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }

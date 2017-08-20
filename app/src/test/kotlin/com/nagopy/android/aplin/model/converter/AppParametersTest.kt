@@ -22,7 +22,6 @@ import android.content.pm.PackageInfo
 import com.nagopy.android.aplin.entity.App
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.Mockito

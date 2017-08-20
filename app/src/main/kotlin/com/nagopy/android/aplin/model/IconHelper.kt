@@ -45,14 +45,14 @@ constructor(val application: Application, activityManager: ActivityManager) {
     /**
      * デフォルト表示用のアプリケーションアイコン
      */
-    val defaultIcon: Drawable = ResourcesCompat.getDrawable(application.resources, android.R.drawable.sym_def_app_icon, null)!!
+    private val defaultIcon: Drawable = ResourcesCompat.getDrawable(application.resources, android.R.drawable.sym_def_app_icon, null)!!
 
     /**
      * アイコン画像の大きさ（PX)
      */
     open val iconSize: Int = activityManager.launcherLargeIconSize * 4 / 3
 
-    val iconCache: IconLruCache = IconLruCache(1024 * 1024 * activityManager.memoryClass / 6)
+    private val iconCache: IconLruCache = IconLruCache(1024 * 1024 * activityManager.memoryClass / 6)
 
     fun requestLoadIcon(pkg: String): Single<Drawable> {
         return Single.create<Drawable> {
@@ -88,7 +88,7 @@ constructor(val application: Application, activityManager: ActivityManager) {
             if (value is BitmapDrawable) {
                 return value.bitmap.byteCount / 1024
             } else {
-                return 0;
+                return 0
             }
         }
     }

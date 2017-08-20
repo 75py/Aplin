@@ -116,9 +116,8 @@ enum class DisplayItem(
             if (appData.requestedPermissions.isNotEmpty()) {
                 val core = appData.isSystemPackage or appData.hasActiveAdmins
                 if (!appData.isSystem or !core) {
-                    sb.append(appData.permissionGroups
-                            .map { it.label }
-                            .joinToString(context.getString(R.string.display_item_deniable_permissions_separator))
+                    sb.append(appData.permissionGroups.joinToString(
+                            context.getString(R.string.display_item_deniable_permissions_separator)) { it.label }
                     )
                 }
             }

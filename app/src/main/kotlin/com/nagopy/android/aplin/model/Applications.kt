@@ -48,9 +48,7 @@ open class Applications @Inject constructor() {
 
     val appObserver: PublishSubject<Int> = PublishSubject.create<Int>() // onNext(null)が不可になったので、ダミー引数Intを使う
 
-    open fun isLoaded(): Boolean {
-        return appCache.isNotEmpty()
-    }
+    open fun isLoaded(): Boolean = appCache.isNotEmpty()
 
     open fun initAppCache(): Completable {
         return Completable.create {
