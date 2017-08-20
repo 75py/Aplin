@@ -27,6 +27,7 @@ import com.nagopy.android.aplin.model.IconHelper
 import com.nagopy.android.aplin.model.UserSettings
 import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -79,7 +80,7 @@ class AppListPresenterTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        `when`(applications.getApplicationList(Category.ALL)).thenReturn(mockList)
+        `when`(applications.getApplicationList(Category.ALL)).thenReturn(Single.create { it.onSuccess(mockList) })
     }
 
     @Test

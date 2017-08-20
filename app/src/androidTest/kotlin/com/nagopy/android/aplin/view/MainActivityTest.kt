@@ -116,6 +116,9 @@ class MainActivityTest {
         clickAll { app ->
             assertTrue(app.packageName.contains("nagopy"), app.toString())
         }
+
+        onView(withId(R.id.search_src_text))
+                .perform(ViewActions.clearText())
     }
 
 

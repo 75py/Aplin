@@ -24,6 +24,7 @@ import com.nagopy.android.aplin.model.converter.AppConverter
 import com.nagopy.android.aplin.model.converter.AppParameters
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
@@ -52,35 +53,38 @@ open class Applications @Inject constructor() {
 
     open fun initAppCache(): Completable {
         return Completable.create {
-            if (!isLoaded()) {
-                refresh()
-            }
+            Timber.d("initAppCache appCache.size=%s", appCache.size)
+            loadAppCache()
+            Timber.d("initAppCache appCache.size=%s refreshed", appCache.size)
             it.onComplete()
         }
     }
 
-    open fun refresh() {
-        appCache.clear()
-        val all = getInstalledPackageNames()
-        val executorService = Executors.newCachedThreadPool()
-        appConverter.prepare()
-        all.forEach { packageName ->
-            Timber.d("LOAD start pkg=%s", packageName)
-            executorService.execute {
-                val entity = App()
-                appConverter.setValues(entity, packageName)
-                appCache.put(packageName, entity)
-                Timber.d("LOAD fin  pkg=%s", packageName)
+    open fun loadAppCache() {
+        synchronized(appCache, {
+            if (!isLoaded()) {
+                appCache.clear()
+                val all = getInstalledPackageNames()
+                val executorService = Executors.newCachedThreadPool()
+                appConverter.prepare()
+                all.forEach { packageName ->
+                    Timber.v("LOAD start pkg=%s", packageName)
+                    executorService.execute {
+                        val entity = App()
+                        appConverter.setValues(entity, packageName)
+                        appCache.put(packageName, entity)
+                        Timber.v("LOAD fin  pkg=%s", packageName)
+                    }
+                }
+                executorService.shutdown()
+                executorService.awaitTermination(60, TimeUnit.SECONDS)
             }
-        }
-        executorService.shutdown()
-        executorService.awaitTermination(60, TimeUnit.SECONDS)
-
+        })
     }
 
-    open fun getApplicationList(category: Category): List<App> {
-        Timber.d("getApplicationList %s", category)
-        return userSettings.sort.orderBy(category.where(appCache.values)).toList()
+    open fun getApplicationList(category: Category): Single<List<App>> = Single.create {
+        loadAppCache()
+        it.onSuccess(userSettings.sort.orderBy(category.where(appCache.values)).toList())
     }
 
     fun getInstalledPackageNames(): List<String> {
