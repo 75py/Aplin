@@ -81,6 +81,8 @@ class AppListPresenterTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
         `when`(applications.getApplicationList(Category.ALL)).thenReturn(Single.create { it.onSuccess(mockList) })
+        appListPresenter.defList = mockList
+        appListPresenter.filteredList.addAll(mockList)
     }
 
     @Test
