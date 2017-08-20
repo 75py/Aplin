@@ -36,6 +36,7 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * カテゴリ毎アプリ一覧のプレゼンター
@@ -54,7 +55,7 @@ open class AppListPresenter @Inject constructor() : Presenter {
     @Inject
     lateinit var iconHelper: IconHelper
 
-    private lateinit var defList: List<App>
+    var defList: List<App> = emptyList()
 
     val filteredList: MutableList<App> = ArrayList()
 
@@ -74,12 +75,20 @@ open class AppListPresenter @Inject constructor() : Presenter {
     }
 
     fun updateAppList() {
-        defList = applications.getApplicationList(category)
-        updateFilter(searchText)
+        applications.getApplicationList(category)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    defList = it
+                    updateFilter(searchText)
+                }, { e ->
+                    Timber.e(e, "Error occurred")
+                })
     }
 
     fun updateFilter(searchText: String) {
         this.searchText = searchText
+        Timber.d("searchText: %s, defList.size = %d, applications.appCache.size = %d", searchText, defList.size, applications.appCache.size)
         filteredList.clear()
         defList.forEach {
             if (it.packageName.contains(searchText, ignoreCase = true)

@@ -62,7 +62,7 @@ constructor(val application: Application, activityManager: ActivityManager) {
                 try {
                     d = packageManager.getApplicationIcon(pkg) as? BitmapDrawable
                 } catch (e: PackageManager.NameNotFoundException) {
-                    Timber.d(e, "Error pkg=%s", pkg)
+                    Timber.v(e, "Error pkg=%s", pkg)
                     it.onSuccess(defaultIcon)
                     return@create
                 }
@@ -72,9 +72,9 @@ constructor(val application: Application, activityManager: ActivityManager) {
                     icon = defaultIcon
                 }
                 iconCache.put(pkg, icon)
-                Timber.d("Add cache. pkg=s%s", pkg)
+                Timber.v("Add cache. pkg=s%s", pkg)
             } else {
-                Timber.d("Cached. pkg=%s", pkg)
+                Timber.v("Cached. pkg=%s", pkg)
             }
             it.onSuccess(icon)
         }
