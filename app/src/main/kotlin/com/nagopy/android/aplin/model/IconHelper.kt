@@ -71,7 +71,7 @@ constructor(val application: Application, activityManager: ActivityManager) {
                 } else {
                     icon = defaultIcon
                 }
-                iconCache.put(pkg, icon as BitmapDrawable)
+                iconCache.put(pkg, icon)
                 Timber.d("Add cache. pkg=s%s", pkg)
             } else {
                 Timber.d("Cached. pkg=%s", pkg)
@@ -80,14 +80,16 @@ constructor(val application: Application, activityManager: ActivityManager) {
         }
     }
 
-    class IconLruCache(maxSize: Int) : LruCache<String, BitmapDrawable>(maxSize) {
+    class IconLruCache(maxSize: Int) : LruCache<String, Drawable>(maxSize) {
 
-        fun getOrNull(key: String): BitmapDrawable? {
-            return get(key)
-        }
+        fun getOrNull(key: String): Drawable? = get(key)
 
-        override fun sizeOf(key: String?, value: BitmapDrawable): Int {
-            return value.bitmap.byteCount / 1024
+        override fun sizeOf(key: String?, value: Drawable): Int {
+            if (value is BitmapDrawable) {
+                return value.bitmap.byteCount / 1024
+            } else {
+                return 0;
+            }
         }
     }
 }
