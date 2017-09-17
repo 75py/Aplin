@@ -210,7 +210,7 @@ class MainActivityTest {
                 app.permissionGroups.forEach {
                     val exists = uiDevice.findObject(UiSelector().text(it.label)).waitForExists(timeout)
                     if (!exists) {
-                        Timber.d("pkg=%s cannot deny permission %s", app.packageName, it)
+                        Timber.w("pkg=%s cannot deny permission %s", app.packageName, it)
                         errors.add(app.packageName)
                     }
                 }
@@ -218,7 +218,7 @@ class MainActivityTest {
                 uiDevice.pressBack()
             } else {
                 // 「権限」がクリックできない
-                Timber.d("pkg=%s cannot deny any permissions.", app.packageName)
+                Timber.w("pkg=%s cannot deny any permissions.", app.packageName)
                 errors.add(app.packageName)
             }
         }
@@ -256,7 +256,7 @@ class MainActivityTest {
                         .perform(click())
                 uiDevice.waitForIdle()
                 val packageName = appListViewProtocol.apps[i].packageName
-                Timber.d("packageName=%s", packageName)
+                Timber.i("packageName=%s", packageName)
                 Intents.intended(allOf(
                         IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         , IntentMatchers.hasData("package:$packageName")
