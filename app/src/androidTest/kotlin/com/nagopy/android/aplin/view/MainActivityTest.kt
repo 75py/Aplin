@@ -55,6 +55,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -138,18 +139,31 @@ class MainActivityTest {
     fun SYSTEM_DISABLABLE() {
         start()
         switchCategory(Category.SYSTEM_DISABLABLE)
+        val errors = ArrayList<AssertionError>()
         clickAll { app ->
-            // アプリ名が表示されていることを確認
-            assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
+            try {
+                // アプリ名が表示されていることを確認
+                assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
 
-            val disableButtonLabel =
-                    if (app.isEnabled && !app.isDisabledUntilUsed) {
-                        TestResources.string.test_btn_disable
-                    } else {
-                        TestResources.string.test_btn_enable
-                    }
-            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
-            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
+                val disableButtonLabel =
+                        if (app.isEnabled && !app.isDisabledUntilUsed) {
+                            TestResources.string.test_btn_disable
+                        } else {
+                            TestResources.string.test_btn_enable
+                        }
+                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
+                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
+            } catch (e: AssertionError) {
+                Timber.e(e, "Continue")
+                errors.add(e)
+            }
+        }
+
+        errors.forEach {
+            Timber.e(it)
+        }
+        if (errors.isNotEmpty()) {
+            throw errors[0]
         }
     }
 
@@ -196,7 +210,7 @@ class MainActivityTest {
                 app.permissionGroups.forEach {
                     val exists = uiDevice.findObject(UiSelector().text(it.label)).waitForExists(timeout)
                     if (!exists) {
-                        Timber.d("pkg=%s cannot deny permission %s", app.packageName, it)
+                        Timber.w("pkg=%s cannot deny permission %s", app.packageName, it)
                         errors.add(app.packageName)
                     }
                 }
@@ -204,7 +218,7 @@ class MainActivityTest {
                 uiDevice.pressBack()
             } else {
                 // 「権限」がクリックできない
-                Timber.d("pkg=%s cannot deny any permissions.", app.packageName)
+                Timber.w("pkg=%s cannot deny any permissions.", app.packageName)
                 errors.add(app.packageName)
             }
         }
@@ -242,7 +256,7 @@ class MainActivityTest {
                         .perform(click())
                 uiDevice.waitForIdle()
                 val packageName = appListViewProtocol.apps[i].packageName
-                Timber.d("packageName=%s", packageName)
+                Timber.i("packageName=%s", packageName)
                 Intents.intended(allOf(
                         IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         , IntentMatchers.hasData("package:$packageName")
