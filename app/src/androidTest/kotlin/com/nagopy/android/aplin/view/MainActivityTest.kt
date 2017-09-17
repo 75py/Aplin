@@ -55,6 +55,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -138,18 +139,31 @@ class MainActivityTest {
     fun SYSTEM_DISABLABLE() {
         start()
         switchCategory(Category.SYSTEM_DISABLABLE)
+        val errors = ArrayList<AssertionError>()
         clickAll { app ->
-            // アプリ名が表示されていることを確認
-            assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
+            try {
+                // アプリ名が表示されていることを確認
+                assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
 
-            val disableButtonLabel =
-                    if (app.isEnabled && !app.isDisabledUntilUsed) {
-                        TestResources.string.test_btn_disable
-                    } else {
-                        TestResources.string.test_btn_enable
-                    }
-            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
-            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
+                val disableButtonLabel =
+                        if (app.isEnabled && !app.isDisabledUntilUsed) {
+                            TestResources.string.test_btn_disable
+                        } else {
+                            TestResources.string.test_btn_enable
+                        }
+                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
+                assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
+            } catch (e: AssertionError) {
+                Timber.e(e, "Continue")
+                errors.add(e)
+            }
+        }
+
+        errors.forEach {
+            Timber.e(it)
+        }
+        if (errors.isNotEmpty()) {
+            throw errors[0]
         }
     }
 
