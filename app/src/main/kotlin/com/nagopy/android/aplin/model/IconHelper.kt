@@ -58,25 +58,18 @@ constructor(val application: Application, activityManager: ActivityManager) {
         return Single.create<Drawable> {
             var icon: Drawable? = iconCache.getOrNull(pkg)
             if (icon == null) {
-                val d: BitmapDrawable?
-                try {
-                    d = packageManager.getApplicationIcon(pkg) as? BitmapDrawable
+                icon = try {
+                    packageManager.getApplicationIcon(pkg)
                 } catch (e: PackageManager.NameNotFoundException) {
                     Timber.v(e, "Error pkg=%s", pkg)
-                    it.onSuccess(defaultIcon)
-                    return@create
-                }
-                if (d != null) {
-                    icon = d
-                } else {
-                    icon = defaultIcon
+                    defaultIcon
                 }
                 iconCache.put(pkg, icon)
                 Timber.v("Add cache. pkg=s%s", pkg)
             } else {
                 Timber.v("Cached. pkg=%s", pkg)
             }
-            it.onSuccess(icon)
+            it.onSuccess(icon!!)
         }
     }
 
