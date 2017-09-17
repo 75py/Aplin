@@ -20,6 +20,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.DeadObjectException
 import android.support.multidex.MultiDex
 import android.util.Log
 import com.google.android.gms.ads.MobileAds
@@ -45,7 +46,7 @@ open class Aplin : Application() {
         }
 
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(AplinDebugTree())
         } else {
             MobileAds.initialize(this, BuildConfig.AD_APP_ID)
             Timber.plant(object : Timber.Tree() {
@@ -77,6 +78,15 @@ open class Aplin : Application() {
     companion object {
         var component: ApplicationComponent? = null
         fun getApplicationComponent(): ApplicationComponent = component!!
+    }
+
+    class AplinDebugTree : Timber.DebugTree() {
+        override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
+            if (t is DeadObjectException) {
+                throw t
+            }
+            super.log(priority, tag, message, t)
+        }
     }
 
 }
