@@ -20,6 +20,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.view.MenuItem
 import android.widget.Toast
@@ -105,6 +106,13 @@ import javax.inject.Singleton
             else ->
                 Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
 
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (activity.isInMultiWindowMode) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            }
         }
         activity.startActivity(intent)
     }
