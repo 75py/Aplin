@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 3.3.0 *(2017-10-22)*
+----------------------------
+
+* [Nougat or higher] #112  
+If multi-window mode is enabled, open settings app in split-screen
+
 Version 3.2.4 *(2017-09-17)*
 ----------------------------
 
@@ -15,7 +21,7 @@ Version 3.2.2 *(2017-08-20)*
 ----------------------------
 
 * Fix #115
-* Support Android O
+* Support Android O  
 353fd519dcc85ee0bd3d64c6e0c17b6a9e9931a9
 * Update dependencies
 
@@ -29,7 +35,7 @@ Version 3.2.1 *(2017-02-26)*
 Version 3.1.3 *(2017-02-18)*
 ----------------------------
 
-* Fix bugs
+* Fix bugs  
 パーミッションの取得をPackageManager経由ではなくコマンド経由にした。
 
 
@@ -107,4 +113,3 @@ Version 1.0.0 *(2015-12-23)*
 ----------------------------
 
 Initial release on Google Play!
-

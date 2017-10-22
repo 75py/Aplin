@@ -21,11 +21,13 @@ For Developers
 
 Unit test
 =========
+
 * Command
 ```
 cd Aplin/app
 ../gradlew testDebug --info
 ```
+
 * Android Studio
 "VM Options -noverify" is required.
 

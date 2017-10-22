@@ -13,7 +13,7 @@ https://play.google.com/store/apps/details?id=com.nagopy.android.aplin
 Latest version
 --------------
 
-3.2.4
+3.3.0
 
 
 For Developers
@@ -21,11 +21,13 @@ For Developers
 
 Unit test
 =========
+
 * Command
 ```
 cd Aplin/app
 ../gradlew testDebug --info
 ```
+
 * Android Studio
 "VM Options -noverify" is required.
 
