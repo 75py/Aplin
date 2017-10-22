@@ -33,7 +33,14 @@ open class Aplin : Application() {
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
-        MultiDex.install(this)
+        try {
+            MultiDex.install(this)
+        } catch (e: Exception) {
+            Timber.d(e)
+            if (!System.getProperty("java.vm.name").startsWith("Java")) {
+                throw e
+            }
+        }
     }
 
     override fun onCreate() {
