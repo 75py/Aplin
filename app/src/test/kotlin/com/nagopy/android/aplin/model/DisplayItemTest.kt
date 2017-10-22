@@ -16,20 +16,22 @@
 
 package com.nagopy.android.aplin.model
 
-import android.content.Context
+import android.app.Application
 import com.nagopy.android.aplin.entity.App
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
 
 
 @RunWith(RobolectricTestRunner::class)
+@Config(manifest = Config.NONE)
 class DisplayItemTest {
 
-    lateinit var context: Context
+    lateinit var context: Application
 
     var app = App()
 
