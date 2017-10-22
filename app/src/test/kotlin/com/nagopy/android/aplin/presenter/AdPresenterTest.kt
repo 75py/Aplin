@@ -18,20 +18,14 @@ package com.nagopy.android.aplin.presenter
 import com.google.android.gms.ads.AdView
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.mockito.MockitoAnnotations
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-@RunWith(PowerMockRunner::class)
-//@PowerMockRunnerDelegate(Enclosed::class)
-@PrepareForTest(AdView::class)
 class AdPresenterTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -41,8 +35,7 @@ class AdPresenterTest {
 
     @Before
     fun setup() {
-        PowerMockito.spy(AdView::class.java)
-        adView = PowerMockito.mock(AdView::class.java)
+        MockitoAnnotations.initMocks(this)
         assertNotNull(adView)
 
         adPresenter = AdPresenter()
@@ -50,7 +43,7 @@ class AdPresenterTest {
 
     @Test
     fun initialize() {
-        PowerMockito.doNothing().`when`(adView).loadAd(Mockito.any())
+        Mockito.doNothing().`when`(adView).loadAd(Mockito.any())
 
         adPresenter.showAds = true
         adPresenter.initialize(adView)
@@ -62,7 +55,7 @@ class AdPresenterTest {
 
     @Test
     fun initialize_debug() {
-        PowerMockito.doNothing().`when`(adView).loadAd(Mockito.any())
+        Mockito.doNothing().`when`(adView).loadAd(Mockito.any())
 
         adPresenter.showAds = false
         adPresenter.initialize(adView)
@@ -72,7 +65,7 @@ class AdPresenterTest {
 
     @Test
     fun resume() {
-        PowerMockito.doNothing().`when`(adView).resume()
+        Mockito.doNothing().`when`(adView).resume()
         adPresenter.adView = adView
         adPresenter.showAds = true
         adPresenter.resume()
@@ -83,7 +76,7 @@ class AdPresenterTest {
 
     @Test
     fun resume_debug() {
-        PowerMockito.doNothing().`when`(adView).resume()
+        Mockito.doNothing().`when`(adView).resume()
         adPresenter.adView = null
         adPresenter.showAds = false
         adPresenter.resume()
@@ -93,7 +86,7 @@ class AdPresenterTest {
 
     @Test
     fun pause() {
-        PowerMockito.doNothing().`when`(adView).pause()
+        Mockito.doNothing().`when`(adView).pause()
         adPresenter.adView = adView
         adPresenter.showAds = true
         adPresenter.pause()
@@ -103,7 +96,7 @@ class AdPresenterTest {
 
     @Test
     fun pause_debug() {
-        PowerMockito.doNothing().`when`(adView).pause()
+        Mockito.doNothing().`when`(adView).pause()
         adPresenter.adView = null
         adPresenter.showAds = false
         adPresenter.pause()
@@ -113,7 +106,7 @@ class AdPresenterTest {
 
     @Test
     fun destroy() {
-        PowerMockito.doNothing().`when`(adView).destroy()
+        Mockito.doNothing().`when`(adView).destroy()
         adPresenter.adView = adView
         adPresenter.showAds = true
         adPresenter.destroy()
@@ -124,7 +117,7 @@ class AdPresenterTest {
 
     @Test
     fun destroy_debug() {
-        PowerMockito.doNothing().`when`(adView).destroy()
+        Mockito.doNothing().`when`(adView).destroy()
         adPresenter.adView = null
         adPresenter.showAds = false
         adPresenter.destroy()
