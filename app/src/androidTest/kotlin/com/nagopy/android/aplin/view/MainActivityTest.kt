@@ -42,6 +42,7 @@ import android.support.test.uiautomator.Until
 import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ProgressBar
+import com.nagopy.android.aplin.BuildConfig
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.TestResources
@@ -68,7 +69,8 @@ class MainActivityTest {
     @JvmField
     val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, false, false)
 
-    val timeout = 500L
+    private val timeout = 500L
+    private val testPackageName = BuildConfig.APPLICATION_ID + ".test"
 
     lateinit var uiDevice: UiDevice
     lateinit var sp: SharedPreferences
@@ -129,8 +131,10 @@ class MainActivityTest {
         start()
         switchCategory(Category.ALL)
         clickAll { app ->
-            // アプリ名が表示されていることを確認
-            assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
+            if (app.packageName != testPackageName) {
+                // アプリ名が表示されていることを確認
+                assertTrue(uiDevice.findObject(UiSelector().text(app.label)).waitForExists(timeout), app.toString())
+            }
         }
     }
 

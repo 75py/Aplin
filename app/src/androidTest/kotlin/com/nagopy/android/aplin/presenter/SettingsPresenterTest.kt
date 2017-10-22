@@ -6,7 +6,7 @@ import android.support.test.filters.SmallTest
 import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -45,7 +45,7 @@ class SettingsPresenterTest {
     @Test
     fun resume() {
         Mockito.doNothing().`when`(sharedPreferences).registerOnSharedPreferenceChangeListener(
-                Matchers.any(SharedPreferences.OnSharedPreferenceChangeListener::class.java))
+                ArgumentMatchers.any(SharedPreferences.OnSharedPreferenceChangeListener::class.java))
 
         target.initialize(settingsView)
         target.resume()
@@ -57,7 +57,7 @@ class SettingsPresenterTest {
     @Test
     fun pause() {
         Mockito.doNothing().`when`(sharedPreferences).unregisterOnSharedPreferenceChangeListener(
-                Matchers.any(SharedPreferences.OnSharedPreferenceChangeListener::class.java))
+                ArgumentMatchers.any(SharedPreferences.OnSharedPreferenceChangeListener::class.java))
 
         target.pause()
 
