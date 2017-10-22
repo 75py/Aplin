@@ -16,6 +16,20 @@ Latest version
 3.2.4
 
 
+For Developers
+--------------
+
+Unit test
+=========
+* Command
+```
+cd Aplin/app
+../gradlew testDebug --info
+```
+* Android Studio
+"VM Options -noverify" is required.
+
+
 License
 -------
 
