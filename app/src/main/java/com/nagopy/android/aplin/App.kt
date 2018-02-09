@@ -1,16 +1,16 @@
 package com.nagopy.android.aplin
 
 import android.app.Application
-import android.app.admin.DevicePolicyManager
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.os.Handler
 import android.os.Looper
-import android.preference.PreferenceManager
-import com.github.salomonbrys.kodein.*
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.KodeinAware
+import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.conf.ConfigurableKodein
+import com.github.salomonbrys.kodein.singleton
+import com.nagopy.android.aplin.loader.AppLoader
+import com.nagopy.android.aplin.loader.LoaderProvider
 import timber.log.Timber
 
 class App : Application(), KodeinAware {
@@ -19,27 +19,20 @@ class App : Application(), KodeinAware {
 
     override fun onCreate() {
         super.onCreate()
-        resetInjection()
+        kodein.addImport(appDependencies(), true)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
     }
 
-    fun resetInjection() {
-        kodein.clear()
-        kodein.addImport(appDependencies(), true)
-    }
-
-
     private fun appDependencies(): Kodein.Module {
         return Kodein.Module(allowSilentOverride = true) {
             bind<App>() with singleton { this@App }
             bind<Handler>() with singleton { Handler(Looper.getMainLooper()) }
-            bind<Resources>() with singleton { this@App.resources }
-            bind<PackageManager>() with singleton { packageManager }
-            bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(this@App) }
-            bind<DevicePolicyManager>() with singleton { getSystemService(DevicePolicyManager::class.java) }
+
+            val loaderProvider = LoaderProvider(this@App)
+            bind<AppLoader>() with singleton { loaderProvider.appLoader }
         }
     }
 
