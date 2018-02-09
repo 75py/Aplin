@@ -9,9 +9,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.cookpad.android.licensetools:license-tools-plugin:1.0.0'
     }
 }
 
@@ -24,4 +22,78 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    publish_version_name = versionName()
+    publish_version_code = versionCode()
+}
+
+task bumpMajor {
+    doLast {
+        ant.propertyfile(file: 'version.properties') {
+            entry(key: 'major', type: 'int', operation: '+', value: 1, pattern: '0')
+            entry(key: 'minor', type: 'int', operation: '=', value: 0, pattern: '0')
+            entry(key: 'patch', type: 'int', operation: '=', value: 0, pattern: '0')
+            entry(key: 'id', type: 'int', operation: '+', value: 1, pattern: '0')
+        }
+    }
+}
+
+task bumpMinor {
+    doLast {
+        ant.propertyfile(file: 'version.properties') {
+            entry(key: 'minor', type: 'int', operation: '+', value: 1, pattern: '0')
+            entry(key: 'patch', type: 'int', operation: '=', value: 0, pattern: '0')
+            entry(key: 'id', type: 'int', operation: '+', value: 1, pattern: '0')
+        }
+    }
+}
+
+task bumpPatch {
+    doLast {
+        ant.propertyfile(file: 'version.properties') {
+            entry(key: 'patch', type: 'int', operation: '+', value: 1, pattern: '0')
+            entry(key: 'id', type: 'int', operation: '+', value: 1, pattern: '0')
+        }
+    }
+}
+
+task updateReadme {
+    doLast {
+        def template = file('README_template.md').text
+        def result = template
+                .replaceAll("%%version%%", versionName())
+        file("README.md").withWriter { it << result }
+    }
+}
+
+task printVersion {
+    doLast {
+        println "Version name : " + versionName()
+        println "Version code : " + versionCode()
+    }
+}
+
+String versionName() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('version.properties').newDataInputStream())
+    return properties['major'] + "." + properties['minor'] + "." + properties['patch']
+}
+
+int versionCode() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('version.properties').newDataInputStream())
+    return properties['id'].toString().toInteger()
+}
+
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.incremental = true
+}
+
+tasks.withType(Test) {
+    def maxCount = gradle.startParameter.maxWorkerCount
+    maxParallelForks = (maxCount < 2) ? 1 : maxCount / 2
+    forkEvery = 100
 }
