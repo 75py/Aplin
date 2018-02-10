@@ -1,27 +1,72 @@
 package com.nagopy.android.aplin
 
+import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.widget.TextView
 import com.github.salomonbrys.kodein.KodeinInjector
 import com.github.salomonbrys.kodein.android.appKodein
 import com.github.salomonbrys.kodein.instance
-import com.nagopy.android.aplin.loader.AppLoader
+import com.nagopy.android.aplin.databinding.ActivityMainBinding
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
     val injector = KodeinInjector()
 
-    val appLoader: AppLoader by injector.instance()
+    lateinit var binding: ActivityMainBinding
+
+    val mainViewModelFactory: MainViewModel.Factory by injector.instance()
+
+    val mainViewModel: MainViewModel by lazy {
+        ViewModelProviders.of(this, mainViewModelFactory).get(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injector.inject(appKodein())
 
-        val apps = appLoader.load()
-        setContentView(TextView(this).apply {
-            text = apps.joinToString { it.toString() }
-        })
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setSupportActionBar(binding.toolBar)
+        binding.mainViewModel = mainViewModel
+
+        launch(UI) {
+            Timber.d("start loading")
+
+            async(CommonPool) {
+                mainViewModel.loadApplications()
+            }.await()
+
+            binding.viewPager.adapter = AppListPagerAdapter(supportFragmentManager)
+            binding.tabLayout.setupWithViewPager(binding.viewPager)
+            Timber.d("finish loading")
+        }
+
+        Timber.d("onCreate end")
+    }
+
+    class AppListPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+
+        val categories = Category.values()
+
+        override fun getItem(position: Int): Fragment {
+            return AppListFragment.newInstance(categories[position])
+        }
+
+        override fun getCount(): Int {
+            return categories.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return categories[position].name
+        }
     }
 
 }
