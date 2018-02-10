@@ -3,4 +3,15 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="titleTextColor">@android:color/white</color>
+
+    <color name="textColorPrimary">#000000</color>
+    <color name="textColorPrimaryDisabled">#c0c0c0</color>
+    <color name="textColorSecondary">#909090</color>
+    <color name="textColorSecondaryDisabled">#c0c0c0</color>
+    <color name="disabledBackgroundColor">#f8f8ff</color>
+
+    <color name="thumb_pressed">#BBF57C00</color>
+    <color name="thumb">#88F57C00</color>
 </resources>

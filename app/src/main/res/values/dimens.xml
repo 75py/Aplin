@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="margin_narrow">4dp</dimen>
+    <dimen name="margin_normal">8dp</dimen>
+    <dimen name="margin_wide">12dp</dimen>
+    <dimen name="margin_wide2">16dp</dimen>
+
+    <dimen name="card_corner">6dp</dimen>
+
+    <dimen name="fastscroll_radius">4dp</dimen>
+    <dimen name="fastscroll_thickness">8dp</dimen>
+    <dimen name="fastscroll_thickness_touchable">48dp</dimen>
+</resources>
