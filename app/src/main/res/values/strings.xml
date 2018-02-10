@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Aplin</string>
+
+    <string name="category_all">All</string>
+    <string name="category_system">System</string>
+    <string name="category_disablable">Disablable</string>
+    <string name="category_disabled">Disabled</string>
+    <string name="category_undisablable">Undisablable</string>
+    <string name="category_user">User</string>
 </resources>

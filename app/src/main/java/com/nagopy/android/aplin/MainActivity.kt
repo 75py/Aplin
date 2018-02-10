@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Resources
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.loadApplications()
             }.await()
 
-            binding.viewPager.adapter = AppListPagerAdapter(supportFragmentManager)
+            binding.viewPager.adapter = AppListPagerAdapter(supportFragmentManager, resources)
             binding.tabLayout.setupWithViewPager(binding.viewPager)
             Timber.d("finish loading")
         }
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         Timber.d("onCreate end")
     }
 
-    class AppListPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    class AppListPagerAdapter(fm: FragmentManager, val resources: Resources) : FragmentPagerAdapter(fm) {
 
         val categories = Category.values()
 
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            return categories[position].name
+            return resources.getText(categories[position].titleResId)
         }
     }
 

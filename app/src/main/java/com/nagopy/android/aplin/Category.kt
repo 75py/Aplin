@@ -2,18 +2,18 @@ package com.nagopy.android.aplin
 
 import com.nagopy.android.aplin.loader.AppInfo
 
-enum class Category(val predicate: (AppInfo) -> Boolean) {
+enum class Category(val titleResId: Int, val predicate: (AppInfo) -> Boolean) {
 
-    ALL({ true }),
+    ALL(R.string.category_all, { true }),
 
-    SYSTEM(AppInfo::isSystem),
+    SYSTEM(R.string.category_system, AppInfo::isSystem),
 
-    DISABLABLE({ it.isDisablable && it.isEnabled }),
+    DISABLABLE(R.string.category_disablable, { it.isDisablable && it.isEnabled }),
 
-    DISABLED({ !it.isEnabled }),
+    DISABLED(R.string.category_disabled, { !it.isEnabled }),
 
-    UNDISABLABLE({ it.isEnabled && !it.isDisablable }),
+    UNDISABLABLE(R.string.category_undisablable, { it.isEnabled && !it.isDisablable }),
 
-    USER({ it.isSystem });
+    USER(R.string.category_user, { it.isSystem });
 
 }
