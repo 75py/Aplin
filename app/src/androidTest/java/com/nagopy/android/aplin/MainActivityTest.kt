@@ -22,6 +22,7 @@ import com.nagopy.android.aplin.loader.AppInfo
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
+import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -68,7 +69,7 @@ class MainActivityTest {
     }
 
     // https://stackoverflow.com/questions/36399787/how-to-count-recyclerview-items-with-espresso
-    private fun getCountFromRecyclerView(recyclerViewId: Int): Int {
+    private fun getItemCount(recyclerViewMatcher: Matcher<View>): Int {
         var count: Int? = null
         val matcher = object : TypeSafeMatcher<View>() {
             override fun matchesSafely(item: View?): Boolean {
@@ -79,7 +80,7 @@ class MainActivityTest {
             override fun describeTo(description: Description?) {
             }
         }
-        onView(allOf(withId(recyclerViewId), isDisplayed())).check(matches(matcher));
+        onView(recyclerViewMatcher).check(matches(matcher));
         return count ?: 0
     }
 
@@ -117,7 +118,7 @@ class MainActivityTest {
 
         selectCategory(Category.ALL)
 
-        val itemCount = getCountFromRecyclerView(R.id.recyclerView)
+        val itemCount = getItemCount(allOf(withId(R.id.recyclerView), isDisplayed()))
         for (i in 0 until itemCount) {
             uiDevice.waitForIdle()
 
@@ -153,7 +154,7 @@ class MainActivityTest {
 
         selectCategory(Category.DISABLABLE)
 
-        val itemCount = getCountFromRecyclerView(R.id.recyclerView)
+        val itemCount = getItemCount(allOf(withId(R.id.recyclerView), isDisplayed()))
         for (i in 0 until itemCount) {
             uiDevice.waitForIdle()
 
