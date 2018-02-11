@@ -9,7 +9,7 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
-        minSdkVersion 27
+        minSdkVersion 26
         targetSdkVersion 27
         versionCode publish_version_code
         versionName publish_version_name

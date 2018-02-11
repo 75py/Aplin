@@ -196,47 +196,6 @@ class MainActivityTest {
             uiDevice.pressBack()
             uiDevice.waitForIdle()
         }
-
-    }
-
-    @Test
-    fun test_disablable() {
-        start()
-
-        selectCategory(Category.DISABLABLE)
-
-        val itemCount = getItemCount(allOf(withId(R.id.recyclerView), isDisplayed()))
-        for (i in 0 until itemCount) {
-            uiDevice.waitForIdle()
-
-            // scroll
-            onView(allOf(withId(R.id.recyclerView), isDisplayed()))
-                    .perform(RecyclerViewActions.actionOnItemAtPosition<AppListFragment.AppViewHolder>(i, scrollTo()))
-
-            // get item
-            val appInfo = getAppInfo(i)!!
-            assertThat(Category.DISABLABLE.predicate(appInfo), `is`(true))
-        }
-    }
-
-    @Test
-    fun test_undisablable() {
-        start()
-
-        selectCategory(Category.UNDISABLABLE)
-
-        val itemCount = getItemCount(allOf(withId(R.id.recyclerView), isDisplayed()))
-        for (i in 0 until itemCount) {
-            uiDevice.waitForIdle()
-
-            // scroll
-            onView(allOf(withId(R.id.recyclerView), isDisplayed()))
-                    .perform(RecyclerViewActions.actionOnItemAtPosition<AppListFragment.AppViewHolder>(i, scrollTo()))
-
-            // get item
-            val appInfo = getAppInfo(i)!!
-            assertThat(Category.UNDISABLABLE.predicate(appInfo), `is`(true))
-        }
     }
 
     @Test
