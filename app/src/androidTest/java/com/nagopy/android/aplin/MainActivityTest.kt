@@ -117,7 +117,7 @@ class MainActivityTest {
     private fun assertButton(appInfo: AppInfo) {
         Category.values().filter { it.predicate.invoke(appInfo) }.forEach {
             val buttonLabel: String
-            val clickable: Boolean
+            val clickable: Boolean?
             when (it) {
                 Category.ALL -> {
                     // ignore
@@ -131,7 +131,7 @@ class MainActivityTest {
                             } else {
                                 TestR.string.test_btn_enable
                             })
-                    clickable = appInfo.isDisablable
+                    clickable = null // 押せる押せないはDISABLABLE, UNDISABLABLE で見れば良い
                 }
                 Category.DISABLABLE -> {
                     buttonLabel = getString(TestR.string.test_btn_disable)
@@ -139,7 +139,7 @@ class MainActivityTest {
                 }
                 Category.DISABLED -> {
                     buttonLabel = getString(TestR.string.test_btn_enable)
-                    clickable = true
+                    clickable = null
                 }
                 Category.UNDISABLABLE -> {
                     buttonLabel = getString(TestR.string.test_btn_disable)
@@ -154,7 +154,9 @@ class MainActivityTest {
             Timber.d("%s", appInfo)
             assertThat(appInfo.toString(), uiDevice.findObject(UiSelector().textStartsWith(buttonLabel)).waitForExists(3000)
                     , `is`(true))
-            assertThat(appInfo.toString(), uiDevice.findObject(UiSelector().textStartsWith(buttonLabel)).isEnabled, `is`(clickable))
+            clickable?.run {
+                assertThat(appInfo.toString(), uiDevice.findObject(UiSelector().textStartsWith(buttonLabel)).isEnabled, `is`(clickable))
+            }
         }
     }
 
@@ -189,8 +191,9 @@ class MainActivityTest {
                 ))
             }
 
-            //assertButton(appInfo)
+            assertButton(appInfo)
 
+            uiDevice.waitForIdle()
             uiDevice.pressBack()
             uiDevice.waitForIdle()
         }

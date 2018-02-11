@@ -8,11 +8,11 @@ enum class Category(val titleResId: Int, val predicate: (AppInfo) -> Boolean) {
 
     SYSTEM(R.string.category_system, AppInfo::isSystem),
 
-    DISABLABLE(R.string.category_disablable, { it.isDisablable && it.isEnabled }),
+    DISABLABLE(R.string.category_disablable, { it.isSystem && it.isDisablable && it.isEnabled }),
 
-    DISABLED(R.string.category_disabled, { !it.isEnabled }),
+    DISABLED(R.string.category_disabled, { it.isSystem && !it.isEnabled }),
 
-    UNDISABLABLE(R.string.category_undisablable, { it.isEnabled && !it.isDisablable }),
+    UNDISABLABLE(R.string.category_undisablable, { it.isSystem && it.isEnabled && !it.isDisablable }),
 
     USER(R.string.category_user, { !it.isSystem });
 

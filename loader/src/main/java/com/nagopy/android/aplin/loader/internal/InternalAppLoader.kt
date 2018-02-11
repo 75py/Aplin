@@ -15,7 +15,8 @@ import java.text.Collator
 internal class InternalAppLoader(val packageManager: PackageManager
                                  , val aplinDevicePolicyManager: AplinDevicePolicyManager
                                  , val packageNamesLoader: PackageNamesLoader
-                                 , val iconLoader: IconLoader) {
+                                 , val iconLoader: IconLoader
+                                 , val aplinWebViewUpdateService: AplinWebViewUpdateService) {
 
     lateinit var homeActivities: List<String>
     lateinit var launcherPkgs: List<String>
@@ -62,14 +63,18 @@ internal class InternalAppLoader(val packageManager: PackageManager
                         , enabledSettingField
                         , homeActivities
                         , launcherPkgs
+                        , aplinWebViewUpdateService
                         , packageInfo
                 ))
             }
             appList.add(AppInfo(
                     packageName = tmpAppInfo.packageName
                     , label = tmpAppInfo.label
-                    , isEnabled = if (tmpAppInfo.isSystem) {
-                if (tmpAppInfo.isHomeApp || tmpAppInfo.isSystemPackage) {
+                    , isEnabled =
+            if (tmpAppInfo.isSystem) {
+                if (tmpAppInfo.isFallbackPackage) {
+                    false
+                } else if (tmpAppInfo.isHomeApp || tmpAppInfo.isSystemPackage) {
                     true
                 } else if (tmpAppInfo.enabled && !tmpAppInfo.isDisabledUntilUsed) {
                     true
@@ -126,6 +131,7 @@ internal class InternalAppLoader(val packageManager: PackageManager
                       , val enabledSettingField: Field?
                       , val homeActivities: List<String>
                       , val launcherPkgs: List<String>
+                      , val aplinWebViewUpdateService: AplinWebViewUpdateService
                       , val packageInfo: PackageInfo) {
     }
 
@@ -226,7 +232,12 @@ internal class InternalAppLoader(val packageManager: PackageManager
                     }
                 }
             }
-        }, ;
+        },
+        isFallbackPackage {
+            override fun setValue(tmpAppInfo: TmpAppInfo, convertInfo: ConvertInfo) {
+                tmpAppInfo.isFallbackPackage = convertInfo.aplinWebViewUpdateService.isFallbackPackage(convertInfo.packageInfo.packageName)
+            }
+        };
 
         abstract fun setValue(tmpAppInfo: TmpAppInfo, convertInfo: ConvertInfo)
     }

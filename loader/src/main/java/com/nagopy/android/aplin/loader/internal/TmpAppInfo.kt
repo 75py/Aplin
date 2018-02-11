@@ -38,6 +38,8 @@ class TmpAppInfo {
 
     var shouldSkip: Boolean = false
 
+    var isFallbackPackage: Boolean = false
+
     override fun toString(): String = "$packageName    $label"
 
 }

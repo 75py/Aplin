@@ -5,9 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Build
-import android.os.IBinder
 import android.print.PrintManager
-import android.webkit.IWebViewUpdateService
 import timber.log.Timber
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -104,22 +102,6 @@ internal class AplinDevicePolicyManager(
         }
     }
 
-    val webviewUpdateService: IWebViewUpdateService? by lazy {
-        // 7.0-
-        try {
-            val clsServiceManager = Class.forName("android.os.ServiceManager")
-            val clsServiceManager_getService = clsServiceManager.getDeclaredMethod("getService", java.lang.String::class.java)
-            clsServiceManager_getService.isAccessible = true
-            val ibinder = clsServiceManager_getService.invoke(null, "webviewupdate") as? IBinder
-            val v = IWebViewUpdateService.Stub.asInterface(ibinder)
-            Timber.d("webviewUpdateService = %s", v)
-            return@lazy v
-        } catch (e: Exception) {
-            Timber.e(e, "webviewUpdateService の取得に失敗")
-            return@lazy null
-        }
-    }
-
     /**
      * [DevicePolicyManager]のpackageHasActiveAdminsメソッドを実行する
      * @param packageName パッケージ名
@@ -151,7 +133,9 @@ internal class AplinDevicePolicyManager(
      */
     fun isThisASystemPackage(packageInfo: PackageInfo?): Boolean {
         return (packageInfo?.signatures != null
+                && packageInfo.signatures.isNotEmpty()
                 && mSystemPackageInfo != null
+                && mSystemPackageInfo!!.signatures.isNotEmpty()
                 && mSystemPackageInfo!!.signatures[0] == packageInfo.signatures[0])
     }
 
@@ -162,7 +146,6 @@ internal class AplinDevicePolicyManager(
                 || packageInfo.packageName == permissionControllerPackageName
                 || packageInfo.packageName == servicesSystemSharedLibraryPackageName
                 || packageInfo.packageName == sharedSystemSharedLibraryPackageName
-                || webviewUpdateService?.isFallbackPackage(packageInfo.packageName) ?: false
                 )
     }
 
