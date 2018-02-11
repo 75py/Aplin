@@ -5,12 +5,12 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.cookpad.android.licensetools'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
     defaultConfig {
         applicationId "com.nagopy.android.aplin"
         minSdkVersion versions.minSdk
-        targetSdkVersion 27
+        targetSdkVersion versions.targetSdk
         versionCode publish_version_code
         versionName publish_version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

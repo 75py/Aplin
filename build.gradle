@@ -29,7 +29,10 @@ ext {
     publish_version_code = versionCode()
 
     versions = [
-            minSdk: 24
+            compileSdk: 27,
+            buildTools: "27.0.3",
+            minSdk    : 24,
+            targetSdk : 27,
     ]
 }
 
