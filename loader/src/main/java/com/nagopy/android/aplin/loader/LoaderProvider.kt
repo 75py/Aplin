@@ -8,10 +8,7 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
 import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.conf.ConfigurableKodein
-import com.nagopy.android.aplin.loader.internal.AplinDevicePolicyManager
-import com.nagopy.android.aplin.loader.internal.InternalAppLoader
-import com.nagopy.android.aplin.loader.internal.PackageNamesLoader
-import com.nagopy.android.aplin.loader.internal.ShellCmd
+import com.nagopy.android.aplin.loader.internal.*
 
 class LoaderProvider(context: Context) {
 
@@ -19,7 +16,6 @@ class LoaderProvider(context: Context) {
         val module = Kodein.Module {
             // external
             bind<AppLoader>() with singleton { AppLoader(instance()) }
-            bind<IconLoader>() with singleton { IconLoader(instance(), instance("defaultIcon")) }
 
             // internal (Android SDK)
             bind<Resources>() with singleton { context.resources }
@@ -28,10 +24,11 @@ class LoaderProvider(context: Context) {
 
             // internal
             bind<Drawable>("defaultIcon") with singleton { ResourcesCompat.getDrawable(instance(), android.R.drawable.sym_def_app_icon, null)!! }
-            bind<InternalAppLoader>() with singleton { InternalAppLoader(instance(), instance(), instance()) }
+            bind<InternalAppLoader>() with singleton { InternalAppLoader(instance(), instance(), instance(), instance()) }
             bind<ShellCmd>() with singleton { ShellCmd() }
             bind<AplinDevicePolicyManager>() with singleton { AplinDevicePolicyManager(instance(), instance()) }
             bind<PackageNamesLoader>() with singleton { PackageNamesLoader(instance()) }
+            bind<IconLoader>() with singleton { IconLoader(instance(), instance("defaultIcon")) }
         }
 
         val kodein = ConfigurableKodein(mutable = true).apply {
@@ -42,7 +39,5 @@ class LoaderProvider(context: Context) {
     }
 
     val appLoader: AppLoader by injector.instance()
-
-    val iconLoader: IconLoader by injector.instance()
 
 }

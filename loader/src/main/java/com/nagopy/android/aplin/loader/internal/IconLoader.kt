@@ -1,10 +1,10 @@
-package com.nagopy.android.aplin.loader
+package com.nagopy.android.aplin.loader.internal
 
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import timber.log.Timber
 
-class IconLoader(val packageManager: PackageManager
+internal class IconLoader(val packageManager: PackageManager
                  , val defaultIcon: Drawable) {
 
     val iconCache = HashMap<String, Drawable>()

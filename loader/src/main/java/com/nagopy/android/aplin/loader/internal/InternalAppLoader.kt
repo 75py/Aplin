@@ -14,7 +14,8 @@ import java.text.Collator
 
 internal class InternalAppLoader(val packageManager: PackageManager
                                  , val aplinDevicePolicyManager: AplinDevicePolicyManager
-                                 , val packageNamesLoader: PackageNamesLoader) {
+                                 , val packageNamesLoader: PackageNamesLoader
+                                 , val iconLoader: IconLoader) {
 
     lateinit var homeActivities: List<String>
     lateinit var launcherPkgs: List<String>
@@ -80,8 +81,9 @@ internal class InternalAppLoader(val packageManager: PackageManager
                 tmpAppInfo.enabled
             }, isDisablable =
             tmpAppInfo.isSystem && !tmpAppInfo.isProfileOrDeviceOwner && !tmpAppInfo.isSystemPackage && !tmpAppInfo.hasActiveAdmins && !tmpAppInfo.isHomeApp
-                    , isSystem = tmpAppInfo.isSystem)
-            )
+                    , isSystem = tmpAppInfo.isSystem
+                    , icon = iconLoader.loadIcon(tmpAppInfo.packageName)
+            ))
         }
         appList.sortWith(ALPHA_COMPARATOR)
         return appList

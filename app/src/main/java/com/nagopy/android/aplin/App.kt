@@ -8,7 +8,6 @@ import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.android.androidActivityScope
 import com.github.salomonbrys.kodein.conf.ConfigurableKodein
 import com.nagopy.android.aplin.loader.AppLoader
-import com.nagopy.android.aplin.loader.IconLoader
 import com.nagopy.android.aplin.loader.LoaderProvider
 import timber.log.Timber
 
@@ -36,14 +35,13 @@ class App : Application(), KodeinAware {
 
             val loaderProvider = LoaderProvider(this@App)
             bind<AppLoader>() with singleton { loaderProvider.appLoader }
-            bind<IconLoader>() with singleton { loaderProvider.iconLoader }
         }
     }
 
     private fun viewModelModule(): Kodein.Module {
         return Kodein.Module(true) {
             bind<MainViewModel.Factory>() with singleton { MainViewModel.Factory(instance()) }
-            bind<AppListViewModel.Factory>() with singleton { AppListViewModel.Factory(instance()) }
+            bind<AppListViewModel.Factory>() with singleton { AppListViewModel.Factory() }
         }
     }
 

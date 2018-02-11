@@ -16,10 +16,6 @@ import com.github.salomonbrys.kodein.with
 import com.nagopy.android.aplin.databinding.FragmentAppListBinding
 import com.nagopy.android.aplin.databinding.ListItemBinding
 import com.nagopy.android.aplin.loader.AppInfo
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 
 class AppListFragment : Fragment() {
 
@@ -59,7 +55,6 @@ class AppListFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
             adapter = AppListAdapter(
                     mainViewModel.getLoadedApplicationList().filter(category.predicate)
-                    , appListViewModel
                     , navigator)
         }
     }
@@ -69,7 +64,6 @@ class AppListFragment : Fragment() {
     }
 
     open class AppListAdapter(val appList: List<AppInfo>
-                              , val appListViewModel: AppListViewModel
                               , val navigator: Navigator) : RecyclerView.Adapter<AppViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
@@ -82,16 +76,7 @@ class AppListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
-            val appInfo = appList[position]
-            holder.binding.appInfo = appInfo
-            launch(UI) {
-                val icon = async(CommonPool) {
-                    appListViewModel.loadIcon(appInfo.packageName)
-                }.await()
-                if (holder.binding.appInfo?.packageName == appInfo.packageName) {
-                    holder.binding.icon.setImageDrawable(icon)
-                }
-            }
+            holder.binding.appInfo = appList[position]
         }
 
         override fun getItemCount(): Int {
