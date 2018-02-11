@@ -24,12 +24,13 @@ class LoaderProvider(context: Context) {
 
             // internal
             bind<Drawable>("defaultIcon") with singleton { ResourcesCompat.getDrawable(instance(), android.R.drawable.sym_def_app_icon, null)!! }
-            bind<InternalAppLoader>() with singleton { InternalAppLoader(instance(), instance(), instance(), instance(), instance()) }
+            bind<InternalAppLoader>() with singleton { InternalAppLoader(instance(), instance(), instance(), instance(), instance(), instance()) }
             bind<ShellCmd>() with singleton { ShellCmd() }
             bind<AplinDevicePolicyManager>() with singleton { AplinDevicePolicyManager(instance(), instance()) }
             bind<PackageNamesLoader>() with singleton { PackageNamesLoader(instance()) }
             bind<IconLoader>() with singleton { IconLoader(instance(), instance("defaultIcon")) }
             bind<AplinWebViewUpdateService>() with singleton { AplinWebViewUpdateService() }
+            bind<AplinPackageManager>() with singleton { AplinPackageManager(instance()) }
         }
 
         val kodein = ConfigurableKodein(mutable = true).apply {

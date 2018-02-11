@@ -16,9 +16,10 @@ internal class InternalAppLoader(val packageManager: PackageManager
                                  , val aplinDevicePolicyManager: AplinDevicePolicyManager
                                  , val packageNamesLoader: PackageNamesLoader
                                  , val iconLoader: IconLoader
-                                 , val aplinWebViewUpdateService: AplinWebViewUpdateService) {
+                                 , val aplinWebViewUpdateService: AplinWebViewUpdateService
+                                 , val aplinPackageManager: AplinPackageManager) {
 
-    lateinit var homeActivities: List<String>
+    lateinit var homeActivities: Collection<String>
     lateinit var launcherPkgs: List<String>
     val enabledSettingField: Field? by lazy {
         try {
@@ -32,10 +33,7 @@ internal class InternalAppLoader(val packageManager: PackageManager
     }
 
     fun prepare() {
-        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-        homeActivities = packageManager.queryIntentActivities(intent, 0)
-                .map { it.activityInfo.packageName }
-                .plus("com.google.android.launcher") // 仕組みが未確認だが、これはホームアプリ判定になっているっぽい
+        homeActivities = aplinPackageManager.getHomePackages()
         Timber.v("homeActivities %s", homeActivities)
 
         val launcherIntent = Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER)
@@ -129,7 +127,7 @@ internal class InternalAppLoader(val packageManager: PackageManager
     class ConvertInfo(val packageManager: PackageManager
                       , val aplinDevicePolicyManager: AplinDevicePolicyManager
                       , val enabledSettingField: Field?
-                      , val homeActivities: List<String>
+                      , val homeActivities: Collection<String>
                       , val launcherPkgs: List<String>
                       , val aplinWebViewUpdateService: AplinWebViewUpdateService
                       , val packageInfo: PackageInfo) {
