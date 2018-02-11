@@ -14,6 +14,6 @@ enum class Category(val titleResId: Int, val predicate: (AppInfo) -> Boolean) {
 
     UNDISABLABLE(R.string.category_undisablable, { it.isEnabled && !it.isDisablable }),
 
-    USER(R.string.category_user, { it.isSystem });
+    USER(R.string.category_user, { !it.isSystem });
 
 }

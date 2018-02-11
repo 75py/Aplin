@@ -18,6 +18,7 @@ import android.support.test.uiautomator.UiSelector
 import android.support.test.uiautomator.Until
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.loader.AppInfo
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
@@ -31,6 +32,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import timber.log.Timber
 import kotlin.test.assertTrue
+import com.nagopy.android.aplin.test.R as TestR
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
@@ -112,6 +114,50 @@ class MainActivityTest {
         return InstrumentationRegistry.getContext().getString(resId)
     }
 
+    private fun assertButton(appInfo: AppInfo) {
+        Category.values().filter { it.predicate.invoke(appInfo) }.forEach {
+            val buttonLabel: String
+            val clickable: Boolean
+            when (it) {
+                Category.ALL -> {
+                    // ignore
+                    return@forEach
+                }
+                Category.SYSTEM -> {
+                    // button text = "Disable" or "Enable"
+                    buttonLabel = getString(
+                            if (appInfo.isEnabled) {
+                                TestR.string.test_btn_disable
+                            } else {
+                                TestR.string.test_btn_enable
+                            })
+                    clickable = appInfo.isDisablable
+                }
+                Category.DISABLABLE -> {
+                    buttonLabel = getString(TestR.string.test_btn_disable)
+                    clickable = true
+                }
+                Category.DISABLED -> {
+                    buttonLabel = getString(TestR.string.test_btn_enable)
+                    clickable = true
+                }
+                Category.UNDISABLABLE -> {
+                    buttonLabel = getString(TestR.string.test_btn_disable)
+                    clickable = false
+                }
+                Category.USER -> {
+                    buttonLabel = getString(TestR.string.test_btn_uninstall)
+                    clickable = true
+                }
+            }
+            Timber.d("%s", it)
+            Timber.d("%s", appInfo)
+            assertThat(appInfo.toString(), uiDevice.findObject(UiSelector().textStartsWith(buttonLabel)).waitForExists(3000)
+                    , `is`(true))
+            assertThat(appInfo.toString(), uiDevice.findObject(UiSelector().textStartsWith(buttonLabel)).isEnabled, `is`(clickable))
+        }
+    }
+
     @Test
     fun test_all() {
         start()
@@ -142,6 +188,9 @@ class MainActivityTest {
                         , IntentMatchers.hasData("package:${appInfo.packageName}")
                 ))
             }
+
+            //assertButton(appInfo)
+
             uiDevice.pressBack()
             uiDevice.waitForIdle()
         }
@@ -179,7 +228,6 @@ class MainActivityTest {
                 ))
             }
 
-            com.nagopy.android.aplin.test.R.string.test_btn_disable
             val disableButtonLabel = getString(
                     if (appInfo.isEnabled) {
                         com.nagopy.android.aplin.test.R.string.test_btn_disable
