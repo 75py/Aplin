@@ -75,6 +75,7 @@ internal class AplinDevicePolicyManager(
     }
 
     val PRINT_SPOOLER_PACKAGE_NAME: String? by lazy {
+        // 7.1-
         if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
             try {
                 val v = PrintManager::class.java.getDeclaredField("PRINT_SPOOLER_PACKAGE_NAME")
@@ -90,16 +91,19 @@ internal class AplinDevicePolicyManager(
 
     val deviceProvisioningPackage: String? by lazy {
         // 7.1-
-        try {
-            val r = Resources.getSystem()
-            val id = r.getIdentifier("config_deviceProvisioningPackage", "string", "android")
-            val v = r.getString(id)
-            Timber.d("deviceProvisioningPackage id = %d, value = %s", id, v)
-            return@lazy v
-        } catch (e: Exception) {
-            Timber.e(e, "deviceProvisioningPackage の取得に失敗")
-            return@lazy null
+        if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
+            try {
+                val r = Resources.getSystem()
+                val id = r.getIdentifier("config_deviceProvisioningPackage", "string", "android")
+                val v = r.getString(id)
+                Timber.d("deviceProvisioningPackage id = %d, value = %s", id, v)
+                return@lazy v
+            } catch (e: Exception) {
+                Timber.e(e, "deviceProvisioningPackage の取得に失敗")
+                return@lazy null
+            }
         }
+        return@lazy null
     }
 
     /**
@@ -121,7 +125,11 @@ internal class AplinDevicePolicyManager(
     }
 
     fun isSystemPackage(packageInfo: PackageInfo?): Boolean =
-            isSystemPackageApi25(packageInfo)
+            if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
+                isSystemPackageApi25(packageInfo)
+            } else {
+                isSystemPackageApi24(packageInfo)
+            }
 
     /**
      * [DevicePolicyManager]のisThisASystemPackageメソッドと同じ内容.
