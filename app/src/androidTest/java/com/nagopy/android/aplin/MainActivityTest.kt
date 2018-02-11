@@ -31,7 +31,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import timber.log.Timber
-import kotlin.test.assertTrue
 import com.nagopy.android.aplin.test.R as TestR
 
 @RunWith(AndroidJUnit4::class)
@@ -39,7 +38,7 @@ class MainActivityTest {
 
     @Rule
     @JvmField
-    val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, false, false)
+    val rule: ActivityTestRule<MainActivity> = AplinActivityTestRule(MainActivity::class.java, false, false)
 
     lateinit var uiDevice: UiDevice
 
@@ -216,35 +215,51 @@ class MainActivityTest {
 
             // get item
             val appInfo = getAppInfo(i)!!
-            Timber.d("%s", appInfo)
+            assertThat(Category.DISABLABLE.predicate(appInfo), `is`(true))
+        }
+    }
 
-            // click
-            intentBlock {
-                onView(allOf(withId(R.id.recyclerView), isDisplayed()))
-                        .perform(RecyclerViewActions.actionOnItemAtPosition<AppListFragment.AppViewHolder>(i, click()))
+    @Test
+    fun test_undisablable() {
+        start()
 
+        selectCategory(Category.UNDISABLABLE)
+
+        val itemCount = getItemCount(allOf(withId(R.id.recyclerView), isDisplayed()))
+        for (i in 0 until itemCount) {
+            uiDevice.waitForIdle()
+
+            // scroll
+            onView(allOf(withId(R.id.recyclerView), isDisplayed()))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition<AppListFragment.AppViewHolder>(i, scrollTo()))
+
+            // get item
+            val appInfo = getAppInfo(i)!!
+            assertThat(Category.UNDISABLABLE.predicate(appInfo), `is`(true))
+        }
+    }
+
+    @Test
+    fun test_filter() {
+        start()
+
+        Category.values().forEach {
+            uiDevice.waitForIdle()
+            selectCategory(it)
+
+            val itemCount = getItemCount(allOf(withId(R.id.recyclerView), isDisplayed()))
+            for (i in 0 until itemCount) {
                 uiDevice.waitForIdle()
 
-                Intents.intended(allOf(
-                        IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        , IntentMatchers.hasData("package:${appInfo.packageName}")
-                ))
+                // scroll
+                onView(allOf(withId(R.id.recyclerView), isDisplayed()))
+                        .perform(RecyclerViewActions.actionOnItemAtPosition<AppListFragment.AppViewHolder>(i, scrollTo()))
+
+                // get item
+                val appInfo = getAppInfo(i)!!
+                assertThat(it.predicate(appInfo), `is`(true))
             }
-
-            val disableButtonLabel = getString(
-                    if (appInfo.isEnabled) {
-                        com.nagopy.android.aplin.test.R.string.test_btn_disable
-                    } else {
-                        com.nagopy.android.aplin.test.R.string.test_btn_enable
-                    })
-            Timber.d(disableButtonLabel)
-            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(3000), appInfo.toString())
-            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, appInfo.toString())
-
-            uiDevice.pressBack()
-            uiDevice.waitForIdle()
         }
-
     }
 
 
