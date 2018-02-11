@@ -32,6 +32,7 @@ class AppListFragment : Fragment() {
     }
 
     lateinit var navigator: Navigator
+    lateinit var recycledViewPool: RecyclerView.RecycledViewPool
 
     lateinit var binding: FragmentAppListBinding
     val category: Category by lazy {
@@ -42,6 +43,7 @@ class AppListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         injector.inject(appKodein())
         navigator = injector.kodein().value.with(activity as Activity).instance()
+        recycledViewPool = injector.kodein().value.with(activity as Activity).instance()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,6 +55,7 @@ class AppListFragment : Fragment() {
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(activity)
+            recycledViewPool = this@AppListFragment.recycledViewPool
             adapter = AppListAdapter(
                     mainViewModel.getLoadedApplicationList().filter(category.predicate)
                     , navigator)
@@ -63,8 +66,8 @@ class AppListFragment : Fragment() {
         val binding = ListItemBinding.bind(parent)
     }
 
-    open class AppListAdapter(val appList: List<AppInfo>
-                              , val navigator: Navigator) : RecyclerView.Adapter<AppViewHolder>() {
+    class AppListAdapter(val appList: List<AppInfo>
+                         , val navigator: Navigator) : RecyclerView.Adapter<AppViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)

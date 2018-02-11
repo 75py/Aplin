@@ -2,6 +2,7 @@ package com.nagopy.android.aplin
 
 import android.app.Application
 import android.content.Intent
+import android.support.v7.widget.RecyclerView
 import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.android.androidActivityScope
 import com.github.salomonbrys.kodein.conf.ConfigurableKodein
@@ -45,6 +46,7 @@ class App : Application(), KodeinAware {
             bind<Navigator>() with scopedSingleton(androidActivityScope) {
                 Navigator(androidActivityScope.getContext())
             }
+            bind<RecyclerView.RecycledViewPool>() with scopedSingleton(androidActivityScope) { RecyclerView.RecycledViewPool() }
         }
     }
 
