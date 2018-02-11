@@ -2,8 +2,6 @@ package com.nagopy.android.aplin
 
 import android.app.Application
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.android.androidActivityScope
 import com.github.salomonbrys.kodein.conf.ConfigurableKodein
@@ -30,9 +28,6 @@ class App : Application(), KodeinAware {
 
     private fun appModule(): Kodein.Module {
         return Kodein.Module(allowSilentOverride = true) {
-            bind<App>() with singleton { this@App }
-            bind<Handler>() with singleton { Handler(Looper.getMainLooper()) }
-
             val loaderProvider = LoaderProvider(this@App)
             bind<AppLoader>() with singleton { loaderProvider.appLoader }
         }
