@@ -40,6 +40,10 @@ class MainActivityTest {
     @JvmField
     val rule: ActivityTestRule<MainActivity> = AplinActivityTestRule(MainActivity::class.java, false, false)
 
+    @Rule
+    @JvmField
+    val noAnimationTestRule = NoAnimationTestRule()
+
     lateinit var uiDevice: UiDevice
 
     @Before
