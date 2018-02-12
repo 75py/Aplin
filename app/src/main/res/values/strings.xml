@@ -7,4 +7,6 @@
     <string name="category_disabled">Disabled</string>
     <string name="category_undisablable">Undisablable</string>
     <string name="category_user">User</string>
+
+    <string name="menu_search">Search</string>
 </resources>
