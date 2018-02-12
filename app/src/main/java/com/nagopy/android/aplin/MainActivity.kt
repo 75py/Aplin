@@ -13,6 +13,7 @@ import android.view.Menu
 import com.github.salomonbrys.kodein.KodeinInjector
 import com.github.salomonbrys.kodein.android.appKodein
 import com.github.salomonbrys.kodein.instance
+import com.github.salomonbrys.kodein.with
 import com.nagopy.android.aplin.databinding.ActivityMainBinding
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
-    val mainViewModelFactory: MainViewModel.Factory by injector.instance()
+    val mainViewModelFactory: MainViewModel.Factory by injector.with(this).instance()
 
     val mainViewModel: MainViewModel by lazy {
         ViewModelProviders.of(this, mainViewModelFactory).get(MainViewModel::class.java)
@@ -53,6 +54,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         Timber.d("onCreate end")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Timber.d("onRestart")
+        launch(UI) {
+            async(CommonPool) {
+                mainViewModel.loadPackageIfNeeded()
+            }.await()
+            Timber.d("finish loading")
+        }
     }
 
     class AppListPagerAdapter(fm: FragmentManager, val resources: Resources) : FragmentPagerAdapter(fm) {

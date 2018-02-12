@@ -36,7 +36,6 @@ class App : Application(), KodeinAware {
 
     private fun viewModelModule(): Kodein.Module {
         return Kodein.Module(true) {
-            bind<MainViewModel.Factory>() with singleton { MainViewModel.Factory(instance()) }
             bind<AppListViewModel.Factory>() with singleton { AppListViewModel.Factory() }
         }
     }
@@ -45,6 +44,9 @@ class App : Application(), KodeinAware {
         return Kodein.Module {
             bind<Navigator>() with scopedSingleton(androidActivityScope) {
                 Navigator(androidActivityScope.getContext())
+            }
+            bind<MainViewModel.Factory>() with scopedSingleton(androidActivityScope) {
+                MainViewModel.Factory(instance(), with(androidActivityScope.getContext()).instance())
             }
             bind<RecyclerView.RecycledViewPool>() with scopedSingleton(androidActivityScope) { RecyclerView.RecycledViewPool() }
         }

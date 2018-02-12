@@ -151,10 +151,11 @@ class MainActivityTest {
             }
             Timber.d("%s", it)
             Timber.d("%s", appInfo)
-            assertThat(appInfo.toString(), uiDevice.findObject(UiSelector().textStartsWith(buttonLabel)).waitForExists(3000)
+            val buttonObject = uiDevice.findObject(UiSelector().textStartsWith(buttonLabel))
+            assertThat(appInfo.toString(), buttonObject.waitForExists(3000)
                     , `is`(true))
             clickable?.run {
-                assertThat(appInfo.toString(), uiDevice.findObject(UiSelector().textStartsWith(buttonLabel)).isEnabled, `is`(clickable))
+                assertThat(appInfo.toString(), buttonObject.isEnabled && buttonObject.isClickable, `is`(clickable))
             }
         }
     }
@@ -190,6 +191,7 @@ class MainActivityTest {
                 ))
             }
 
+            uiDevice.waitForIdle()
             assertButton(appInfo)
 
             uiDevice.waitForIdle()

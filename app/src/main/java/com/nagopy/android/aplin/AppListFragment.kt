@@ -18,15 +18,16 @@ import com.github.salomonbrys.kodein.with
 import com.nagopy.android.aplin.databinding.FragmentAppListBinding
 import com.nagopy.android.aplin.databinding.ListItemBinding
 import com.nagopy.android.aplin.loader.AppInfo
+import timber.log.Timber
 import java.text.Collator
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener {
+class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener, MainViewModel.OnAppInfoChangeListener {
 
     val injector = KodeinInjector()
 
-    val mainViewModelFactory: MainViewModel.Factory by injector.instance()
+    lateinit var mainViewModelFactory: MainViewModel.Factory
     val mainViewModel: MainViewModel by lazy {
         ViewModelProviders.of(activity!!, mainViewModelFactory).get(MainViewModel::class.java)
     }
@@ -36,7 +37,6 @@ class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener {
         ViewModelProviders.of(this, appListViewModelFactory).get(AppListViewModel::class.java)
     }
 
-    lateinit var navigator: Navigator
     lateinit var recycledViewPool: RecyclerView.RecycledViewPool
     lateinit var adapter: AppListAdapter
 
@@ -48,11 +48,14 @@ class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injector.inject(appKodein())
-        navigator = injector.kodein().value.with(activity as Activity).instance()
+        mainViewModelFactory = injector.kodein().value.with(activity as Activity).instance()
         recycledViewPool = injector.kodein().value.with(activity as Activity).instance()
-        adapter = AppListAdapter(
-                mainViewModel.getLoadedApplicationList().filter(category.predicate)
-                , { navigator.startApplicationDetailSettings(it.packageName) })
+        adapter = AppListAdapter(getAppList(), {
+            Timber.d("onclick %s", it)
+            Timber.d("%s", category)
+            mainViewModel.onAppClick(it.packageName)
+        })
+        mainViewModel.addOnAppInfoChangeListener(this)
     }
 
     override fun onStart() {
@@ -63,6 +66,11 @@ class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener {
     override fun onStop() {
         super.onStop()
         mainViewModel.removeOnSearchTextListener(this)
+    }
+
+    override fun onDestroy() {
+        mainViewModel.removeOnAppInfoChangeListener(this)
+        super.onDestroy()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -79,39 +87,91 @@ class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener {
         }
     }
 
+    override fun onAppChange(packageName: String) {
+        Timber.d("%s onAppChange %s", category, packageName)
+        adapter.appList = mainViewModel.getLoadedApplicationList().filter(category.predicate).sortedWith(ALPHA_COMPARATOR)
+
+        val newAppInfo = adapter.appList.find { it.packageName == packageName }
+        Timber.d("%s, newAppInfo:%s", packageName, newAppInfo)
+        val oldAppInfo = adapter.filteredAppList.find { it.packageName == packageName }
+        Timber.d("%s, oldAppInfo:%s", packageName, oldAppInfo)
+
+        if (newAppInfo == null) {
+            // このカテゴリ外のアプリ
+            if (oldAppInfo == null) {
+                // もともと表示されていなかった
+            } else {
+                // もともと表示されていた
+                val index = adapter.filteredAppList.indexOf(oldAppInfo)
+                adapter.filteredAppList.removeAt(index)
+                adapter.notifyItemRemoved(index)
+            }
+        } else {
+            // このカテゴリのアプリ
+            if (oldAppInfo == null) {
+                // もともと表示されていなかった
+                adapter.updateFilter()
+            } else {
+                // もともと表示されていた
+                val index = adapter.filteredAppList.indexOf(oldAppInfo)
+                adapter.filteredAppList.removeAt(index)
+                adapter.notifyItemRemoved(index)
+                adapter.updateFilter()
+            }
+        }
+    }
+
+    override fun onAppRemove(packageName: String) {
+        adapter.appList = getAppList()
+        val oldAppInfo = adapter.filteredAppList.find { it.packageName == packageName }
+        if (oldAppInfo != null) {
+            val index = adapter.filteredAppList.indexOf(oldAppInfo)
+            adapter.filteredAppList.removeAt(index)
+            adapter.notifyItemChanged(index)
+        }
+    }
+
     override fun onSearchTextChange(newText: String?) {
-        val adapter = binding.recyclerView.adapter as AppListAdapter
-        adapter.filter.filter(newText)
+        adapter.updateFilter(newText)
     }
 
     class AppViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
         val binding = ListItemBinding.bind(parent)
     }
 
-    class AppListAdapter(val appList: List<AppInfo>
+    private fun getAppList() = mainViewModel.getLoadedApplicationList().filter(category.predicate).sortedWith(ALPHA_COMPARATOR)
+
+    class AppListAdapter(var appList: List<AppInfo>
                          , val onItemClickListener: (AppInfo) -> Unit) : RecyclerView.Adapter<AppViewHolder>(), Filterable {
 
         var filteredAppList = ArrayList<AppInfo>(appList)
+        var filterText = ""
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
-            val vh = AppViewHolder(v)
-            vh.binding.root.setOnClickListener {
-                onItemClickListener.invoke(filteredAppList[vh.adapterPosition])
-            }
-            return vh
+            return AppViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
             holder.binding.appInfo = filteredAppList[position]
+            holder.binding.root.setOnClickListener {
+                Timber.v("onClick %s", filteredAppList)
+                onItemClickListener.invoke(filteredAppList[holder.adapterPosition])
+            }
         }
 
         override fun getItemCount(): Int {
             return filteredAppList.size
         }
 
+        fun updateFilter(text: String? = filterText) {
+            filter.filter(text)
+        }
+
         override fun getFilter(): Filter = object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
+                filterText = constraint?.toString() ?: "" // cache
+
                 val filtered: List<AppInfo>
                 if (constraint.isNullOrEmpty()) {
                     filtered = appList
@@ -129,9 +189,11 @@ class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener {
                     val newList = it.values as List<AppInfo>
                     appList.forEach {
                         if (newList.contains(it)) {
-                            // 表示するアプリ
+                            Timber.d("表示するアプリ, %s", it.packageName)
+
                             if (!filteredAppList.contains(it)) {
-                                //  非表示→表示
+                                Timber.d("非表示→表示 %s", it.packageName)
+
                                 filteredAppList.add(it)
                                 filteredAppList.sortWith(ALPHA_COMPARATOR)
                                 val index = filteredAppList.indexOf(it)
@@ -139,9 +201,11 @@ class AppListFragment : Fragment(), MainViewModel.OnSearchTextListener {
                                 notifyItemRangeChanged(index, filteredAppList.size)
                             }
                         } else {
-                            // 非表示にするアプリ
+                            Timber.d("非表示にするアプリ %s", it.packageName)
+
                             if (filteredAppList.contains(it)) {
-                                // 表示→非表示
+                                Timber.d("表示→非表示, %s", it.packageName)
+
                                 val index = filteredAppList.indexOf(it)
                                 filteredAppList.removeAt(index)
                                 notifyItemRemoved(index)

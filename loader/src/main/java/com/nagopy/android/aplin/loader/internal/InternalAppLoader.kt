@@ -47,48 +47,50 @@ internal class InternalAppLoader(val packageManager: PackageManager
         Timber.v("launcherPkgs %s", launcherPkgs)
     }
 
+    fun loadPackage(packageName: String): AppInfo {
+        val packageInfo = getPackageInfo(packageName)
+        val tmpAppInfo = TmpAppInfo()
+        AppParameter.values().forEach { p ->
+            p.setValue(tmpAppInfo, ConvertInfo(
+                    packageManager
+                    , aplinDevicePolicyManager
+                    , enabledSettingField
+                    , homeActivities
+                    , launcherPkgs
+                    , aplinWebViewUpdateService
+                    , packageInfo
+            ))
+        }
+        return AppInfo(
+                packageName = tmpAppInfo.packageName
+                , label = tmpAppInfo.label
+                , isEnabled =
+        if (tmpAppInfo.isSystem) {
+            if (tmpAppInfo.isFallbackPackage) {
+                false
+            } else if (tmpAppInfo.isHomeApp || tmpAppInfo.isSystemPackage) {
+                true
+            } else if (tmpAppInfo.enabled && !tmpAppInfo.isDisabledUntilUsed) {
+                true
+            } else {
+                false
+            }
+        } else {
+            // TODO ユーザー数を見るべきっぽいが、可能？
+            tmpAppInfo.enabled
+        }, isDisablable =
+        tmpAppInfo.isSystem && !tmpAppInfo.isProfileOrDeviceOwner && !tmpAppInfo.isSystemPackage && !tmpAppInfo.hasActiveAdmins && !tmpAppInfo.isHomeApp
+                , isSystem = tmpAppInfo.isSystem
+                , icon = iconLoader.loadIcon(tmpAppInfo.packageName)
+        )
+    }
+
     fun load(): List<AppInfo> {
         val appList = ArrayList<AppInfo>()
         prepare()
-        val params = AppParameter.values()
         packageNamesLoader.getInstalledPackageNames().forEach { packageName ->
-            val packageInfo = getPackageInfo(packageName)
-            val tmpAppInfo = TmpAppInfo()
-            params.forEach { p ->
-                p.setValue(tmpAppInfo, ConvertInfo(
-                        packageManager
-                        , aplinDevicePolicyManager
-                        , enabledSettingField
-                        , homeActivities
-                        , launcherPkgs
-                        , aplinWebViewUpdateService
-                        , packageInfo
-                ))
-            }
-            appList.add(AppInfo(
-                    packageName = tmpAppInfo.packageName
-                    , label = tmpAppInfo.label
-                    , isEnabled =
-            if (tmpAppInfo.isSystem) {
-                if (tmpAppInfo.isFallbackPackage) {
-                    false
-                } else if (tmpAppInfo.isHomeApp || tmpAppInfo.isSystemPackage) {
-                    true
-                } else if (tmpAppInfo.enabled && !tmpAppInfo.isDisabledUntilUsed) {
-                    true
-                } else {
-                    false
-                }
-            } else {
-                // TODO ユーザー数を見るべきっぽいが、可能？
-                tmpAppInfo.enabled
-            }, isDisablable =
-            tmpAppInfo.isSystem && !tmpAppInfo.isProfileOrDeviceOwner && !tmpAppInfo.isSystemPackage && !tmpAppInfo.hasActiveAdmins && !tmpAppInfo.isHomeApp
-                    , isSystem = tmpAppInfo.isSystem
-                    , icon = iconLoader.loadIcon(tmpAppInfo.packageName)
-            ))
+            appList.add(loadPackage(packageName))
         }
-        appList.sortWith(ALPHA_COMPARATOR)
         return appList
     }
 
@@ -273,26 +275,6 @@ internal class InternalAppLoader(val packageManager: PackageManager
                 return@lazy retrieveFlags
             }
             /*}*/
-        }
-
-        // from android-8.1.0_r1.0, ApplicationsState.java
-        val ALPHA_COMPARATOR = object : Comparator<AppInfo> {
-
-            val collator = Collator.getInstance()
-
-            override fun compare(app1: AppInfo, app2: AppInfo): Int {
-                var compareResult = collator.compare(app1.label, app2.label)
-                if (compareResult != 0) {
-                    return compareResult
-                }
-                compareResult = collator.compare(app1.packageName, app2.packageName)
-                if (compareResult != 0) {
-                    return compareResult
-                }
-                //return object1.info.uid - object2.info.uid
-                return 0
-            }
-
         }
     }
 
