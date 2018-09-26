@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 3.3.1 *(2018-09-26)*
+----------------------------
+
+* Disable Advertising ID collection  
+https://firebase.google.com/support/guides/disable-analytics#disable_advertising_id_collection
+
+* [Nougat or higher] #112  
+If multi-window mode is enabled, open settings app in split-screen
+
 Version 3.3.0 *(2017-10-22)*
 ----------------------------
 

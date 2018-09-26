@@ -36,6 +36,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- https://firebase.google.com/support/guides/disable-analytics -->
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
