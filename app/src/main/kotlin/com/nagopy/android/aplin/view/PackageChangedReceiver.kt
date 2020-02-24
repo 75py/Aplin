@@ -16,6 +16,7 @@
 
 package com.nagopy.android.aplin.view
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -33,7 +34,7 @@ class PackageChangedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Aplin.getApplicationComponent().inject(this)
 
-        val pkg = intent.data.schemeSpecificPart
+        val pkg = intent.data?.schemeSpecificPart
 
         Timber.d("%s", intent)
         if (pkg != null) {

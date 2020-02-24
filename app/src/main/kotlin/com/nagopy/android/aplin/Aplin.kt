@@ -37,7 +37,7 @@ open class Aplin : Application() {
             MultiDex.install(this)
         } catch (e: Exception) {
             Timber.d(e)
-            if (!System.getProperty("java.vm.name").startsWith("Java")) {
+            if (!System.getProperty("java.vm.name")!!.startsWith("Java")) {
                 throw e
             }
         }

@@ -66,7 +66,7 @@ class AplinDevicePolicyManagerTest {
         if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
             assertNotNull(aplinDevicePolicyManager.PRINT_SPOOLER_PACKAGE_NAME)
         }
-        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             assertNotNull(aplinDevicePolicyManager.webviewUpdateService)
         }
     }

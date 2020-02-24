@@ -28,7 +28,7 @@ object Constants {
     /**
      * 改行
      */
-    val LINE_SEPARATOR: String = System.getProperty("line.separator")
+    val LINE_SEPARATOR: String = System.getProperty("line.separator") ?: "\n"
 
     /**
      * 2000/01/01（ミリ秒）

@@ -54,7 +54,7 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
     var disposer: Disposable? = null
     var searchTextDisposer: Disposable? = null
 
-    val category: Category by lazy { Category.valueOf(arguments.getString("type")) }
+    val category: Category by lazy { Category.valueOf(arguments!!.getString("type")!!) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,10 +114,10 @@ class AppListFragment : Fragment(), AppListView, AdapterView.OnItemClickListener
         return inflater.inflate(R.layout.fragment_app_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listView = view!!.findViewById(R.id.list)
+        listView = view.findViewById(R.id.list)
         listView.adapter = adapter
     }
 

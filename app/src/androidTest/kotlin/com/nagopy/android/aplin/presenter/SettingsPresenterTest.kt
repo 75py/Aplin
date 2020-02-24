@@ -7,28 +7,25 @@ import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
-import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import org.hamcrest.CoreMatchers.`is` as _is
 
 class SettingsPresenterTest {
 
     lateinit var target: SettingsPresenter
 
-    @Mock
     lateinit var application: Application
-    @Mock
     lateinit var sharedPreferences: SharedPreferences
-    @Mock
     lateinit var settingsView: SettingsView
 
     @Before
     fun setup() {
         target = SettingsPresenter()
-        MockitoAnnotations.initMocks(this)
+        application = Mockito.mock(Application::class.java)
+        sharedPreferences = Mockito.mock(SharedPreferences::class.java)
+        settingsView = Mockito.mock(SettingsView::class.java)
+
         target.application = application
         target.sharedPreferences = sharedPreferences
     }

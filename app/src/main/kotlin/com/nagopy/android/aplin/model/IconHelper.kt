@@ -77,11 +77,11 @@ constructor(val application: Application, activityManager: ActivityManager) {
 
         fun getOrNull(key: String): Drawable? = get(key)
 
-        override fun sizeOf(key: String?, value: Drawable): Int {
-            if (value is BitmapDrawable) {
-                return value.bitmap.byteCount / 1024
+        override fun sizeOf(key: String, value: Drawable): Int {
+            return if (value is BitmapDrawable) {
+                value.bitmap.byteCount / 1024
             } else {
-                return 0
+                0
             }
         }
     }

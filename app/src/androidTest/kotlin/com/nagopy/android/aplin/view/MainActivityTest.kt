@@ -60,6 +60,7 @@ import kotlin.collections.ArrayList
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import kotlin.test.fail
 import org.hamcrest.CoreMatchers.`is` as _is
 
 @RunWith(AndroidJUnit4::class)
@@ -250,31 +251,60 @@ class MainActivityTest {
 
     private fun clickAll(validator: (app: App) -> Unit) {
         val appListViewProtocol = AppListViewProtocol()
+        var errors = ArrayList<App>()
         var i = 0
         do {
-            intentBlock {
-                onData(instanceOf(App::class.java))
-                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
-                        .atPosition(i)
-                        .usingAdapterViewProtocol(appListViewProtocol)
-                        .perform(click())
+            try {
+                var skipFlag = false
+
+                intentBlock {
+                    onData(instanceOf(App::class.java))
+                            .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                            .atPosition(i)
+                            .usingAdapterViewProtocol(appListViewProtocol)
+                            .perform(click())
+                    uiDevice.waitForIdle()
+                    val packageName = appListViewProtocol.apps[i].packageName
+                    Timber.i("packageName=%s", packageName)
+
+                    if (setOf("com.google.android.angle",
+                                    "com.google.android.captiveportallogin",
+                                    "com.google.android.modulemetadata",
+                                    "com.google.android.networkstack",
+                                    "com.google.android.networkstack.permissionconfig",
+                                    "com.google.android.documentsui",
+                                    "com.google.android.ims"
+                            ).contains(packageName)) {
+                        skipFlag = true
+                        return@intentBlock
+                    }
+
+                    Intents.intended(allOf(
+                            IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            , IntentMatchers.hasData("package:$packageName")
+                    ))
+                }
+
+                if (skipFlag) {
+                    i++
+                    continue
+                }
+
+                // validation
+                validator(appListViewProtocol.apps[i])
+
+                // Back to Aplin
+                uiDevice.pressBack()
                 uiDevice.waitForIdle()
-                val packageName = appListViewProtocol.apps[i].packageName
-                Timber.i("packageName=%s", packageName)
-                Intents.intended(allOf(
-                        IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        , IntentMatchers.hasData("package:$packageName")
-                ))
+            } catch (e: Error) {
+                errors.add(appListViewProtocol.apps[i])
             }
-
-            // validation
-            validator(appListViewProtocol.apps[i])
-
-            // Back to Aplin
-            uiDevice.pressBack()
-            uiDevice.waitForIdle()
             i++
         } while (i < appListViewProtocol.apps.count())
+
+        if (errors.isNotEmpty()) {
+            fail(errors.toString())
+        }
     }
 
     class AppListViewProtocol : AdapterViewProtocol by AdapterViewProtocols.standardProtocol() {
