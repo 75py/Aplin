@@ -20,6 +20,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.cookpad.android.licensetools'
 apply plugin: 'project-report'
 apply plugin: 'jacoco-android'
+apply plugin: 'io.fabric'
 
 apply from: 'signingConfigs/release.gradle', to: android
 
@@ -121,7 +122,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_libs_version"
-    implementation "com.google.firebase:firebase-crash:$firebase_version"
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation "com.google.firebase:firebase-ads:$firebase_version"
     implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
     implementation ('io.reactivex.rxjava2:rxandroid:2.0.1') {

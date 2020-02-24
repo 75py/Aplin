@@ -19,13 +19,11 @@ package com.nagopy.android.aplin
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.os.DeadObjectException
 import android.support.multidex.MultiDex
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.MobileAds
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crash.FirebaseCrash
 import timber.log.Timber
 
 
@@ -58,18 +56,9 @@ open class Aplin : Application() {
             MobileAds.initialize(this, BuildConfig.AD_APP_ID)
             Timber.plant(object : Timber.Tree() {
                 override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-                    when (priority) {
-                        Log.INFO -> {
-                            val b = Bundle()
-                            b.putString("message", message)
-                            FirebaseAnalytics.getInstance(this@Aplin).logEvent("INFO", b)
-                        }
-                        Log.WARN -> {
-                            FirebaseCrash.log(message)
-                        }
-                        Log.ERROR -> {
-                            FirebaseCrash.report(t)
-                        }
+                    Crashlytics.log(priority, tag, "message=%s, t=%t".format(message, t))
+                    if (priority == Log.ERROR) {
+                        Crashlytics.logException(t)
                     }
                 }
             })
