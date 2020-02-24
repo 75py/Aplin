@@ -1,6 +1,6 @@
 package com.nagopy.android.aplin
 
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import com.nagopy.android.aplin.test.R
 
 object TestResources {

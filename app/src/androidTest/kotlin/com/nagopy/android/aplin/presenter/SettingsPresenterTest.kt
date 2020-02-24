@@ -2,7 +2,7 @@ package com.nagopy.android.aplin.presenter
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.support.test.filters.SmallTest
+import androidx.test.filters.SmallTest
 import com.nagopy.android.aplin.view.SettingsView
 import org.junit.Before
 import org.junit.Test

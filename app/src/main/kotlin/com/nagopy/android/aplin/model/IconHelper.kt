@@ -21,8 +21,8 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.util.LruCache
+import androidx.core.content.res.ResourcesCompat
+import androidx.collection.LruCache
 import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject

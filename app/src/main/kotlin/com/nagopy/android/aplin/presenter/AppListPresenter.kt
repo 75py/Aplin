@@ -17,7 +17,7 @@
 package com.nagopy.android.aplin.presenter
 
 import android.app.Application
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView

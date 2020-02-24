@@ -17,7 +17,7 @@
 package com.nagopy.android.aplin.model.converter
 
 import android.app.Application
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import com.nagopy.android.aplin.*
 import com.nagopy.android.aplin.entity.App
 import org.junit.After

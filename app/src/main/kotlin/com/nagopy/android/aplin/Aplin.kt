@@ -20,7 +20,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.DeadObjectException
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.MobileAds
