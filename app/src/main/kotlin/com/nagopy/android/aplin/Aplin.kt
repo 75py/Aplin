@@ -56,7 +56,7 @@ open class Aplin : Application() {
             MobileAds.initialize(this, BuildConfig.AD_APP_ID)
             Timber.plant(object : Timber.Tree() {
                 override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-                    Crashlytics.log(priority, tag, "message=%s, t=%t".format(message, t))
+                    Crashlytics.log(priority, tag, "message=%s, t=%s".format(message, t))
                     if (priority == Log.ERROR) {
                         Crashlytics.logException(t)
                     }

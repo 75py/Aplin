@@ -155,7 +155,7 @@ buildscript {
     ext.support_libs_version = '28.0.0'
     ext.kotlin_version = '1.3.61'
     ext.dagger_version = '2.12'
-    ext.target_sdk_version = 25
+    ext.target_sdk_version = 29
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     ext.sdk_dir = properties.getProperty("sdk.dir")
