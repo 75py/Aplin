@@ -20,11 +20,11 @@ import android.app.Activity
 import android.app.Application
 import android.os.Build
 import android.provider.Settings
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.filters.MediumTest
 import androidx.test.filters.SdkSuppress
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.UiDevice
 import com.nagopy.android.aplin.Aplin
