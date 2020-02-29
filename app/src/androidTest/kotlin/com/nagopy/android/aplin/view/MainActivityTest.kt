@@ -20,35 +20,36 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso.onData
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.AdapterViewProtocol
-import android.support.test.espresso.action.AdapterViewProtocols
-import android.support.test.espresso.action.ViewActions
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.matcher.IntentMatchers
-import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.filters.LargeTest
-import android.support.test.filters.SdkSuppress
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import android.support.test.uiautomator.By
-import android.support.test.uiautomator.UiDevice
-import android.support.test.uiautomator.UiSelector
-import android.support.test.uiautomator.Until
 import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ProgressBar
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.AdapterViewProtocol
+import androidx.test.espresso.action.AdapterViewProtocols
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.LargeTest
+import androidx.test.filters.SdkSuppress
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.ActivityTestRule
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.Until
 import com.nagopy.android.aplin.BuildConfig
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.TestResources
 import com.nagopy.android.aplin.entity.App
 import com.nagopy.android.aplin.model.Category
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -60,6 +61,7 @@ import kotlin.collections.ArrayList
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import kotlin.test.fail
 import org.hamcrest.CoreMatchers.`is` as _is
 
 @RunWith(AndroidJUnit4::class)
@@ -250,31 +252,60 @@ class MainActivityTest {
 
     private fun clickAll(validator: (app: App) -> Unit) {
         val appListViewProtocol = AppListViewProtocol()
+        var errors = ArrayList<App>()
         var i = 0
         do {
-            intentBlock {
-                onData(instanceOf(App::class.java))
-                        .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
-                        .atPosition(i)
-                        .usingAdapterViewProtocol(appListViewProtocol)
-                        .perform(click())
+            try {
+                var skipFlag = false
+
+                intentBlock {
+                    onData(instanceOf(App::class.java))
+                            .inAdapterView(allOf(withId(R.id.list), isDisplayed()))
+                            .atPosition(i)
+                            .usingAdapterViewProtocol(appListViewProtocol)
+                            .perform(click())
+                    uiDevice.waitForIdle()
+                    val packageName = appListViewProtocol.apps[i].packageName
+                    Timber.i("packageName=%s", packageName)
+
+                    if (setOf("com.google.android.angle",
+                                    "com.google.android.captiveportallogin",
+                                    "com.google.android.modulemetadata",
+                                    "com.google.android.networkstack",
+                                    "com.google.android.networkstack.permissionconfig",
+                                    "com.google.android.documentsui",
+                                    "com.google.android.ims"
+                            ).contains(packageName)) {
+                        skipFlag = true
+                        return@intentBlock
+                    }
+
+                    Intents.intended(allOf(
+                            IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            , IntentMatchers.hasData("package:$packageName")
+                    ))
+                }
+
+                if (skipFlag) {
+                    i++
+                    continue
+                }
+
+                // validation
+                validator(appListViewProtocol.apps[i])
+
+                // Back to Aplin
+                uiDevice.pressBack()
                 uiDevice.waitForIdle()
-                val packageName = appListViewProtocol.apps[i].packageName
-                Timber.i("packageName=%s", packageName)
-                Intents.intended(allOf(
-                        IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        , IntentMatchers.hasData("package:$packageName")
-                ))
+            } catch (e: Error) {
+                errors.add(appListViewProtocol.apps[i])
             }
-
-            // validation
-            validator(appListViewProtocol.apps[i])
-
-            // Back to Aplin
-            uiDevice.pressBack()
-            uiDevice.waitForIdle()
             i++
         } while (i < appListViewProtocol.apps.count())
+
+        if (errors.isNotEmpty()) {
+            fail(errors.toString())
+        }
     }
 
     class AppListViewProtocol : AdapterViewProtocol by AdapterViewProtocols.standardProtocol() {

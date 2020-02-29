@@ -18,8 +18,8 @@ package com.nagopy.android.aplin.model
 
 import android.app.Application
 import android.os.Build
-import android.support.test.InstrumentationRegistry
-import android.support.test.filters.SmallTest
+import androidx.test.filters.SmallTest
+import androidx.test.platform.app.InstrumentationRegistry
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.ApplicationMockComponent
 import com.nagopy.android.aplin.ApplicationMockModule
@@ -66,7 +66,7 @@ class AplinDevicePolicyManagerTest {
         if (Build.VERSION_CODES.N_MR1 <= Build.VERSION.SDK_INT) {
             assertNotNull(aplinDevicePolicyManager.PRINT_SPOOLER_PACKAGE_NAME)
         }
-        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             assertNotNull(aplinDevicePolicyManager.webviewUpdateService)
         }
     }

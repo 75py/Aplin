@@ -21,8 +21,8 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.util.LruCache
+import androidx.core.content.res.ResourcesCompat
+import androidx.collection.LruCache
 import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
@@ -77,11 +77,11 @@ constructor(val application: Application, activityManager: ActivityManager) {
 
         fun getOrNull(key: String): Drawable? = get(key)
 
-        override fun sizeOf(key: String?, value: Drawable): Int {
-            if (value is BitmapDrawable) {
-                return value.bitmap.byteCount / 1024
+        override fun sizeOf(key: String, value: Drawable): Int {
+            return if (value is BitmapDrawable) {
+                value.bitmap.byteCount / 1024
             } else {
-                return 0
+                0
             }
         }
     }

@@ -16,7 +16,7 @@
 
 package com.nagopy.android.aplin
 
-import android.support.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents
 
 object TestFunction {
 

@@ -17,12 +17,17 @@
 buildscript {
     repositories {
         jcenter()
+        google()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.24.0'
-        classpath 'com.google.gms:google-services:3.1.0'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'io.fabric.tools:gradle:1.31.2'
     }
 }
 
@@ -32,6 +37,7 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        google()
     }
 }
 
@@ -44,36 +50,44 @@ ext {
     publish_version_code = versionCode()
 }
 
-task bumpMajor << {
-    ant.propertyfile(file: 'version.properties') {
-        entry(key: 'major', type: 'int', operation: '+', value: 1)
-        entry(key: 'minor', type: 'int', operation: '=', value: 0)
-        entry(key: 'patch', type: 'int', operation: '=', value: 0)
-        entry(key: 'id', type: 'int', operation: '+', value: 1)
+task bumpMajor {
+    doLast {
+        ant.propertyfile(file: 'version.properties') {
+            entry(key: 'major', type: 'int', operation: '+', value: 1)
+            entry(key: 'minor', type: 'int', operation: '=', value: 0)
+            entry(key: 'patch', type: 'int', operation: '=', value: 0)
+            entry(key: 'id', type: 'int', operation: '+', value: 1)
+        }
+        generateReadme()
     }
-    generateReadme()
 }
 
-task bumpMinor << {
-    ant.propertyfile(file: 'version.properties') {
-        entry(key: 'minor', type: 'int', operation: '+', value: 1)
-        entry(key: 'patch', type: 'int', operation: '=', value: 0)
-        entry(key: 'id', type: 'int', operation: '+', value: 1)
+task bumpMinor {
+    doLast {
+        ant.propertyfile(file: 'version.properties') {
+            entry(key: 'minor', type: 'int', operation: '+', value: 1)
+            entry(key: 'patch', type: 'int', operation: '=', value: 0)
+            entry(key: 'id', type: 'int', operation: '+', value: 1)
+        }
+        generateReadme()
     }
-    generateReadme()
 }
 
-task bumpPatch << {
-    ant.propertyfile(file: 'version.properties') {
-        entry(key: 'patch', type: 'int', operation: '+', value: 1)
-        entry(key: 'id', type: 'int', operation: '+', value: 1)
+task bumpPatch {
+    doLast {
+        ant.propertyfile(file: 'version.properties') {
+            entry(key: 'patch', type: 'int', operation: '+', value: 1)
+            entry(key: 'id', type: 'int', operation: '+', value: 1)
+        }
+        generateReadme()
     }
-    generateReadme()
 }
 
-task version << {
-    println "Version name : " + versionName()
-    println "Version code : " + versionCode()
+task version {
+    doLast {
+        println "Version name : " + versionName()
+        println "Version code : " + versionCode()
+    }
 }
 
 String versionName() {
@@ -88,8 +102,10 @@ Integer versionCode() {
     return Integer.valueOf(properties['id'].toString())
 }
 
-task generateReadme << {
-    generateReadme()
+task generateReadme {
+    doLast {
+        generateReadme()
+    }
 }
 
 void generateReadme() {

@@ -17,7 +17,7 @@
 package com.nagopy.android.aplin.presenter
 
 import android.app.Application
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -169,6 +169,7 @@ open class AppListPresenter @Inject constructor() : Presenter {
 
     fun onItemClicked(position: Int) {
         val app = filteredList[position]
+        Timber.d("open %s", app)
         parentView?.onListItemClicked(app, category)
     }
 

@@ -23,7 +23,8 @@ import javax.inject.Singleton
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-@Singleton open class UserSettings
+@Singleton
+open class UserSettings
 @Inject constructor(var sharedPreferences: SharedPreferences) {
 
     val sort: Sort by sortProperty()
@@ -47,7 +48,7 @@ import kotlin.reflect.KProperty
     class sortProperty : ReadOnlyProperty<UserSettings, Sort> {
         override fun getValue(thisRef: UserSettings, property: KProperty<*>): Sort {
             val value = thisRef.sharedPreferences.getString(Sort::class.java.name, "")
-            return if (value.isEmpty()) {
+            return if (value.isNullOrEmpty()) {
                 Sort.DEFAULT
             } else {
                 Sort.valueOf(value)

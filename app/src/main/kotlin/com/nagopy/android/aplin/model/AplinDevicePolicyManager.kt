@@ -136,8 +136,8 @@ open class AplinDevicePolicyManager @Inject constructor() {
     }
 
     val webviewUpdateService: IWebViewUpdateService? by lazy {
-        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
-            // 7.0-
+        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            // 7.0 <= version < 10
             try {
                 val clsServiceManager = Class.forName("android.os.ServiceManager").kotlin
                 val clsServiceManager_getService = clsServiceManager.staticFunctions.first {
@@ -205,8 +205,17 @@ open class AplinDevicePolicyManager @Inject constructor() {
                 || packageInfo.packageName == permissionControllerPackageName
                 || packageInfo.packageName == servicesSystemSharedLibraryPackageName
                 || packageInfo.packageName == sharedSystemSharedLibraryPackageName
-                || webviewUpdateService?.isFallbackPackage(packageInfo.packageName) ?: false
+                || isFallbackPackage(webviewUpdateService, packageInfo.packageName)
                 )
+    }
+
+    fun isFallbackPackage(webviewUpdateService: IWebViewUpdateService?, packageName: String): Boolean {
+        return try {
+            webviewUpdateService?.isFallbackPackage(packageName) ?: false
+        } catch (e: Error) {
+            Timber.d(e)
+            false
+        }
     }
 
     // Utils#isSystemPackage
@@ -219,8 +228,7 @@ open class AplinDevicePolicyManager @Inject constructor() {
                 )
     }
 
-    open fun isProfileOrDeviceOwner(packageName: String): Boolean
-            = devicePolicyManager.isDeviceOwnerApp(packageName)
+    open fun isProfileOrDeviceOwner(packageName: String): Boolean = devicePolicyManager.isDeviceOwnerApp(packageName)
             || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && devicePolicyManager.isProfileOwnerApp(packageName))
 
 }
