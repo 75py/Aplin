@@ -43,7 +43,7 @@ import javax.inject.Inject
 
 class MainScreenPresenterTest {
 
-    val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
+    val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
 
     @Rule
     @JvmField

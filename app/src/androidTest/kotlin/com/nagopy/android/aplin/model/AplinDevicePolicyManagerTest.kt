@@ -31,7 +31,7 @@ import kotlin.test.assertNotNull
 
 class AplinDevicePolicyManagerTest {
 
-    val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
+    val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
 
     @Inject
     lateinit var aplinDevicePolicyManager: AplinDevicePolicyManager

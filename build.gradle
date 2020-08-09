@@ -21,12 +21,13 @@ buildscript {
         maven {
             url 'https://maven.fabric.io/public'
         }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
-        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.24.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.cookpad.android.licensetools:license-tools-plugin:1.0.0'
         classpath 'com.google.gms:google-services:4.3.3'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'com.hiya:jacoco-android:0.2'
         classpath 'io.fabric.tools:gradle:1.31.2'
     }
 }

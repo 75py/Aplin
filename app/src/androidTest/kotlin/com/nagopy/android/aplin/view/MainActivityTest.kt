@@ -80,7 +80,7 @@ class MainActivityTest {
     @Before
     fun setup() {
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        sp = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
+        sp = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().targetContext)
     }
 
     @After
