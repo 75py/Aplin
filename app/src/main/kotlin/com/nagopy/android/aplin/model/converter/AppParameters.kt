@@ -79,7 +79,7 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
             val outFilters = ArrayList<IntentFilter>()
             val outActivities = ArrayList<ComponentName>()
             appConverter.packageManager.getPreferredActivities(outFilters, outActivities, packageInfo.applicationInfo.packageName)
-            app.isDefaultApp = !outActivities.isEmpty()
+            app.isDefaultApp = outActivities.isNotEmpty()
         }
     },
     isHomeApp(Constants.ALL_SDK_VERSION) {
@@ -142,6 +142,15 @@ enum class AppParameters(val targetSdkVersion: IntRange) : AppConverter.Converte
                 if (enabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER) {
                     app.shouldSkip = true
                 }
+            }
+        }
+    },
+    isResourceOverlay(Build.VERSION_CODES.Q..Int.MAX_VALUE) {
+        override fun setValue(app: App, packageInfo: PackageInfo, appConverter: AppConverter) {
+            app.isResourceOverlay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                packageInfo.applicationInfo.isResourceOverlay
+            } else {
+                false
             }
         }
     },

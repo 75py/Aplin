@@ -64,7 +64,8 @@ open class MenuHandler @Inject constructor() {
         return Observable.create { s ->
             val intent = Intent(Intent.ACTION_SEND)
                     .setType(Constants.MIME_TYPE_TEXT_PLAIN)
-                    .putExtra(Intent.EXTRA_SUBJECT, subject ?: application.getString(R.string.app_name))
+                    .putExtra(Intent.EXTRA_SUBJECT, subject
+                            ?: application.getString(R.string.app_name))
                     .putExtra(Intent.EXTRA_TEXT, text)
             if (isLaunchable(intent)) {
                 application.startActivity(intent)

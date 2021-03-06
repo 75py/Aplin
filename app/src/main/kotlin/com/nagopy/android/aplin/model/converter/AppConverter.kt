@@ -67,7 +67,7 @@ open class AppConverter @Inject constructor() {
         launcherPkgs =
                 try {
                     packageManager.queryIntentActivities(launcherIntent, 0).map { it.activityInfo.packageName }
-                } catch(e: Exception) {
+                } catch (e: Exception) {
                     Timber.w(e, "Error: queryIntentActivities")
                     emptyList()
                 }
@@ -81,9 +81,9 @@ open class AppConverter @Inject constructor() {
                     .forEach { param ->
                         param.setValue(app, pi, this@AppConverter)
                     }
-        } catch(e: PackageManager.NameNotFoundException) {
+        } catch (e: PackageManager.NameNotFoundException) {
             Timber.w(e, "Not found. pkg=%s", packageName)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Timber.e(e, "Error occurred. pkg=%s", packageName)
         }
     }

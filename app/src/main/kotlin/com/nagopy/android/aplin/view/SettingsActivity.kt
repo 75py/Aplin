@@ -17,9 +17,9 @@ package com.nagopy.android.aplin.view
 
 import android.os.Bundle
 import android.preference.PreferenceFragment
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import android.view.MenuItem
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.presenter.SettingsPresenter

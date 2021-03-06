@@ -17,10 +17,10 @@
 package com.nagopy.android.aplin.presenter
 
 import android.app.Application
-import androidx.core.content.ContextCompat
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
@@ -32,11 +32,10 @@ import com.nagopy.android.aplin.view.AppListView
 import com.nagopy.android.aplin.view.AppListViewParent
 import com.nagopy.android.aplin.view.adapter.AppListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 /**
  * カテゴリ毎アプリ一覧のプレゼンター
@@ -67,6 +66,8 @@ open class AppListPresenter @Inject constructor() : Presenter {
 
     var searchText: String = ""
 
+    private val compositeDisposable = CompositeDisposable()
+
     fun initialize(view: AppListView, parentView: AppListViewParent, category: Category) {
         this.view = view
         this.parentView = parentView
@@ -83,7 +84,9 @@ open class AppListPresenter @Inject constructor() : Presenter {
                     updateFilter(searchText)
                 }, { e ->
                     Timber.e(e, "Error occurred")
-                })
+                }).also {
+                    compositeDisposable.add(it)
+                }
     }
 
     fun updateFilter(searchText: String) {
@@ -109,6 +112,7 @@ open class AppListPresenter @Inject constructor() : Presenter {
     override fun destroy() {
         view = null
         parentView = null
+        compositeDisposable.clear()
     }
 
     fun onOptionsItemSelected(item: MenuItem) {

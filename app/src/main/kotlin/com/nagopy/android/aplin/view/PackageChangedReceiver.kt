@@ -16,7 +16,6 @@
 
 package com.nagopy.android.aplin.view
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent

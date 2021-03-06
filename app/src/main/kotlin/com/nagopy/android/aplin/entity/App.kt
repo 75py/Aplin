@@ -59,5 +59,7 @@ class App {
 
     var shouldSkip: Boolean = false
 
+    var isResourceOverlay: Boolean = false // 10.0-
+
     override fun toString(): String = "$packageName    $label"
 }

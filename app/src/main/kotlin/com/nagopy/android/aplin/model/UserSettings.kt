@@ -27,11 +27,11 @@ import kotlin.reflect.KProperty
 open class UserSettings
 @Inject constructor(var sharedPreferences: SharedPreferences) {
 
-    val sort: Sort by sortProperty()
+    val sort: Sort by SortProperty()
 
-    val displayItems: List<DisplayItem> by displayItemProperty()
+    val displayItems: List<DisplayItem> by DisplayItemProperty()
 
-    class displayItemProperty : ReadOnlyProperty<UserSettings, List<DisplayItem>> {
+    class DisplayItemProperty : ReadOnlyProperty<UserSettings, List<DisplayItem>> {
         override fun getValue(thisRef: UserSettings, property: KProperty<*>): List<DisplayItem> {
             val v = ArrayList<DisplayItem>()
             DisplayItem.values().forEach {
@@ -45,7 +45,7 @@ open class UserSettings
 
     }
 
-    class sortProperty : ReadOnlyProperty<UserSettings, Sort> {
+    class SortProperty : ReadOnlyProperty<UserSettings, Sort> {
         override fun getValue(thisRef: UserSettings, property: KProperty<*>): Sort {
             val value = thisRef.sharedPreferences.getString(Sort::class.java.name, "")
             return if (value.isNullOrEmpty()) {

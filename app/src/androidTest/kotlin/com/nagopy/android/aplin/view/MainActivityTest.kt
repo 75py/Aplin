@@ -18,11 +18,11 @@ package com.nagopy.android.aplin.view
 
 import android.content.SharedPreferences
 import android.os.Build
-import android.preference.PreferenceManager
 import android.provider.Settings
 import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ProgressBar
+import androidx.preference.PreferenceManager
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.AdapterViewProtocol
@@ -43,6 +43,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import com.nagopy.android.aplin.BuildConfig
+import com.nagopy.android.aplin.NoAnimationTestRule
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.TestFunction.intentBlock
 import com.nagopy.android.aplin.TestResources
@@ -70,6 +71,10 @@ class MainActivityTest {
     @Rule
     @JvmField
     val rule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, false, false)
+
+    @Rule
+    @JvmField
+    val noAnimationTestRule = NoAnimationTestRule()
 
     private val timeout = 500L
     private val testPackageName = BuildConfig.APPLICATION_ID + ".test"
@@ -116,14 +121,12 @@ class MainActivityTest {
                 .perform(click())
 
         onView(withId(R.id.search_src_text))
-                .perform(ViewActions.typeText("nagopy"))
+                .perform(ViewActions.replaceText("nagopy"))
+                .perform(ViewActions.pressImeActionButton())
 
         clickAll { app ->
             assertTrue(app.packageName.contains("nagopy"), app.toString())
         }
-
-        onView(withId(R.id.search_src_text))
-                .perform(ViewActions.clearText())
     }
 
 
@@ -145,7 +148,7 @@ class MainActivityTest {
     fun SYSTEM_DISABLABLE() {
         start()
         switchCategory(Category.SYSTEM_DISABLABLE)
-        val errors = ArrayList<AssertionError>()
+        val errors = ArrayList<Throwable>()
         clickAll { app ->
             try {
                 // アプリ名が表示されていることを確認
@@ -159,9 +162,9 @@ class MainActivityTest {
                         }
                 assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
                 assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
-            } catch (e: AssertionError) {
-                Timber.e(e, "Continue")
-                errors.add(e)
+            } catch (t: Throwable) {
+                Timber.e(t, "Continue")
+                errors.add(t)
             }
         }
 
@@ -188,8 +191,9 @@ class MainActivityTest {
                     } else {
                         TestResources.string.test_btn_enable
                     }
-            assertTrue(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout), app.toString())
-            assertFalse(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
+            if (uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).waitForExists(timeout)) {
+                assertFalse(uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel)).isEnabled, app.toString())
+            }
         }
     }
 
@@ -213,11 +217,16 @@ class MainActivityTest {
                 //  クリックして次の画面へ
                 uiDevice.findObject(UiSelector().text(TestResources.string.test_permissions)).clickAndWaitForNewWindow(timeout)
 
-                app.permissionGroups.forEach {
-                    val exists = uiDevice.findObject(UiSelector().text(it.label)).waitForExists(timeout)
-                    if (!exists) {
-                        Timber.w("pkg=%s cannot deny permission %s", app.packageName, it)
-                        errors.add(app.packageName)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    // Android 10未満のみ
+                    // Android 10では権限グループを知る手段がない
+                    // https://developer.android.com/about/versions/10/privacy/changes#permission-groups-removed
+                    app.permissionGroups.forEach {
+                        val exists = uiDevice.findObject(UiSelector().text(it.label)).waitForExists(timeout)
+                        if (!exists) {
+                            Timber.w("pkg=%s cannot deny permission %s", app.packageName, it)
+                            errors.add(app.packageName)
+                        }
                     }
                 }
 
@@ -229,8 +238,8 @@ class MainActivityTest {
             }
         }
 
-        assertTrue(errors.size < 10, "Too many errors. " + errors.toString())
-        assertTrue(errors.filter { !it.startsWith("com.android") }.count() < 3, "Too many errors. " + errors.toString())
+        assertTrue(errors.size < 10, "Too many errors. $errors")
+        assertTrue(errors.filter { !it.startsWith("com.android") }.count() < 3, "Too many errors. $errors")
     }
 
     private fun start() {
@@ -252,7 +261,7 @@ class MainActivityTest {
 
     private fun clickAll(validator: (app: App) -> Unit) {
         val appListViewProtocol = AppListViewProtocol()
-        var errors = ArrayList<App>()
+        val errors = ArrayList<App>()
         var i = 0
         do {
             try {
@@ -281,13 +290,12 @@ class MainActivityTest {
                     }
 
                     Intents.intended(allOf(
-                            IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                            , IntentMatchers.hasData("package:$packageName")
+                            IntentMatchers.hasAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS), IntentMatchers.hasData("package:$packageName")
                     ))
                 }
 
                 if (skipFlag) {
-                    i++
+                    i += (appListViewProtocol.apps.count() / 20 + 1)
                     continue
                 }
 
@@ -300,7 +308,7 @@ class MainActivityTest {
             } catch (e: Error) {
                 errors.add(appListViewProtocol.apps[i])
             }
-            i++
+            i += (appListViewProtocol.apps.count() / 10 + 1)
         } while (i < appListViewProtocol.apps.count())
 
         if (errors.isNotEmpty()) {

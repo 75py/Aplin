@@ -21,8 +21,8 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.core.content.res.ResourcesCompat
 import androidx.collection.LruCache
+import androidx.core.content.res.ResourcesCompat
 import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
@@ -64,12 +64,12 @@ constructor(val application: Application, activityManager: ActivityManager) {
                     Timber.v(e, "Error pkg=%s", pkg)
                     defaultIcon
                 }
-                iconCache.put(pkg, icon)
+                iconCache.put(pkg, icon!!)
                 Timber.v("Add cache. pkg=s%s", pkg)
             } else {
                 Timber.v("Cached. pkg=%s", pkg)
             }
-            it.onSuccess(icon!!)
+            it.onSuccess(icon)
         }
     }
 

@@ -18,16 +18,12 @@ package com.nagopy.android.aplin.model
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
-import kotlin.comparisons.compareBy
 
 /**
  * ソート順の定義クラス
  */
 enum class Sort(
-        val titleResourceId: Int
-        , val summaryResourceId: Int
-        , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION
-        , val defaultValue: Boolean = false) {
+        val titleResourceId: Int, val summaryResourceId: Int, val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION, val defaultValue: Boolean = false) {
 
     /**
      * デフォルトのソート順。
@@ -43,29 +39,29 @@ enum class Sort(
             return list.sortedWith(compareBy(App::isInstalled, App::label, App::packageName))
         }
     },
+
     /**
      * パッケージ名の昇順
      */
-    PACKAGE_NAME(titleResourceId = R.string.sort_package_name
-            , summaryResourceId = R.string.sort_package_name_summary) {
+    PACKAGE_NAME(titleResourceId = R.string.sort_package_name, summaryResourceId = R.string.sort_package_name_summary) {
         override fun orderBy(list: Collection<App>): Collection<App> {
             return list.sortedWith(compareBy(App::isInstalled, App::packageName))
         }
     },
+
     /**
      * 初回インストール日時の降順
      */
-    FIRST_INSTALL_TIME_DESC(titleResourceId = R.string.sort_install_time_desc
-            , summaryResourceId = R.string.sort_install_time_desc_summary) {
+    FIRST_INSTALL_TIME_DESC(titleResourceId = R.string.sort_install_time_desc, summaryResourceId = R.string.sort_install_time_desc_summary) {
         override fun orderBy(list: Collection<App>): Collection<App> {
             return list.sortedWith(compareBy({ it.firstInstallTime * -1 }, App::isInstalled, App::label, App::packageName))
         }
     },
+
     /**
      * 最終更新日時の降順
      */
-    UPDATE_DATE_DESC(titleResourceId = R.string.sort_update_time_desc
-            , summaryResourceId = R.string.sort_update_time_desc_summary) {
+    UPDATE_DATE_DESC(titleResourceId = R.string.sort_update_time_desc, summaryResourceId = R.string.sort_update_time_desc_summary) {
         override fun orderBy(list: Collection<App>): Collection<App> {
             return list.sortedWith(compareBy({ it.lastUpdateTime * -1 }, App::isInstalled, App::label, App::packageName))
         }
