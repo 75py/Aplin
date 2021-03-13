@@ -294,13 +294,10 @@ class MainActivityTest {
                     ))
                 }
 
-                if (skipFlag) {
-                    i += (appListViewProtocol.apps.count() / 20 + 1)
-                    continue
+                if (!skipFlag) {
+                    // validation
+                    validator(appListViewProtocol.apps[i])
                 }
-
-                // validation
-                validator(appListViewProtocol.apps[i])
 
                 // Back to Aplin
                 uiDevice.pressBack()
