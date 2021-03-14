@@ -7,5 +7,5 @@
 /captures
 *.iml
 .idea
-app/signingConfigs/release.gradle
+app/signingConfigs
 fabric.properties
