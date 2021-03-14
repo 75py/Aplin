@@ -21,84 +21,61 @@ import com.nagopy.android.aplin.constants.Constants
 import com.nagopy.android.aplin.entity.App
 
 enum class Category(
-        val titleResourceId: Int
-        , val summaryResourceId: Int
-        , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION) {
+        val titleResourceId: Int, val summaryResourceId: Int, val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION) {
 
-    ALL(titleResourceId = R.string.category_all
-            , summaryResourceId = R.string.category_all_summary) {
+    ALL(titleResourceId = R.string.category_all, summaryResourceId = R.string.category_all_summary) {
         override fun filter(list: Collection<App>): Collection<App> = list
-    }
-
-    ,
+    },
     SYSTEM(
-            titleResourceId = R.string.category_system
-            , summaryResourceId = R.string.category_system_summary) {
+            titleResourceId = R.string.category_system, summaryResourceId = R.string.category_system_summary) {
         override fun filter(list: Collection<App>): Collection<App> = list.filter(App::isSystem)
-    }
-    ,
+    },
     SYSTEM_UNDISABLABLE(
-            titleResourceId = R.string.category_system_undisablable
-            , summaryResourceId = R.string.category_system_undisablable_summary) {
+            titleResourceId = R.string.category_system_undisablable, summaryResourceId = R.string.category_system_undisablable_summary) {
         override fun filter(list: Collection<App>): Collection<App> {
             return list.filter {
-                it.isSystem && (it.isSystemPackage || it.hasActiveAdmins || it.isProfileOrDeviceOwner || it.isHomeApp)
+                it.isSystem && (it.isSystemPackage || it.hasActiveAdmins || it.isProfileOrDeviceOwner || it.isHomeApp
+                        || it.isResourceOverlay)
             }
         }
-    }
-    ,
-    SYSTEM_DISABLABLE(titleResourceId = R.string.category_system_disablable
-            , summaryResourceId = R.string.category_system_disablable_summary) {
+    },
+    SYSTEM_DISABLABLE(titleResourceId = R.string.category_system_disablable, summaryResourceId = R.string.category_system_disablable_summary) {
         override fun filter(list: Collection<App>): Collection<App> {
             return list.filter {
                 it.isSystem && !it.isProfileOrDeviceOwner && !it.isSystemPackage && !it.hasActiveAdmins && !it.isHomeApp
+                        && !it.isResourceOverlay
             }
         }
-    }
-    ,
-    DISABLED(titleResourceId = R.string.category_disabled
-            , summaryResourceId = R.string.category_disabled_summary) {
+    },
+    DISABLED(titleResourceId = R.string.category_disabled, summaryResourceId = R.string.category_disabled_summary) {
         override fun filter(list: Collection<App>): Collection<App> = list.filter { !it.isEnabled }
-    }
-    ,
-    DEFAULT(titleResourceId = R.string.category_default
-            , summaryResourceId = R.string.category_default_summary) {
+    },
+    DEFAULT(titleResourceId = R.string.category_default, summaryResourceId = R.string.category_default_summary) {
         override fun filter(list: Collection<App>): Collection<App> = list.filter(App::isDefaultApp)
-    }
-    ,
-    USER(titleResourceId = R.string.category_user
-            , summaryResourceId = R.string.category_user_summary) {
+    },
+    USER(titleResourceId = R.string.category_user, summaryResourceId = R.string.category_user_summary) {
         override fun filter(list: Collection<App>): Collection<App> = list.filter { !it.isSystem }
-    }
-    ,
-    INTERNET_PERMISSIONS(titleResourceId = R.string.category_internet_permissions
-            , summaryResourceId = R.string.category_internet_permissions_summary) {
+    },
+    INTERNET_PERMISSIONS(titleResourceId = R.string.category_internet_permissions, summaryResourceId = R.string.category_internet_permissions_summary) {
         override fun filter(list: Collection<App>): Collection<App> =
                 list.filter { it.requestedPermissions.contains(android.Manifest.permission.INTERNET) }
-    }
-    ,
-    DENIABLE_PERMISSIONS(titleResourceId = R.string.category_deniable_permissions
-            , summaryResourceId = R.string.category_deniable_permissions_summary
-            , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
+    },
+    DENIABLE_PERMISSIONS(titleResourceId = R.string.category_deniable_permissions, summaryResourceId = R.string.category_deniable_permissions_summary, targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun filter(list: Collection<App>): Collection<App> {
             return list.filter {
                 !it.isSystemPackage
                         && it.permissionGroups.isNotEmpty()
             }
         }
-    }
-    ,
-    SYSTEM_ALERT_WINDOW_PERMISSION(titleResourceId = R.string.category_system_alert_window_permission
-            , summaryResourceId = R.string.category_system_alert_window_permission_summary
-            , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
+    },
+    SYSTEM_ALERT_WINDOW_PERMISSION(titleResourceId = R.string.category_system_alert_window_permission, summaryResourceId = R.string.category_system_alert_window_permission_summary, targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun filter(list: Collection<App>): Collection<App> {
             return list.filter {
                 !it.isSystemPackage
                         && it.requestedPermissions.contains(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
             }
         }
-    }
-    ,
+    },
     ;
 
     abstract fun filter(list: Collection<App>): Collection<App>
@@ -106,6 +83,6 @@ enum class Category(
     fun where(list: Collection<App>): Collection<App> = filter(list).filter { !it.shouldSkip }
 
     companion object {
-        fun getAll() = Category.values().filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
+        fun getAll() = values().filter { it.targetSdkVersion.contains(Build.VERSION.SDK_INT) }
     }
 }

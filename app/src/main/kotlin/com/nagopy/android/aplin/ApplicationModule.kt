@@ -22,7 +22,7 @@ import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -36,8 +36,7 @@ open class ApplicationModule(val application: Application) {
 
     @Singleton
     @Provides
-    open fun provideSharedPreferences(application: Application): SharedPreferences
-            = PreferenceManager.getDefaultSharedPreferences(application)
+    open fun provideSharedPreferences(application: Application): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
 
     @Singleton
     @Provides
@@ -45,11 +44,9 @@ open class ApplicationModule(val application: Application) {
 
     @Singleton
     @Provides
-    open fun provideActivityManager(application: Application): ActivityManager
-            = application.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    open fun provideActivityManager(application: Application): ActivityManager = application.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
     @Singleton
     @Provides
-    open fun provideDevicePolicyManager(application: Application): DevicePolicyManager
-            = application.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+    open fun provideDevicePolicyManager(application: Application): DevicePolicyManager = application.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 }

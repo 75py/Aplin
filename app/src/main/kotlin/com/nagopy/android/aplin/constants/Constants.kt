@@ -38,6 +38,7 @@ object Constants {
     init {
         val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         try {
+            @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
             Y2K = simpleDateFormat.parse("20000101").time
         } catch (e: ParseException) {
             throw RuntimeException(e)

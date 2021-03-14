@@ -20,10 +20,10 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.DeadObjectException
-import androidx.multidex.MultiDex
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import androidx.multidex.MultiDex
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
 
@@ -55,10 +55,9 @@ open class Aplin : Application() {
         } else {
             MobileAds.initialize(this, BuildConfig.AD_APP_ID)
             Timber.plant(object : Timber.Tree() {
-                override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-                    Crashlytics.log(priority, tag, "message=%s, t=%s".format(message, t))
-                    if (priority == Log.ERROR) {
-                        Crashlytics.logException(t)
+                override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+                    if (priority == Log.ERROR && t != null) {
+                        FirebaseCrashlytics.getInstance().recordException(t)
                     }
                 }
             })
@@ -77,7 +76,7 @@ open class Aplin : Application() {
     }
 
     class AplinDebugTree : Timber.DebugTree() {
-        override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
+        override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
             if (t is DeadObjectException) {
                 throw t
             }

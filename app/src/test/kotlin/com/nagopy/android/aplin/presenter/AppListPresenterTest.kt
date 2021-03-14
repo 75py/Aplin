@@ -41,10 +41,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class
-        , sdk = intArrayOf(Build.VERSION_CODES.LOLLIPOP)
-        , manifest = Config.NONE
-)
+@Config(manifest = Config.NONE)
 class AppListPresenterTest {
 
     @Mock

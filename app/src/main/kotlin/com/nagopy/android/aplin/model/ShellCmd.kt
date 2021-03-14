@@ -37,11 +37,11 @@ class ShellCmd @Inject constructor() {
     }
 
     fun <T> exec(commands: Collection<String>, useLines: (Sequence<String>) -> T, defaultValue: T): T {
-        try {
-            return exec(commands, useLines)
+        return try {
+            exec(commands, useLines)
         } catch (e: Exception) {
             Timber.w(e)
-            return defaultValue
+            defaultValue
         }
     }
 }

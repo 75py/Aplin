@@ -17,16 +17,16 @@
 package com.nagopy.android.aplin.view
 
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ProgressBar
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
@@ -45,10 +45,8 @@ import javax.inject.Inject
  * メインになる画面用のActivity
  */
 class MainActivity : AppCompatActivity(),
-        MainScreenView
-        , AppListViewParent // 子Viewから処理を移譲してもらうためのインターフェース
-        , AdapterView.OnItemSelectedListener
-        , ViewPager.OnPageChangeListener {
+        MainScreenView, AppListViewParent // 子Viewから処理を移譲してもらうためのインターフェース
+        , AdapterView.OnItemSelectedListener, ViewPager.OnPageChangeListener {
 
     val toolbar: Toolbar by lazy {
         findViewById<Toolbar>(R.id.toolbar)

@@ -27,17 +27,13 @@ import java.util.*
  * アプリ毎に表示する詳細情報の定義クラス
  */
 enum class DisplayItem(
-        val titleResourceId: Int
-        , val summaryResourceId: Int
-        , val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION
-        , val defaultValue: Boolean = false) {
+        val titleResourceId: Int, val summaryResourceId: Int, val targetSdkVersion: IntRange = Constants.ALL_SDK_VERSION, val defaultValue: Boolean = false) {
 
     /**
      * インストール状態
      */
     NOT_INSTALLED(
-            titleResourceId = R.string.display_item_not_installed
-            , summaryResourceId = R.string.display_item_not_installed_summary) {
+            titleResourceId = R.string.display_item_not_installed, summaryResourceId = R.string.display_item_not_installed_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             if (!appData.isInstalled) {
                 sb.append(context.getString(R.string.display_item_not_installed_format))
@@ -46,12 +42,12 @@ enum class DisplayItem(
             return false
         }
     },
+
     /**
      * 初回インストール日時
      */
     FIRST_INSTALL_TIME(
-            titleResourceId = R.string.display_item_first_install_time
-            , summaryResourceId = R.string.display_item_first_install_time_summary) {
+            titleResourceId = R.string.display_item_first_install_time, summaryResourceId = R.string.display_item_first_install_time_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             if (appData.firstInstallTime < Constants.Y2K) {
                 return false
@@ -61,12 +57,12 @@ enum class DisplayItem(
             return true
         }
     },
+
     /**
      * 最終更新日時
      */
     LAST_UPDATE_TIME(
-            titleResourceId = R.string.display_item_last_update_time
-            , summaryResourceId = R.string.display_item_last_update_time_summary) {
+            titleResourceId = R.string.display_item_last_update_time, summaryResourceId = R.string.display_item_last_update_time_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             if (appData.lastUpdateTime < Constants.Y2K) {
                 return false
@@ -76,12 +72,12 @@ enum class DisplayItem(
             return true
         }
     },
+
     /**
      * バージョン情報
      */
     VERSION_NAME(
-            titleResourceId = R.string.display_item_version_name
-            , summaryResourceId = R.string.display_item_version_name_summary) {
+            titleResourceId = R.string.display_item_version_name, summaryResourceId = R.string.display_item_version_name_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             if (appData.versionName != null) {
                 sb.append(context.getString(R.string.display_item_version_name_format, appData.versionName))
@@ -89,12 +85,12 @@ enum class DisplayItem(
             return true
         }
     },
+
     /**
      * パーミッション（インターネット）
      */
     INTERNET_PERMISSION(
-            titleResourceId = R.string.display_item_internet_permission
-            , summaryResourceId = R.string.display_item_internet_permission_summary) {
+            titleResourceId = R.string.display_item_internet_permission, summaryResourceId = R.string.display_item_internet_permission_summary) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             if (appData.requestedPermissions.isNotEmpty()) {
                 val internet = appData.requestedPermissions.contains("android.permission.INTERNET")
@@ -105,30 +101,35 @@ enum class DisplayItem(
             return true
         }
     },
+
     /**
      * パーミッション（拒否可能、6.0以降）
      */
     DENIABLE_PERMISSIONS(
-            titleResourceId = R.string.display_item_deniable_permissions
-            , summaryResourceId = R.string.display_item_deniable_permissions_summary
-            , targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
+            titleResourceId = R.string.display_item_deniable_permissions, summaryResourceId = R.string.display_item_deniable_permissions_summary, targetSdkVersion = Build.VERSION_CODES.M..Int.MAX_VALUE) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
-            if (appData.requestedPermissions.isNotEmpty()) {
-                val core = appData.isSystemPackage or appData.hasActiveAdmins
-                if (!appData.isSystem or !core) {
-                    sb.append(appData.permissionGroups.joinToString(
-                            context.getString(R.string.display_item_deniable_permissions_separator)) { it.label }
-                    )
-                }
+            if (appData.requestedPermissions.isEmpty()) {
+                return false
+            }
+            val core = appData.isSystemPackage || appData.hasActiveAdmins
+            if (appData.isSystem && core) {
+                return false
+            }
+
+            if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
+                // 29-
+                sb.append(context.getString(R.string.category_deniable_permissions))
+            } else {
+                // -28
+                sb.append(appData.permissionGroups.joinToString(
+                        context.getString(R.string.display_item_deniable_permissions_separator)) { it.label }
+                )
             }
             return true
         }
     },
     PACKAGE_NAME(
-            titleResourceId = R.string.display_item_package_name
-            , summaryResourceId = R.string.display_item_package_name_summary
-            , targetSdkVersion = Constants.ALL_SDK_VERSION
-            , defaultValue = true) {
+            titleResourceId = R.string.display_item_package_name, summaryResourceId = R.string.display_item_package_name_summary, targetSdkVersion = Constants.ALL_SDK_VERSION, defaultValue = true) {
         override fun append(context: Context, sb: StringBuilder, appData: App): Boolean {
             sb.append(appData.packageName)
             return true

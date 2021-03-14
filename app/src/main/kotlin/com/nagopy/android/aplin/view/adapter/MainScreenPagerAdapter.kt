@@ -29,7 +29,7 @@ import com.nagopy.android.aplin.view.AppListFragment
 class MainScreenPagerAdapter(
         val context: Context,
         fragmentManager: FragmentManager,
-        val categories: List<Category> = Category.getAll()) : FragmentPagerAdapter(fragmentManager) {
+        private val categories: List<Category> = Category.getAll()) : FragmentPagerAdapter(fragmentManager) {
 
     override fun getItem(position: Int): Fragment =
             AppListFragment.newInstance(categories[position])

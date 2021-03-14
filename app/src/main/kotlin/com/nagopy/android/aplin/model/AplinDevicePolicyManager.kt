@@ -112,9 +112,10 @@ open class AplinDevicePolicyManager @Inject constructor() {
                     it.name == "PRINT_SPOOLER_PACKAGE_NAME"
                 }?.call() as? String
                 Timber.d("PRINT_SPOOLER_PACKAGE_NAME = %s", v)
-                return@lazy v
+                return@lazy v ?: "com.android.printspooler"
             } catch (e: Exception) {
                 Timber.e(e, "PRINT_SPOOLER_PACKAGE_NAME の取得に失敗")
+                return@lazy "com.android.printspooler"
             }
         }
         return@lazy null

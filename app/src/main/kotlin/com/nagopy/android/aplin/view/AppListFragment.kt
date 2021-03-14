@@ -18,13 +18,13 @@ package com.nagopy.android.aplin.view
 
 import android.app.Application
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.AdapterView
+import androidx.fragment.app.Fragment
 import com.nagopy.android.aplin.Aplin
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.model.Category

@@ -32,6 +32,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.random.Random
 
 @Singleton
 open class Applications @Inject constructor() {
@@ -61,7 +62,7 @@ open class Applications @Inject constructor() {
     }
 
     open fun loadAppCache() {
-        synchronized(appCache, {
+        synchronized(appCache) {
             if (!isLoaded()) {
                 appCache.clear()
                 val all = getInstalledPackageNames()
@@ -70,6 +71,7 @@ open class Applications @Inject constructor() {
                 all.forEach { packageName ->
                     Timber.v("LOAD start pkg=%s", packageName)
                     executorService.execute {
+                        Thread.sleep(Random.nextLong(3000) + 100)
                         val entity = App()
                         appConverter.setValues(entity, packageName)
                         appCache.put(packageName, entity)
@@ -77,9 +79,17 @@ open class Applications @Inject constructor() {
                     }
                 }
                 executorService.shutdown()
-                executorService.awaitTermination(60, TimeUnit.SECONDS)
+                val finished = try {
+                    executorService.awaitTermination(60, TimeUnit.SECONDS)
+                } catch (e: InterruptedException) {
+                    Timber.d(e, "Interrupted")
+                    true
+                }
+                if (!finished) {
+                    executorService.shutdownNow()
+                }
             }
-        })
+        }
     }
 
     open fun getApplicationList(category: Category): Single<List<App>> = Single.create {
@@ -87,16 +97,16 @@ open class Applications @Inject constructor() {
         it.onSuccess(userSettings.sort.orderBy(category.where(appCache.values)).toList())
     }
 
-    fun getInstalledPackageNames(): List<String> {
-        if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
+    private fun getInstalledPackageNames(): List<String> {
+        return if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             // 24-
-            return getInstalledPackageNames24()
+            getInstalledPackageNames24()
         } else {
-            return getInstalledPackageNames23()
+            getInstalledPackageNames23()
         }
     }
 
-    fun getInstalledPackageNames23(): List<String> {
+    private fun getInstalledPackageNames23(): List<String> {
         return shellCmd.exec(listOf("pm", "list", "packages"), { seq ->
             seq.filter(String::isNotBlank)
                     .filter { it.startsWith("package:") }
@@ -105,7 +115,7 @@ open class Applications @Inject constructor() {
         }, emptyList())
     }
 
-    fun getInstalledPackageNames24(): List<String> {
+    private fun getInstalledPackageNames24(): List<String> {
         return shellCmd.exec(listOf("cmd", "package", "list", "packages"), { seq ->
             seq.filter(String::isNotBlank)
                     .filter { it.startsWith("package:") }

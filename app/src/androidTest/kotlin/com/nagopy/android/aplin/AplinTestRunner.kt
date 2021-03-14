@@ -21,6 +21,7 @@ import android.graphics.PixelFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.multidex.MultiDex
@@ -50,12 +51,16 @@ class AplinTestRunner : AndroidJUnitRunner() {
                         or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                         or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                , PixelFormat.TRANSLUCENT)
+                        or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                PixelFormat.TRANSLUCENT)
         p.width = 0
         p.height = 0
         mainHandler.post {
-            wm.addView(dummyView, p)
+            try {
+                wm.addView(dummyView, p)
+            } catch (e: Exception) {
+                Log.e(this.javaClass.simpleName, "Error", e)
+            }
         }
         super.onStart()
     }

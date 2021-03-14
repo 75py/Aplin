@@ -39,6 +39,7 @@ enum class SharingMethod {
             return appData.label
         }
     },
+
     /**
      * パッケージ名
      */
@@ -56,6 +57,7 @@ enum class SharingMethod {
             return appData.packageName
         }
     },
+
     /**
      * アプリ名とパッケージ名
      */

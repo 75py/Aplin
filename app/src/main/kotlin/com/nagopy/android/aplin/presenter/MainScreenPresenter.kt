@@ -33,7 +33,7 @@ import com.nagopy.android.aplin.model.SharingMethod
 import com.nagopy.android.aplin.view.MainScreenView
 import com.nagopy.android.aplin.view.SettingsActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -42,7 +42,8 @@ import javax.inject.Singleton
 /**
  * メイン画面用プレゼンター
  */
-@Singleton open class MainScreenPresenter @Inject constructor() : Presenter {
+@Singleton
+open class MainScreenPresenter @Inject constructor() : Presenter {
 
     @Inject
     lateinit var menuHandler: MenuHandler
@@ -55,7 +56,7 @@ import javax.inject.Singleton
 
     var view: MainScreenView? = null
 
-    var subscription: Disposable? = null
+    private val compositeDisposable = CompositeDisposable()
 
     open fun initialize(view: MainScreenView) {
         this.view = view
@@ -64,7 +65,7 @@ import javax.inject.Singleton
         view.showIndicator()
         view.setToolbarSpinnerEnabled(false)
 
-        subscription = applications.initAppCache()
+        applications.initAppCache()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -73,7 +74,9 @@ import javax.inject.Singleton
                     view.setToolbarSpinnerEnabled(true)
                 }, { e ->
                     Timber.e(e, "Error occurred")
-                })
+                }).also {
+                    compositeDisposable.add(it)
+                }
     }
 
     override fun resume() {
@@ -84,7 +87,9 @@ import javax.inject.Singleton
                 }, { t ->
                     Timber.e(t, "Default status update error")
                     // ignore
-                })
+                }).also {
+                    compositeDisposable.add(it)
+                }
     }
 
     override fun pause() {
@@ -92,9 +97,7 @@ import javax.inject.Singleton
 
     override fun destroy() {
         view = null
-        if (subscription?.isDisposed == true) {
-            subscription?.dispose()
-        }
+        compositeDisposable.clear()
     }
 
     fun listItemClicked(activity: Activity, app: App, category: Category) {
@@ -123,7 +126,9 @@ import javax.inject.Singleton
                 .subscribe({}, { e ->
                     Timber.e(e, "onError")
                     Toast.makeText(application, e.message, Toast.LENGTH_LONG).show()
-                })
+                }).also {
+                    compositeDisposable.add(it)
+                }
     }
 
     fun onMenuItemClicked(item: MenuItem, checkedItemList: List<App>) {

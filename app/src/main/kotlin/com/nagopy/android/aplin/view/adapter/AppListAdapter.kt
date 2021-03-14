@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.presenter.AppListPresenter
 
-class AppListAdapter(val context: Context, val appListPresenter: AppListPresenter) : BaseAdapter() {
+class AppListAdapter(private val context: Context, private val appListPresenter: AppListPresenter) : BaseAdapter() {
 
     override fun getItem(position: Int): Any = appListPresenter.filteredList[position]
 
@@ -19,7 +19,8 @@ class AppListAdapter(val context: Context, val appListPresenter: AppListPresente
     override fun getCount(): Int = appListPresenter.filteredList.count()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
+        val view = convertView
+                ?: LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
         val holder = (view.tag as? ViewHolder) ?: ViewHolder(view)
         view.tag = holder
 

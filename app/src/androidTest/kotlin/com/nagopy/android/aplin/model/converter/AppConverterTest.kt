@@ -28,7 +28,7 @@ import kotlin.test.assertEquals
 
 class AppConverterTest {
 
-    val application = InstrumentationRegistry.getTargetContext().applicationContext as Application
+    val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
 
     @Inject
     lateinit var appConverter: AppConverter
@@ -54,7 +54,7 @@ class AppConverterTest {
 
     @Test
     fun packageName() {
-        assertEquals(InstrumentationRegistry.getTargetContext().packageName, aplinApp.packageName)
+        assertEquals(InstrumentationRegistry.getInstrumentation().targetContext.packageName, aplinApp.packageName)
     }
 
     @Test

@@ -30,11 +30,11 @@ import com.nagopy.android.aplin.model.Category
 
 class AppCategoryAdapter(val application: Application) : BaseAdapter() {
 
-    internal val categories = Category.getAll()
+    private val categories = Category.getAll()
 
-    val inflater = LayoutInflater.from(application)!!
+    private val inflater = LayoutInflater.from(application)!!
 
-    val screenWidth: Int
+    private val screenWidth: Int
 
     init {
         val wm = application.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -50,7 +50,7 @@ class AppCategoryAdapter(val application: Application) : BaseAdapter() {
 
     override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View? {
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         if (convertView == null || convertView.tag.toString() == "DROPDOWN") {
             view = inflater.inflate(R.layout.toolbar_spinner_item_dropdown, parent, false)
