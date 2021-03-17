@@ -117,7 +117,11 @@ open class MainScreenPresenter @Inject constructor() : Presenter {
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
         }
-        activity.startActivity(intent)
+        try {
+            activity.startActivity(intent)
+        } catch (e: Exception) {
+            Timber.w(e)
+        }
     }
 
     fun listItemLongClicked(app: App) {
