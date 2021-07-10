@@ -29,3 +29,11 @@ jobs:
         echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
     - name: Build with Gradle
       run: ./gradlew assembleDebug 
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      if: success() || failure()
+      with:
+        name: results
+        path: app/build/**/*
+        if-no-files-found: warn
+        retention-days: 1
