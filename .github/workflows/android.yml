@@ -23,5 +23,9 @@ jobs:
       run: chmod +x gradlew
     - name: Create local.properties
       run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+    - name: Clean app/signingConfigs/release.gradle
+      run: |
+        mkdir app/signingConfigs
+        echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
     - name: Build with Gradle
       run: ./gradlew assembleDebug 
