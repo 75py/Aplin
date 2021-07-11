@@ -1,0 +1,39 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Create local.properties
+      run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+    - name: Clean app/signingConfigs/release.gradle
+      run: |
+        mkdir app/signingConfigs
+        echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
+
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug 
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      if: success() || failure()
+      with:
+        name: results
+        path: app/build/outputs/**/*
+        if-no-files-found: warn
+        retention-days: 1
