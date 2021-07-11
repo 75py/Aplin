@@ -7,10 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  prepare:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: set up JDK 8
@@ -27,8 +25,14 @@ jobs:
       run: |
         mkdir app/signingConfigs
         echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
+  build:
+    runs-on: ubuntu-latest
+    steps:
     - name: Build with Gradle
       run: ./gradlew assembleDebug 
+  save:
+    runs-on: ubuntu-latest
+    steps:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       if: success() || failure()
