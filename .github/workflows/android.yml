@@ -27,11 +27,13 @@ jobs:
         echo 'signingConfigs{ release {} }' > app/signingConfigs/release.gradle
   build:
     runs-on: ubuntu-latest
+    needs: prepare
     steps:
     - name: Build with Gradle
       run: ./gradlew assembleDebug 
   save:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
