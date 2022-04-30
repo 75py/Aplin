@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin.data.repository
 
 import android.app.admin.DevicePolicyManager
+import androidx.annotation.VisibleForTesting
 import logcat.LogPriority
 import logcat.logcat
 import java.lang.reflect.Method
@@ -9,7 +10,8 @@ class DevicePolicyRepositoryImpl(
     private val devicePolicyManager: DevicePolicyManager,
 ) : DevicePolicyRepository {
 
-    private val packageHasActiveAdmins: Method? by lazy {
+    @VisibleForTesting
+    val packageHasActiveAdmins: Method? by lazy {
         try {
             DevicePolicyManager::class.java.getDeclaredMethod(
                 "packageHasActiveAdmins",
