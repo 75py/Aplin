@@ -1,0 +1,4 @@
+<resources>
+    <string name="test_btn_enable">無効にする</string>
+    <string name="test_btn_disable">有効にする</string>
+</resources>

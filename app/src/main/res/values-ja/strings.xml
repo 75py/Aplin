@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Aplin</string>
+
+    <string name="category_users">アンインストールできるアプリ</string>
+    <string name="category_disableable">無効にできるアプリ</string>
+    <string name="category_all">全てのアプリ</string>
+    <string name="licenses">オープンソースライセンス</string>
+</resources>

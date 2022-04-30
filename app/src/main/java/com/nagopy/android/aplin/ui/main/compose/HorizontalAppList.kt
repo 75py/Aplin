@@ -1,0 +1,89 @@
+package com.nagopy.android.aplin.ui.main.compose
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import com.nagopy.android.aplin.domain.model.PackageModel
+
+@Composable
+fun HorizontalAppList(
+    disableablePackages: List<PackageModel>,
+    onClick: (String) -> Unit
+) {
+    BoxWithConstraints {
+        val itemWidth = maxWidth / 2.6f
+        val iconSize = itemWidth / 2.0f
+        LazyRow {
+            items(disableablePackages) { pkg ->
+                Item(itemWidth, iconSize, onClick, pkg)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Item(
+    itemWidth: Dp,
+    iconSize: Dp,
+    onClick: (String) -> Unit,
+    pkg: PackageModel,
+) {
+    Card(
+        modifier = Modifier
+            .width(itemWidth)
+            .wrapContentHeight()
+            .padding(8.dp)
+            .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
+            .clickable {
+                onClick.invoke(pkg.packageName)
+            },
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Image(
+                painter = rememberDrawablePainter(drawable = pkg.icon),
+                contentDescription = "",
+                modifier = Modifier.size(iconSize)
+            )
+            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+                Text(
+                    text = pkg.label,
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = pkg.packageName,
+                    fontSize = 12.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.End,
+                )
+            }
+        }
+    }
+}
