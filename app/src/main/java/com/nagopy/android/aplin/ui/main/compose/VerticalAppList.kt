@@ -85,7 +85,8 @@ private fun Item(
 @Composable
 fun ItemPreview() {
     Item(
-        startDetailSettingsActivity = {}, iconSize = 32.dp, pkg = PackageModel(
+        startDetailSettingsActivity = {}, iconSize = 32.dp,
+        pkg = PackageModel(
             packageName = "com.example",
             label = "Example Label",
             icon = AppCompatResources.getDrawable(
@@ -97,5 +98,29 @@ fun ItemPreview() {
             lastUpdateTime = 0L,
             versionName = "1.0.0",
         )
+    )
+}
+
+@Preview
+@Composable
+fun VerticalAppListPreview() {
+    val packages = IntRange(0, 20).map {
+        PackageModel(
+            packageName = "com.example$it",
+            label = "Example Label $it",
+            icon = AppCompatResources.getDrawable(
+                LocalContext.current,
+                R.mipmap.ic_launcher
+            )!!,
+            isEnabled = it % 2 == 0,
+            firstInstallTime = 0L,
+            lastUpdateTime = 0L,
+            versionName = "1.0.0",
+        )
+    }
+    VerticalAppList(
+        packages = packages,
+        launcherLargeIconSize = 32,
+        startDetailSettingsActivity = {}
     )
 }
