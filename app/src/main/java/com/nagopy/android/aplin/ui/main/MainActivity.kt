@@ -27,6 +27,9 @@ class MainActivity : ComponentActivity() {
                         pkg
                     )
                 },
+                sharePackages = { packages ->
+                    mainViewModel.sharePackages(this@MainActivity, packages)
+                },
                 startOssLicensesActivity = {
                     mainViewModel.startOssLicensesActivity(this)
                 },

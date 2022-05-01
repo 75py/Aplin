@@ -6,4 +6,5 @@
     <string name="category_all">All Apps</string>
     <string name="licenses">Open source licenses</string>
     <string name="change_consent_state" translatable="false">Change consent state</string>
+    <string name="share">Share</string>
 </resources>

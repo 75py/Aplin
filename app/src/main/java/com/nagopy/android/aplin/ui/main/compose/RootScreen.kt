@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nagopy.android.aplin.R
+import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.ads.AdsStatus
 import com.nagopy.android.aplin.ui.ads.compose.AdBanner
 import com.nagopy.android.aplin.ui.main.AppCategory
@@ -26,6 +27,7 @@ fun RootScreen(
     state: MainUiState,
     mainViewModel: MainViewModel,
     startDetailSettingsActivity: (String) -> Unit,
+    sharePackages: (List<PackageModel>) -> Unit,
     startOssLicensesActivity: () -> Unit,
     adsStatus: AdsStatus,
     isGDPR: Boolean,
@@ -71,6 +73,7 @@ fun RootScreen(
                             appCategory = AppCategory.USERS,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
+                            sharePackages = sharePackages,
                         )
                     }
                     composable("disableableAppList") {
@@ -79,6 +82,7 @@ fun RootScreen(
                             appCategory = AppCategory.DISABLEABLE,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
+                            sharePackages = sharePackages,
                         )
                     }
                     composable("allAppList") {
@@ -87,6 +91,7 @@ fun RootScreen(
                             appCategory = AppCategory.ALL,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
+                            sharePackages = sharePackages,
                         )
                     }
                 }

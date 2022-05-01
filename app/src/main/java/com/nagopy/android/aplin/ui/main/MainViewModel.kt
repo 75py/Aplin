@@ -5,9 +5,11 @@ import android.app.ActivityManager
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.model.PackagesModel
 import com.nagopy.android.aplin.domain.usecase.LoadPackagesUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -75,5 +77,16 @@ class MainViewModel(
 
     fun startOssLicensesActivity(activity: Activity) {
         activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
+    }
+
+    fun sharePackages(activity: Activity, packages: List<PackageModel>) {
+        ShareCompat.IntentBuilder(activity)
+            .setText(packages.joinToString(separator = LINE_SEPARATOR) { it.packageName })
+            .setType("text/plain")
+            .startChooser()
+    }
+
+    companion object {
+        private val LINE_SEPARATOR: String = System.getProperty("line.separator") ?: "\n"
     }
 }

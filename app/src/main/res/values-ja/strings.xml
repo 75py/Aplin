@@ -5,4 +5,5 @@
     <string name="category_disableable">無効にできるアプリ</string>
     <string name="category_all">全てのアプリ</string>
     <string name="licenses">オープンソースライセンス</string>
+    <string name="share">共有</string>
 </resources>
