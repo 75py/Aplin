@@ -1,5 +1,6 @@
 package com.nagopy.android.aplin.ui.main.compose
 
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 
 @Composable
@@ -75,4 +79,23 @@ private fun Item(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun ItemPreview() {
+    Item(
+        startDetailSettingsActivity = {}, iconSize = 32.dp, pkg = PackageModel(
+            packageName = "com.example",
+            label = "Example Label",
+            icon = AppCompatResources.getDrawable(
+                LocalContext.current,
+                R.mipmap.ic_launcher
+            )!!,
+            isEnabled = true,
+            firstInstallTime = 0L,
+            lastUpdateTime = 0L,
+            versionName = "1.0.0",
+        )
+    )
 }
