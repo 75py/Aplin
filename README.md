@@ -1,4 +1,4 @@
-Aplin [![Build Status](https://travis-ci.org/75py/Aplin.svg?branch=master)](https://travis-ci.org/75py/Aplin) [![codecov](https://codecov.io/gh/75py/Aplin/branch/master/graph/badge.svg)](https://codecov.io/gh/75py/Aplin)
+Aplin
 =====
 
 Application manager for Android!
@@ -8,28 +8,6 @@ Download
 --------
 
 https://play.google.com/store/apps/details?id=com.nagopy.android.aplin
-
-
-Latest version
---------------
-
-4.0.1
-
-
-For Developers
---------------
-
-Unit test
-=========
-
-* Command
-```
-cd Aplin/app
-../gradlew testDebug --info
-```
-
-* Android Studio
-"VM Options -noverify" is required.
 
 
 License
