@@ -1,29 +1,21 @@
--dontskipnonpubliclibraryclasses
--optimizationpasses 3
--flattenpackagehierarchy
--keepattributes SourceFile,LineNumberTable
--printmapping map.txt
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
 
--keep public class com.google.android.gms.ads.** {
-   public *;
-}
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
 
--keep public class com.google.ads.** {
-   public *;
-}
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
 
--keep class android.support.v7.widget.SearchView { *; }
-
-# Kotlin
--keep class kotlin.reflect.jvm.internal.impl.** { *; }
--dontwarn kotlin.**
-
-# Timber
--dontwarn org.jetbrains.annotations.**
-
-# Support libs
--dontwarn android.support.**
-
-# Others
--dontobfuscate
--dontskipnonpubliclibraryclassmembers
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
