@@ -41,7 +41,8 @@ class MainActivity : ComponentActivity() {
                 isGDPR = adsViewModel.isGDPRState.collectAsState().value,
                 showConsentForm = {
                     adsViewModel.loadForm(this, force = true)
-                }
+                },
+                updateAds = adsViewModel::updateAds,
             )
         }
 
