@@ -2,8 +2,13 @@ package com.nagopy.android.aplin.ui.ads
 
 import android.app.Activity
 import android.content.SharedPreferences
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.ads.mediation.admob.AdMobAdapter
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.ump.ConsentDebugSettings
 import com.google.android.ump.ConsentInformation
 import com.google.android.ump.ConsentRequestParameters
@@ -211,6 +216,27 @@ consentStatus: ${consentInformation.consentStatus}
 isConsentFormAvailable: ${consentInformation.isConsentFormAvailable}
 ----------------------
             """
+        }
+    }
+
+    fun updateAds(state: AdsStatus, adView: AdView) {
+        when (state) {
+            AdsStatus.Personalized -> {
+                MobileAds.initialize(adView.context)
+                adView.loadAd(AdRequest.Builder().build())
+            }
+            AdsStatus.NonPersonalized -> {
+                MobileAds.initialize(adView.context)
+                val extras = Bundle()
+                extras.putString("npa", "1")
+                val request = AdRequest.Builder()
+                    .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+                    .build()
+                adView.loadAd(request)
+            }
+            else -> {
+                // noop
+            }
         }
     }
 }

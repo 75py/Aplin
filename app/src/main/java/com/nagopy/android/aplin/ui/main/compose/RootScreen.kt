@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.ads.AdsStatus
@@ -33,6 +34,7 @@ fun RootScreen(
     adsStatus: AdsStatus,
     isGDPR: Boolean,
     showConsentForm: () -> Unit,
+    updateAds: (AdsStatus, AdView) -> Unit,
 ) {
     val navController = rememberNavController()
     AplinTheme {
@@ -101,7 +103,10 @@ fun RootScreen(
                     }
                 }
 
-                AdBanner(adsStatus)
+                AdBanner(
+                    state = adsStatus,
+                    updateAds = updateAds,
+                )
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.nagopy.android.aplin.ui.ads.compose
 
 import android.content.res.Resources
-import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,16 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.google.ads.mediation.admob.AdMobAdapter
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import com.nagopy.android.aplin.BuildConfig
 import com.nagopy.android.aplin.ui.ads.AdsStatus
 
 @Composable
-fun AdBanner(state: AdsStatus) {
+fun AdBanner(
+    state: AdsStatus,
+    updateAds: (AdsStatus, AdView) -> Unit,
+) {
     if (state != AdsStatus.Personalized && state != AdsStatus.NonPersonalized) {
         return
     }
@@ -45,26 +44,7 @@ fun AdBanner(state: AdsStatus) {
                 adView.adUnitId = BuildConfig.AD_UNIT_ID
                 adView
             },
-            update = {
-                when (state) {
-                    AdsStatus.Personalized -> {
-                        MobileAds.initialize(it.context)
-                        it.loadAd(AdRequest.Builder().build())
-                    }
-                    AdsStatus.NonPersonalized -> {
-                        MobileAds.initialize(it.context)
-                        val extras = Bundle()
-                        extras.putString("npa", "1")
-                        val request = AdRequest.Builder()
-                            .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-                            .build()
-                        it.loadAd(request)
-                    }
-                    else -> {
-                        // noop
-                    }
-                }
-            }
+            update = { updateAds.invoke(state, it) }
         )
     }
 }
