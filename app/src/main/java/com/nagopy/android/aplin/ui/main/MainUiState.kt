@@ -12,5 +12,5 @@ data class MainUiState(
 enum class AppCategory(@StringRes val labelId: Int) {
     USERS(R.string.category_users),
     DISABLEABLE(R.string.category_disableable),
-    ALL(R.string.category_users),
+    ALL(R.string.category_all),
 }
