@@ -1,8 +1,9 @@
 package com.nagopy.android.aplin.ui.main.compose
 
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,18 +34,21 @@ fun VerticalAppList(
     packages: List<PackageModel>,
     launcherLargeIconSize: Int,
     startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
 ) {
     val iconSize = with(LocalDensity.current) { launcherLargeIconSize.toDp() }
     LazyColumn(modifier) {
         items(packages) { pkg ->
-            Item(startDetailSettingsActivity, iconSize, pkg)
+            Item(startDetailSettingsActivity, searchByWeb, iconSize, pkg)
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Item(
     startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
     iconSize: Dp,
     pkg: PackageModel,
 ) {
@@ -54,9 +58,10 @@ private fun Item(
             .wrapContentHeight()
             .padding(8.dp)
             .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
-            .clickable {
-                startDetailSettingsActivity.invoke(pkg.packageName)
-            },
+            .combinedClickable(
+                onClick = { startDetailSettingsActivity.invoke(pkg.packageName) },
+                onLongClick = { searchByWeb.invoke(pkg) },
+            ),
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
@@ -85,7 +90,9 @@ private fun Item(
 @Composable
 fun ItemPreview() {
     Item(
-        startDetailSettingsActivity = {}, iconSize = 32.dp,
+        startDetailSettingsActivity = {},
+        searchByWeb = {},
+        iconSize = 32.dp,
         pkg = PackageModel(
             packageName = "com.example",
             label = "Example Label",
@@ -121,6 +128,7 @@ fun VerticalAppListPreview() {
     VerticalAppList(
         packages = packages,
         launcherLargeIconSize = 32,
-        startDetailSettingsActivity = {}
+        startDetailSettingsActivity = {},
+        searchByWeb = {},
     )
 }

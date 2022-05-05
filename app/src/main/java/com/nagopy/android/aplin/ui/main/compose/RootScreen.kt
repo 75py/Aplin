@@ -27,6 +27,7 @@ fun RootScreen(
     state: MainUiState,
     mainViewModel: MainViewModel,
     startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
     sharePackages: (List<PackageModel>) -> Unit,
     startOssLicensesActivity: () -> Unit,
     adsStatus: AdsStatus,
@@ -62,6 +63,7 @@ fun RootScreen(
                             navController = navController,
                             state = state,
                             startDetailSettingsActivity = startDetailSettingsActivity,
+                            searchByWeb = searchByWeb,
                             startOssLicensesActivity = startOssLicensesActivity,
                             isGDPR = isGDPR,
                             showConsentForm = showConsentForm,
@@ -73,6 +75,7 @@ fun RootScreen(
                             appCategory = AppCategory.USERS,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
+                            searchByWeb = searchByWeb,
                             sharePackages = sharePackages,
                         )
                     }
@@ -82,6 +85,7 @@ fun RootScreen(
                             appCategory = AppCategory.DISABLEABLE,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
+                            searchByWeb = searchByWeb,
                             sharePackages = sharePackages,
                         )
                     }
@@ -91,6 +95,7 @@ fun RootScreen(
                             appCategory = AppCategory.ALL,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
+                            searchByWeb = searchByWeb,
                             sharePackages = sharePackages,
                         )
                     }

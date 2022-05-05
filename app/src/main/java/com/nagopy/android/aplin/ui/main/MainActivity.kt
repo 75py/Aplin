@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
+import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.ads.AdsViewModel
 import com.nagopy.android.aplin.ui.main.compose.RootScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,6 +27,9 @@ class MainActivity : ComponentActivity() {
                         this@MainActivity,
                         pkg
                     )
+                },
+                searchByWeb = { packageModel: PackageModel ->
+                    mainViewModel.searchByWeb(this@MainActivity, packageModel)
                 },
                 sharePackages = { packages ->
                     mainViewModel.sharePackages(this@MainActivity, packages)

@@ -29,6 +29,7 @@ fun AppListScreen(
     appCategory: AppCategory,
     launcherLargeIconSize: Int,
     startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
     sharePackages: (List<PackageModel>) -> Unit,
 ) {
     if (state.packagesModel == null) {
@@ -39,6 +40,7 @@ fun AppListScreen(
             packagesModel = state.packagesModel,
             launcherLargeIconSize = launcherLargeIconSize,
             startDetailSettingsActivity = startDetailSettingsActivity,
+            searchByWeb = searchByWeb,
             sharePackages = sharePackages,
         )
     }
@@ -50,6 +52,7 @@ fun AppListScreenLoaded(
     packagesModel: PackagesModel,
     launcherLargeIconSize: Int,
     startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
     sharePackages: (List<PackageModel>) -> Unit,
 ) {
     val packages = when (appCategory) {
@@ -89,6 +92,7 @@ fun AppListScreenLoaded(
             packages = packages,
             launcherLargeIconSize = launcherLargeIconSize,
             startDetailSettingsActivity = startDetailSettingsActivity,
+            searchByWeb = searchByWeb,
         )
     }
 }
@@ -118,6 +122,7 @@ fun AppListScreenLoadedPreview() {
         appCategory = AppCategory.ALL,
         launcherLargeIconSize = 36,
         startDetailSettingsActivity = {},
+        searchByWeb = {},
         sharePackages = {},
     )
 }
