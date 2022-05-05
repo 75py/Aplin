@@ -28,6 +28,7 @@ fun MainScreen(
     navController: NavController,
     state: MainUiState,
     startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
     startOssLicensesActivity: () -> Unit,
     isGDPR: Boolean,
     showConsentForm: () -> Unit,
@@ -39,6 +40,7 @@ fun MainScreen(
             navController,
             state.packagesModel,
             startDetailSettingsActivity,
+            searchByWeb,
             startOssLicensesActivity,
             isGDPR,
             showConsentForm,
@@ -51,6 +53,7 @@ fun MainScreenLoaded(
     navController: NavController,
     packagesModel: PackagesModel,
     startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
     startOssLicensesActivity: () -> Unit,
     isGDPR: Boolean,
     showConsentForm: () -> Unit,
@@ -67,6 +70,7 @@ fun MainScreenLoaded(
                 navController.navigate("userAppList")
             },
             startDetailSettingsActivity = startDetailSettingsActivity,
+            searchByWeb = searchByWeb,
         )
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalAppSection(
@@ -76,6 +80,7 @@ fun MainScreenLoaded(
                 navController.navigate("disableableAppList")
             },
             startDetailSettingsActivity = startDetailSettingsActivity,
+            searchByWeb = searchByWeb,
         )
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalAppSection(
@@ -85,6 +90,7 @@ fun MainScreenLoaded(
                 navController.navigate("allAppList")
             },
             startDetailSettingsActivity = startDetailSettingsActivity,
+            searchByWeb = searchByWeb,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -123,6 +129,7 @@ fun MainScreenLoadedPreview() {
             navController = rememberNavController(),
             packagesModel = PackagesModel(packages, packages, packages),
             startOssLicensesActivity = {},
+            searchByWeb = {},
             startDetailSettingsActivity = {},
             isGDPR = true,
             showConsentForm = {},

@@ -21,7 +21,8 @@ fun HorizontalAppSection(
     title: String,
     packages: List<PackageModel>,
     navigateToVerticalList: () -> Unit,
-    startDetailSettingsActivity: (String) -> Unit
+    startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
 ) {
     Column {
         Row(
@@ -43,6 +44,6 @@ fun HorizontalAppSection(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        HorizontalAppList(packages, startDetailSettingsActivity)
+        HorizontalAppList(packages, startDetailSettingsActivity, searchByWeb)
     }
 }

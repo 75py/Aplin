@@ -2,7 +2,9 @@ package com.nagopy.android.aplin.ui.main
 
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.SearchManager
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.app.ShareCompat
@@ -19,9 +21,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.logcat
+import java.net.URLEncoder
 
 class MainViewModel(
     activityManager: ActivityManager,
+    private val packageManager: PackageManager,
     private val loadPackagesUseCase: LoadPackagesUseCase,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -73,6 +77,33 @@ class MainViewModel(
         } catch (e: Exception) {
             logcat { "$e" }
         }
+    }
+
+    fun searchByWeb(activity: Activity, packageModel: PackageModel) {
+        val actionWebSearch = Intent(Intent.ACTION_WEB_SEARCH)
+            .putExtra(SearchManager.QUERY, "${packageModel.label} ${packageModel.packageName}")
+
+        if (isLaunchable(actionWebSearch)) {
+            activity.startActivity(actionWebSearch)
+        } else {
+            val url = "https://www.google.com/search?q=${
+            URLEncoder.encode(
+                packageModel.label,
+                "UTF-8"
+            )
+            }%20${packageModel.packageName}"
+            val actionView = Intent(Intent.ACTION_VIEW)
+                .setData(Uri.parse(url))
+            if (isLaunchable(actionView)) {
+                activity.startActivity(actionView)
+            } else {
+                logcat { "ActivityNotFound" }
+            }
+        }
+    }
+
+    private fun isLaunchable(intent: Intent): Boolean {
+        return intent.resolveActivity(packageManager) != null
     }
 
     fun startOssLicensesActivity(activity: Activity) {

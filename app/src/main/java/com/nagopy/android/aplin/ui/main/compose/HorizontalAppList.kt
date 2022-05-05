@@ -1,7 +1,8 @@
 package com.nagopy.android.aplin.ui.main.compose
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,24 +29,27 @@ import com.nagopy.android.aplin.domain.model.PackageModel
 @Composable
 fun HorizontalAppList(
     disableablePackages: List<PackageModel>,
-    onClick: (String) -> Unit
+    startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
 ) {
     BoxWithConstraints {
         val itemWidth = maxWidth / 2.6f
         val iconSize = itemWidth / 2.0f
         LazyRow {
             items(disableablePackages) { pkg ->
-                Item(itemWidth, iconSize, onClick, pkg)
+                Item(itemWidth, iconSize, startDetailSettingsActivity, searchByWeb, pkg)
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Item(
     itemWidth: Dp,
     iconSize: Dp,
-    onClick: (String) -> Unit,
+    startDetailSettingsActivity: (String) -> Unit,
+    searchByWeb: (PackageModel) -> Unit,
     pkg: PackageModel,
 ) {
     Card(
@@ -54,9 +58,10 @@ private fun Item(
             .wrapContentHeight()
             .padding(8.dp)
             .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
-            .clickable {
-                onClick.invoke(pkg.packageName)
-            },
+            .combinedClickable(
+                onClick = { startDetailSettingsActivity.invoke(pkg.packageName) },
+                onLongClick = { searchByWeb.invoke(pkg) },
+            ),
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
