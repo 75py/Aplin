@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.main.MainUiState
 import com.nagopy.android.aplin.ui.main.Screen
@@ -98,7 +99,7 @@ fun DefaultAppBar(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Share,
-                        contentDescription = "Share"
+                        contentDescription = stringResource(id = R.string.share)
                     )
                 }
             }
@@ -108,7 +109,7 @@ fun DefaultAppBar(
             }) {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                    contentDescription = stringResource(id = R.string.search)
                 )
             }
         },
@@ -148,7 +149,7 @@ fun SearchAppBar(
             placeholder = {
                 Text(
                     modifier = Modifier.alpha(ContentAlpha.medium),
-                    text = "Search here...",
+                    text = stringResource(id = R.string.search_hint),
                     color = Color.White
                 )
             },
