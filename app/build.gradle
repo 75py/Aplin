@@ -94,6 +94,6 @@ dependencies {
     implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
     implementation 'androidx.preference:preference:1.2.0'
 
-    testImplementation "io.mockk:mockk:1.12.3"
+    testImplementation "io.mockk:mockk:1.12.4"
     androidTestImplementation "io.mockk:mockk-android:1.12.3"
 }
