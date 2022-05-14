@@ -78,7 +78,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
 
-    implementation "io.insert-koin:koin-android:3.1.6"
+    implementation "io.insert-koin:koin-android:3.2.0"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
     implementation "com.google.accompanist:accompanist-drawablepainter:0.23.1"
     implementation 'com.squareup.logcat:logcat:0.1'
