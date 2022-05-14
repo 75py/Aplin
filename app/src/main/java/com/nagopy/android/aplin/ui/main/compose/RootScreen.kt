@@ -2,25 +2,22 @@ package com.nagopy.android.aplin.ui.main.compose
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.ads.AdView
-import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.ads.AdsStatus
 import com.nagopy.android.aplin.ui.ads.compose.AdBanner
-import com.nagopy.android.aplin.ui.main.AppCategory
 import com.nagopy.android.aplin.ui.main.MainUiState
 import com.nagopy.android.aplin.ui.main.MainViewModel
+import com.nagopy.android.aplin.ui.main.Screen
+import com.nagopy.android.aplin.ui.main.SearchWidgetState
 import com.nagopy.android.aplin.ui.theme.AplinTheme
 
 @Composable
@@ -37,30 +34,39 @@ fun RootScreen(
     updateAds: (AdsStatus, AdView) -> Unit,
 ) {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = Screen.find(navBackStackEntry?.destination?.route)
+
     AplinTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.app_name))
+                MainAppBar(
+                    navController = navController,
+                    state = state,
+                    currentScreen = currentScreen,
+                    sharePackages = sharePackages,
+                    onTextChanged = {
+                        mainViewModel.updateSearchTextState(it)
                     },
-                    actions = {
-                        if (state.isLoading && state.packagesModel != null) {
-                            CircularProgressIndicator(color = Color.LightGray)
-                        }
-                    }
+                    onCloseClicked = {
+                        mainViewModel.updateSearchTextState("")
+                        mainViewModel.updateSearchWidgetState(SearchWidgetState.CLOSED)
+                    },
+                    onSearchTriggered = {
+                        mainViewModel.updateSearchWidgetState(SearchWidgetState.OPENED)
+                    },
                 )
             }
         ) {
             Column(Modifier.fillMaxSize()) {
                 NavHost(
                     navController = navController,
-                    startDestination = "main",
+                    startDestination = Screen.Top.route,
                     modifier = Modifier.weight(1f)
                 ) {
-                    composable("main") {
+                    composable(Screen.Top.route) {
                         MainScreen(
                             navController = navController,
                             state = state,
@@ -71,34 +77,31 @@ fun RootScreen(
                             showConsentForm = showConsentForm,
                         )
                     }
-                    composable("userAppList") {
+                    composable(Screen.UserAppList.route) {
                         AppListScreen(
                             state = state,
-                            appCategory = AppCategory.USERS,
+                            screen = Screen.UserAppList,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
                             searchByWeb = searchByWeb,
-                            sharePackages = sharePackages,
                         )
                     }
-                    composable("disableableAppList") {
+                    composable(Screen.DisableableAppList.route) {
                         AppListScreen(
                             state = state,
-                            appCategory = AppCategory.DISABLEABLE,
+                            screen = Screen.DisableableAppList,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
                             searchByWeb = searchByWeb,
-                            sharePackages = sharePackages,
                         )
                     }
-                    composable("allAppList") {
+                    composable(Screen.AllAppList.route) {
                         AppListScreen(
                             state = state,
-                            appCategory = AppCategory.ALL,
+                            screen = Screen.AllAppList,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
                             searchByWeb = searchByWeb,
-                            sharePackages = sharePackages,
                         )
                     }
                 }
