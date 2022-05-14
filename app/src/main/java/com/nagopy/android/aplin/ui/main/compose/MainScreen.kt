@@ -21,6 +21,7 @@ import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.model.PackagesModel
 import com.nagopy.android.aplin.ui.main.MainUiState
+import com.nagopy.android.aplin.ui.main.Screen
 import com.nagopy.android.aplin.ui.theme.AplinTheme
 
 @Composable
@@ -67,7 +68,7 @@ fun MainScreenLoaded(
             title = stringResource(id = R.string.category_users),
             packages = packagesModel.userPackages,
             navigateToVerticalList = {
-                navController.navigate("userAppList")
+                navController.navigate(Screen.UserAppList.route)
             },
             startDetailSettingsActivity = startDetailSettingsActivity,
             searchByWeb = searchByWeb,
@@ -77,7 +78,7 @@ fun MainScreenLoaded(
             title = stringResource(id = R.string.category_disableable),
             packages = packagesModel.disableablePackages,
             navigateToVerticalList = {
-                navController.navigate("disableableAppList")
+                navController.navigate(Screen.DisableableAppList.route)
             },
             startDetailSettingsActivity = startDetailSettingsActivity,
             searchByWeb = searchByWeb,
@@ -87,7 +88,7 @@ fun MainScreenLoaded(
             title = stringResource(id = R.string.category_all),
             packages = packagesModel.allPackages,
             navigateToVerticalList = {
-                navController.navigate("allAppList")
+                navController.navigate(Screen.AllAppList.route)
             },
             startDetailSettingsActivity = startDetailSettingsActivity,
             searchByWeb = searchByWeb,

@@ -3,24 +3,30 @@ package com.nagopy.android.aplin.ui.main.compose
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.ads.AdView
-import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.ads.AdsStatus
 import com.nagopy.android.aplin.ui.ads.compose.AdBanner
-import com.nagopy.android.aplin.ui.main.AppCategory
 import com.nagopy.android.aplin.ui.main.MainUiState
 import com.nagopy.android.aplin.ui.main.MainViewModel
+import com.nagopy.android.aplin.ui.main.Screen
 import com.nagopy.android.aplin.ui.theme.AplinTheme
 
 @Composable
@@ -37,6 +43,8 @@ fun RootScreen(
     updateAds: (AdsStatus, AdView) -> Unit,
 ) {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = Screen.find(navBackStackEntry?.destination?.route)
     AplinTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(
@@ -44,12 +52,40 @@ fun RootScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = stringResource(id = R.string.app_name))
+                        Text(text = stringResource(id = currentScreen.resourceId))
                     },
                     actions = {
                         if (state.isLoading && state.packagesModel != null) {
                             CircularProgressIndicator(color = Color.LightGray)
                         }
+                        if (currentScreen is Screen.AppList && state.packagesModel != null) {
+                            IconButton(onClick = {
+                                sharePackages.invoke(
+                                    currentScreen.getAppList(
+                                        state.packagesModel
+                                    )
+                                )
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Share,
+                                    contentDescription = "Share"
+                                )
+                            }
+                        }
+                    },
+                    navigationIcon = if (currentScreen != Screen.Top) {
+                        {
+                            IconButton(onClick = {
+                                navController.popBackStack()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Back"
+                                )
+                            }
+                        }
+                    } else {
+                        null
                     }
                 )
             }
@@ -57,10 +93,10 @@ fun RootScreen(
             Column(Modifier.fillMaxSize()) {
                 NavHost(
                     navController = navController,
-                    startDestination = "main",
+                    startDestination = Screen.Top.route,
                     modifier = Modifier.weight(1f)
                 ) {
-                    composable("main") {
+                    composable(Screen.Top.route) {
                         MainScreen(
                             navController = navController,
                             state = state,
@@ -71,34 +107,31 @@ fun RootScreen(
                             showConsentForm = showConsentForm,
                         )
                     }
-                    composable("userAppList") {
+                    composable(Screen.UserAppList.route) {
                         AppListScreen(
                             state = state,
-                            appCategory = AppCategory.USERS,
+                            screen = Screen.UserAppList,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
                             searchByWeb = searchByWeb,
-                            sharePackages = sharePackages,
                         )
                     }
-                    composable("disableableAppList") {
+                    composable(Screen.DisableableAppList.route) {
                         AppListScreen(
                             state = state,
-                            appCategory = AppCategory.DISABLEABLE,
+                            screen = Screen.DisableableAppList,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
                             searchByWeb = searchByWeb,
-                            sharePackages = sharePackages,
                         )
                     }
-                    composable("allAppList") {
+                    composable(Screen.AllAppList.route) {
                         AppListScreen(
                             state = state,
-                            appCategory = AppCategory.ALL,
+                            screen = Screen.AllAppList,
                             launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                             startDetailSettingsActivity = startDetailSettingsActivity,
                             searchByWeb = searchByWeb,
-                            sharePackages = sharePackages,
                         )
                     }
                 }
