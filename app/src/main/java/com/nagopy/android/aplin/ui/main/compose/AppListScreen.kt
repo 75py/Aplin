@@ -24,29 +24,14 @@ fun AppListScreen(
     if (state.packagesModel == null) {
         Loading()
     } else {
-        AppListScreenLoaded(
+        VerticalAppList(
+            modifier = Modifier.padding(8.dp),
             packages = screen.getAppList(state.packagesModel, state.searchText),
             launcherLargeIconSize = launcherLargeIconSize,
             startDetailSettingsActivity = startDetailSettingsActivity,
             searchByWeb = searchByWeb,
         )
     }
-}
-
-@Composable
-fun AppListScreenLoaded(
-    packages: List<PackageModel>,
-    launcherLargeIconSize: Int,
-    startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit,
-) {
-    VerticalAppList(
-        modifier = Modifier.padding(8.dp),
-        packages = packages,
-        launcherLargeIconSize = launcherLargeIconSize,
-        startDetailSettingsActivity = startDetailSettingsActivity,
-        searchByWeb = searchByWeb,
-    )
 }
 
 @Preview
