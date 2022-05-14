@@ -25,7 +25,7 @@ fun AppListScreen(
         Loading()
     } else {
         AppListScreenLoaded(
-            packages = screen.getAppList(state.packagesModel),
+            packages = screen.getAppList(state.packagesModel, state.searchText),
             launcherLargeIconSize = launcherLargeIconSize,
             startDetailSettingsActivity = startDetailSettingsActivity,
             searchByWeb = searchByWeb,

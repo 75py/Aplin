@@ -2,20 +2,10 @@ package com.nagopy.android.aplin.ui.main.compose
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,6 +17,7 @@ import com.nagopy.android.aplin.ui.ads.compose.AdBanner
 import com.nagopy.android.aplin.ui.main.MainUiState
 import com.nagopy.android.aplin.ui.main.MainViewModel
 import com.nagopy.android.aplin.ui.main.Screen
+import com.nagopy.android.aplin.ui.main.SearchWidgetState
 import com.nagopy.android.aplin.ui.theme.AplinTheme
 
 @Composable
@@ -45,48 +36,27 @@ fun RootScreen(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Screen.find(navBackStackEntry?.destination?.route)
+
     AplinTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = currentScreen.resourceId))
+                MainAppBar(
+                    navController = navController,
+                    state = state,
+                    currentScreen = currentScreen,
+                    sharePackages = sharePackages,
+                    onTextChanged = {
+                        mainViewModel.updateSearchTextState(it)
                     },
-                    actions = {
-                        if (state.isLoading && state.packagesModel != null) {
-                            CircularProgressIndicator(color = Color.LightGray)
-                        }
-                        if (currentScreen is Screen.AppList && state.packagesModel != null) {
-                            IconButton(onClick = {
-                                sharePackages.invoke(
-                                    currentScreen.getAppList(
-                                        state.packagesModel
-                                    )
-                                )
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Share,
-                                    contentDescription = "Share"
-                                )
-                            }
-                        }
+                    onCloseClicked = {
+                        mainViewModel.updateSearchTextState("")
+                        mainViewModel.updateSearchWidgetState(SearchWidgetState.CLOSED)
                     },
-                    navigationIcon = if (currentScreen != Screen.Top) {
-                        {
-                            IconButton(onClick = {
-                                navController.popBackStack()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowBack,
-                                    contentDescription = "Back"
-                                )
-                            }
-                        }
-                    } else {
-                        null
-                    }
+                    onSearchTriggered = {
+                        mainViewModel.updateSearchWidgetState(SearchWidgetState.OPENED)
+                    },
                 )
             }
         ) {

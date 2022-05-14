@@ -117,6 +117,18 @@ class MainViewModel(
             .startChooser()
     }
 
+    fun updateSearchWidgetState(newValue: SearchWidgetState) {
+        _viewModelState.update {
+            it.copy(searchWidgetState = newValue)
+        }
+    }
+
+    fun updateSearchTextState(newValue: String) {
+        _viewModelState.update {
+            it.copy(searchText = newValue)
+        }
+    }
+
     companion object {
         private val LINE_SEPARATOR: String = System.getProperty("line.separator") ?: "\n"
     }

@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.model.PackagesModel
+import com.nagopy.android.aplin.ui.main.AppCategory
 import com.nagopy.android.aplin.ui.main.MainUiState
 import com.nagopy.android.aplin.ui.main.Screen
 import com.nagopy.android.aplin.ui.theme.AplinTheme
@@ -40,6 +41,7 @@ fun MainScreen(
         MainScreenLoaded(
             navController,
             state.packagesModel,
+            state.searchText,
             startDetailSettingsActivity,
             searchByWeb,
             startOssLicensesActivity,
@@ -53,6 +55,7 @@ fun MainScreen(
 fun MainScreenLoaded(
     navController: NavController,
     packagesModel: PackagesModel,
+    searchText: String,
     startDetailSettingsActivity: (String) -> Unit,
     searchByWeb: (PackageModel) -> Unit,
     startOssLicensesActivity: () -> Unit,
@@ -66,7 +69,7 @@ fun MainScreenLoaded(
     ) {
         HorizontalAppSection(
             title = stringResource(id = R.string.category_users),
-            packages = packagesModel.userPackages,
+            packages = AppCategory.User.getAppList(packagesModel, searchText),
             navigateToVerticalList = {
                 navController.navigate(Screen.UserAppList.route)
             },
@@ -76,7 +79,7 @@ fun MainScreenLoaded(
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalAppSection(
             title = stringResource(id = R.string.category_disableable),
-            packages = packagesModel.disableablePackages,
+            packages = AppCategory.Disableable.getAppList(packagesModel, searchText),
             navigateToVerticalList = {
                 navController.navigate(Screen.DisableableAppList.route)
             },
@@ -86,7 +89,7 @@ fun MainScreenLoaded(
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalAppSection(
             title = stringResource(id = R.string.category_all),
-            packages = packagesModel.allPackages,
+            packages = AppCategory.All.getAppList(packagesModel, searchText),
             navigateToVerticalList = {
                 navController.navigate(Screen.AllAppList.route)
             },
@@ -129,6 +132,7 @@ fun MainScreenLoadedPreview() {
         MainScreenLoaded(
             navController = rememberNavController(),
             packagesModel = PackagesModel(packages, packages, packages),
+            searchText = "",
             startOssLicensesActivity = {},
             searchByWeb = {},
             startDetailSettingsActivity = {},
