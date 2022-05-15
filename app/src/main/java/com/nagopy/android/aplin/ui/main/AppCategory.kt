@@ -16,6 +16,11 @@ sealed class AppCategory {
             packagesModel.disableablePackages.filter(searchText)
     }
 
+    object Disabled : AppCategory() {
+        override fun getAppList(packagesModel: PackagesModel, searchText: String) =
+            packagesModel.disabledPackages.filter(searchText)
+    }
+
     object All : AppCategory() {
         override fun getAppList(packagesModel: PackagesModel, searchText: String) =
             packagesModel.allPackages.filter(searchText)

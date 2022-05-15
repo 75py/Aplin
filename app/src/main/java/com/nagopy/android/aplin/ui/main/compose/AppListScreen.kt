@@ -16,7 +16,7 @@ import com.nagopy.android.aplin.ui.main.Screen
 @Composable
 fun AppListScreen(
     state: MainUiState,
-    screen: Screen.AppList,
+    screen: Screen.AppListScreen,
     launcherLargeIconSize: Int,
     startDetailSettingsActivity: (String) -> Unit,
     searchByWeb: (PackageModel) -> Unit,
@@ -54,7 +54,7 @@ fun AppListScreenLoadedPreview() {
     AppListScreen(
         state = MainUiState(
             isLoading = false,
-            packagesModel = PackagesModel(packages, packages, packages)
+            packagesModel = PackagesModel(packages, packages, packages, packages)
         ),
         screen = Screen.AllAppList,
         launcherLargeIconSize = 36,

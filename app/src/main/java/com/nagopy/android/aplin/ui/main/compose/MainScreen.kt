@@ -20,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.model.PackagesModel
-import com.nagopy.android.aplin.ui.main.AppCategory
 import com.nagopy.android.aplin.ui.main.MainUiState
 import com.nagopy.android.aplin.ui.main.Screen
 import com.nagopy.android.aplin.ui.theme.AplinTheme
@@ -67,37 +66,19 @@ fun MainScreenLoaded(
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        HorizontalAppSection(
-            title = stringResource(id = R.string.category_users),
-            packages = AppCategory.User.getAppList(packagesModel, searchText),
-            navigateToVerticalList = {
-                navController.navigate(Screen.UserAppList.route)
-            },
-            startDetailSettingsActivity = startDetailSettingsActivity,
-            searchByWeb = searchByWeb,
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        HorizontalAppSection(
-            title = stringResource(id = R.string.category_disableable),
-            packages = AppCategory.Disableable.getAppList(packagesModel, searchText),
-            navigateToVerticalList = {
-                navController.navigate(Screen.DisableableAppList.route)
-            },
-            startDetailSettingsActivity = startDetailSettingsActivity,
-            searchByWeb = searchByWeb,
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        HorizontalAppSection(
-            title = stringResource(id = R.string.category_all),
-            packages = AppCategory.All.getAppList(packagesModel, searchText),
-            navigateToVerticalList = {
-                navController.navigate(Screen.AllAppList.route)
-            },
-            startDetailSettingsActivity = startDetailSettingsActivity,
-            searchByWeb = searchByWeb,
-        )
+        Screen.appListScreens.forEach { appListScreen ->
+            HorizontalAppSection(
+                title = stringResource(id = appListScreen.resourceId),
+                packages = appListScreen.getAppList(packagesModel, searchText),
+                navigateToVerticalList = {
+                    navController.navigate(appListScreen.route)
+                },
+                startDetailSettingsActivity = startDetailSettingsActivity,
+                searchByWeb = searchByWeb,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
 
-        Spacer(modifier = Modifier.height(12.dp))
         Button(onClick = startOssLicensesActivity) {
             Text(stringResource(id = R.string.licenses))
         }
@@ -131,7 +112,7 @@ fun MainScreenLoadedPreview() {
     AplinTheme {
         MainScreenLoaded(
             navController = rememberNavController(),
-            packagesModel = PackagesModel(packages, packages, packages),
+            packagesModel = PackagesModel(packages, packages, packages, packages),
             searchText = "",
             startOssLicensesActivity = {},
             searchByWeb = {},
