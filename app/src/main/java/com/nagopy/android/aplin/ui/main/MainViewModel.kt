@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.nagopy.android.aplin.domain.model.PackageModel
-import com.nagopy.android.aplin.domain.model.PackagesModel
 import com.nagopy.android.aplin.domain.usecase.LoadPackagesUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,11 +52,7 @@ class MainViewModel(
             _viewModelState.update {
                 it.copy(
                     isLoading = false,
-                    packagesModel = PackagesModel(
-                        result.disableablePackages,
-                        result.userPackages,
-                        result.allPackages
-                    )
+                    packagesModel = result,
                 )
             }
         }

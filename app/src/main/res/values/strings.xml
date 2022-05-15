@@ -3,6 +3,7 @@
 
     <string name="category_users">Uninstallable Apps</string>
     <string name="category_disableable">Maybe Disableable Apps</string>
+    <string name="category_disabled">Disabled Apps</string>
     <string name="category_all">All Apps</string>
     <string name="licenses">Open source licenses</string>
     <string name="change_consent_state" translatable="false">Change consent state</string>

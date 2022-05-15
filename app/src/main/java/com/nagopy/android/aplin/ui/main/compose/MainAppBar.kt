@@ -88,7 +88,7 @@ fun DefaultAppBar(
                 CircularProgressIndicator(color = Color.LightGray)
             }
 
-            if (currentScreen is Screen.AppList && state.packagesModel != null) {
+            if (currentScreen is Screen.AppListScreen && state.packagesModel != null) {
                 IconButton(onClick = {
                     sharePackages.invoke(
                         currentScreen.getAppList(

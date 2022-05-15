@@ -77,32 +77,16 @@ fun RootScreen(
                             showConsentForm = showConsentForm,
                         )
                     }
-                    composable(Screen.UserAppList.route) {
-                        AppListScreen(
-                            state = state,
-                            screen = Screen.UserAppList,
-                            launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
-                            startDetailSettingsActivity = startDetailSettingsActivity,
-                            searchByWeb = searchByWeb,
-                        )
-                    }
-                    composable(Screen.DisableableAppList.route) {
-                        AppListScreen(
-                            state = state,
-                            screen = Screen.DisableableAppList,
-                            launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
-                            startDetailSettingsActivity = startDetailSettingsActivity,
-                            searchByWeb = searchByWeb,
-                        )
-                    }
-                    composable(Screen.AllAppList.route) {
-                        AppListScreen(
-                            state = state,
-                            screen = Screen.AllAppList,
-                            launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
-                            startDetailSettingsActivity = startDetailSettingsActivity,
-                            searchByWeb = searchByWeb,
-                        )
+                    Screen.appListScreens.forEach { appListScreen ->
+                        composable(appListScreen.route) {
+                            AppListScreen(
+                                state = state,
+                                screen = appListScreen,
+                                launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
+                                startDetailSettingsActivity = startDetailSettingsActivity,
+                                searchByWeb = searchByWeb,
+                            )
+                        }
                     }
                 }
 

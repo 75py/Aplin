@@ -33,6 +33,10 @@ class LoadPackagesUseCase(
                 }
                 .map { it.toPackageModel() }
                 .sortedWith(compareBy({ it.label }, { it.packageName }))
+            val disabled = src
+                .filter { !it.applicationInfo.enabled }
+                .map { it.toPackageModel() }
+                .sortedWith(compareBy({ it.label }, { it.packageName }))
             val users = src
                 .filter { !categorizePackageUseCase.isBundled(it) }
                 .map { it.toPackageModel() }
@@ -43,6 +47,7 @@ class LoadPackagesUseCase(
 
             PackagesModel(
                 disableablePackages = disableable,
+                disabledPackages = disabled,
                 userPackages = users,
                 allPackages = all,
             )
