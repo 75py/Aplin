@@ -15,4 +15,9 @@
     <string name="display_item_first_install_time">初回インストール日時</string>
     <string name="display_item_last_update_time">最終更新日時</string>
     <string name="display_item_version_name">バージョン名</string>
+
+    <string name="first_install_time_format">初回インストール：%s</string>
+    <string name="last_update_time_format">最終更新：%s</string>
+    <string name="version_format">バージョン：%s</string>
+
 </resources>

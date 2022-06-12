@@ -62,7 +62,7 @@ class LoadPackagesUseCase(
             applicationInfo.enabled,
             firstInstallTime,
             lastUpdateTime,
-            packageName,
+            versionName,
         )
     }
 }
