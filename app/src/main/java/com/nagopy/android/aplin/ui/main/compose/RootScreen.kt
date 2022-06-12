@@ -18,6 +18,7 @@ import com.nagopy.android.aplin.ui.main.MainUiState
 import com.nagopy.android.aplin.ui.main.MainViewModel
 import com.nagopy.android.aplin.ui.main.Screen
 import com.nagopy.android.aplin.ui.main.SearchWidgetState
+import com.nagopy.android.aplin.ui.prefs.PreferenceScreen
 import com.nagopy.android.aplin.ui.theme.AplinTheme
 
 @Composable
@@ -87,6 +88,9 @@ fun RootScreen(
                                 searchByWeb = searchByWeb,
                             )
                         }
+                    }
+                    composable(Screen.Preferences.route) {
+                        PreferenceScreen()
                     }
                 }
 

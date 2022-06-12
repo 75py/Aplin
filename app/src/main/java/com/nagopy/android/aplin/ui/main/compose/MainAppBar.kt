@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -104,13 +105,24 @@ fun DefaultAppBar(
                 }
             }
 
-            IconButton(onClick = {
-                onSearchTriggered()
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = stringResource(id = R.string.search)
-                )
+            if (currentScreen !is Screen.Preferences) {
+                IconButton(onClick = {
+                    onSearchTriggered()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(id = R.string.search)
+                    )
+                }
+
+                IconButton(onClick = {
+                    navController.navigate(Screen.Preferences.route)
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(id = R.string.preferences),
+                    )
+                }
             }
         },
         navigationIcon = if (currentScreen != Screen.Top) {

@@ -9,4 +9,10 @@
     <string name="share">共有</string>
     <string name="search">検索</string>
     <string name="search_hint">アプリ名・パッケージ名で検索する</string>
+
+    <string name="preferences">設定</string>
+    <string name="display_items">表示項目</string>
+    <string name="display_item_first_install_time">初回インストール日時</string>
+    <string name="display_item_last_update_time">最終更新日時</string>
+    <string name="display_item_version_name">バージョン名</string>
 </resources>
