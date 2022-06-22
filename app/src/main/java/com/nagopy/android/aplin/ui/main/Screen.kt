@@ -8,6 +8,8 @@ import com.nagopy.android.aplin.domain.model.PackagesModel
 sealed class Screen(val route: String, @StringRes val resourceId: Int) {
     object Top : Screen("main", R.string.app_name)
 
+    object Preferences : Screen("pref", R.string.preferences)
+
     object UserAppList : AppListScreen("userAppList", R.string.category_users) {
         override fun getAppList(packagesModel: PackagesModel, searchText: String) =
             AppCategory.User.getAppList(packagesModel, searchText)
@@ -42,8 +44,13 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int) {
         val appListScreens =
             listOf(UserAppList, DisableableAppList, DisabledAppList, AllAppList)
 
+        private val values = listOf(
+            Top,
+            Preferences,
+        ) + appListScreens
+
         fun find(route: String?): Screen {
-            return appListScreens.find { it.route == route } ?: Top
+            return values.find { it.route == route } ?: Top
         }
     }
 }
