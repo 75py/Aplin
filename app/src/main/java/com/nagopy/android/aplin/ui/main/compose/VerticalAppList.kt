@@ -38,6 +38,8 @@ import com.nagopy.android.aplin.ui.prefs.UserDataStore
 import com.nagopy.android.aplin.ui.prefs.dataStore
 import java.util.Date
 
+private const val TOO_OLD_TIMESTAMP = 1230768000000L // 2009-01-01
+
 @Composable
 fun VerticalAppList(
     modifier: Modifier = Modifier,
@@ -97,7 +99,7 @@ private fun Item(
                     Spacer(modifier = Modifier.height(4.dp))
                 }
 
-                if (displayItems.contains(DisplayItem.FirstInstallTime) && pkg.firstInstallTime > 0L) {
+                if (displayItems.contains(DisplayItem.FirstInstallTime) && pkg.firstInstallTime > TOO_OLD_TIMESTAMP) {
                     Text(
                         text = stringResource(
                             id = R.string.first_install_time_format,
@@ -109,7 +111,7 @@ private fun Item(
                     )
                 }
 
-                if (displayItems.contains(DisplayItem.LastUpdateTime) && pkg.lastUpdateTime > 0L) {
+                if (displayItems.contains(DisplayItem.LastUpdateTime) && pkg.lastUpdateTime > TOO_OLD_TIMESTAMP) {
                     Text(
                         text = stringResource(
                             id = R.string.last_update_time_format,
