@@ -8,6 +8,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val uiModule = module {
-    viewModel { MainViewModel(get(), get(), get(), get(named(CoroutineDispatcherType.IO))) }
+    viewModel { MainViewModel(get(), get(), get(), get(named(CoroutineDispatcherType.IO)), get()) }
     viewModel { AdsViewModel(get()) }
 }

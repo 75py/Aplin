@@ -7,6 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.jamal.composeprefs.ui.PrefsScreen
+import com.jamal.composeprefs.ui.prefs.ListPref
 import com.jamal.composeprefs.ui.prefs.MultiSelectListPref
 import com.nagopy.android.aplin.R
 
@@ -21,6 +22,16 @@ fun PreferenceScreen() {
                 entries = DisplayItem.values().associate {
                     it.name to stringResource(id = it.labelResId)
                 },
+            )
+        }
+        prefsItem {
+            ListPref(
+                key = SortOrder.KEY,
+                title = stringResource(id = R.string.pref_sort_order),
+                entries = SortOrder.values().associate {
+                    it.name to stringResource(id = it.labelResId)
+                },
+                defaultValue = SortOrder.DEFAULT.name,
             )
         }
     }

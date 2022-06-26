@@ -13,9 +13,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.usecase.LoadPackagesUseCase
+import com.nagopy.android.aplin.ui.prefs.UserDataStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,7 +28,8 @@ class MainViewModel(
     activityManager: ActivityManager,
     private val packageManager: PackageManager,
     private val loadPackagesUseCase: LoadPackagesUseCase,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val userDataStore: UserDataStore,
 ) : ViewModel() {
 
     private val _viewModelState = MutableStateFlow(MainUiState(isLoading = false))
@@ -37,6 +40,23 @@ class MainViewModel(
 
     init {
         updatePackages()
+
+        viewModelScope.launch(ioDispatcher) {
+            userDataStore.sortOrder.collect { newOrder ->
+                logcat { "sortOrder: $newOrder" }
+                _viewModelState.update {
+                    it.copy(
+                        isLoading = false,
+                        packagesModel = it.packagesModel?.let { packagesModel ->
+                            newOrder.sort(
+                                packagesModel
+                            )
+                        },
+                        sortOrder = newOrder,
+                    )
+                }
+            }
+        }
     }
 
     fun updatePackages() {
@@ -52,7 +72,7 @@ class MainViewModel(
             _viewModelState.update {
                 it.copy(
                     isLoading = false,
-                    packagesModel = result,
+                    packagesModel = it.sortOrder.sort(result),
                 )
             }
         }
@@ -82,10 +102,10 @@ class MainViewModel(
             activity.startActivity(actionWebSearch)
         } else {
             val url = "https://www.google.com/search?q=${
-            URLEncoder.encode(
-                packageModel.label,
-                "UTF-8"
-            )
+                URLEncoder.encode(
+                    packageModel.label,
+                    "UTF-8"
+                )
             }%20${packageModel.packageName}"
             val actionView = Intent(Intent.ACTION_VIEW)
                 .setData(Uri.parse(url))
