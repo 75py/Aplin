@@ -20,4 +20,10 @@
     <string name="last_update_time_format">最終更新：%s</string>
     <string name="version_format">バージョン：%s</string>
 
+    <string name="pref_sort_order">ソート順</string>
+    <string name="pref_sort_order_app_name">アプリ名</string>
+    <string name="pref_sort_order_app_package_name">パッケージ名</string>
+    <string name="pref_sort_order_first_install_time_desc">初回インストール日時の降順</string>
+    <string name="pref_sort_order_last_update_time_desc">最終更新日時の降順</string>
+
 </resources>

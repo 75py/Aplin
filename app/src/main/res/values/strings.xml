@@ -20,4 +20,10 @@
     <string name="first_install_time_format">First install: %s</string>
     <string name="last_update_time_format">Last update: %s</string>
     <string name="version_format">Version: %s</string>
+
+    <string name="pref_sort_order">Sort order</string>
+    <string name="pref_sort_order_app_name">App name</string>
+    <string name="pref_sort_order_app_package_name">Package name</string>
+    <string name="pref_sort_order_first_install_time_desc">First install time desc</string>
+    <string name="pref_sort_order_last_update_time_desc">Last update time desc</string>
 </resources>
