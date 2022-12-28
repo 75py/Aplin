@@ -79,7 +79,7 @@ dependencies {
 
 
     implementation "io.insert-koin:koin-android:3.2.0"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.8.0"
     implementation "com.google.accompanist:accompanist-drawablepainter:0.23.1"
     implementation 'com.squareup.logcat:logcat:0.1'
 
