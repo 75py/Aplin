@@ -39,8 +39,7 @@ fun AdBanner(
                 val adView = AdView(context)
                 val displayMetrics = Resources.getSystem().displayMetrics
                 val width = (displayMetrics.widthPixels / displayMetrics.density).toInt()
-                adView.adSize =
-                    AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
+                adView.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width))
                 adView.adUnitId = BuildConfig.AD_UNIT_ID
                 adView
             },
