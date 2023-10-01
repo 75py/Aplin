@@ -1,29 +1,24 @@
-Aplin
-=====
+# Aplin
 
-Application manager for Android!
+## Introduction
+Aplin is an Android application manager that provides a comprehensive list of installed applications on your device. With Aplin, you can easily view:
 
+- Apps that can be uninstalled
+- Apps that can be disabled
+- Already disabled apps
 
-Download
---------
+Simplify your device management with Aplin!
 
-https://play.google.com/store/apps/details?id=com.nagopy.android.aplin
+## Download
+Aplin is available on Google Play. Download it [here](https://play.google.com/store/apps/details?id=com.nagopy.android.aplin).
 
+## License
+Aplin's source code is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
 
-License
--------
+## Contribute
+Contributions to Aplin are always welcome! Whether it's feature enhancements, bug fixes, or documentation improvements, we'd love to have you onboard.
 
-    Copyright 2015 75py
+## Note
+I'm not fluent in English, so please be kind in your interactions and communication regarding Aplin.
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
+Thank you for your understanding and support!
