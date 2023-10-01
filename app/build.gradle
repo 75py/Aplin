@@ -98,7 +98,7 @@ dependencies {
 
     testImplementation "io.mockk:mockk:1.13.3"
     androidTestImplementation "io.mockk:mockk-android:1.13.3"
-    androidTestImplementation "io.mockk:mockk-agent:1.13.3"
+    androidTestImplementation "io.mockk:mockk-agent:1.13.8"
 
     implementation "com.github.JamalMulla:ComposePrefs:1.0.2"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
