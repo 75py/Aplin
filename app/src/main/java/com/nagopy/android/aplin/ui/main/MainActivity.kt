@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                 showConsentForm = {
                     adsViewModel.loadForm(this, force = true)
                 },
-                updateAds = adsViewModel::updateAds,
+                updateAds = adsViewModel::updateAds
             )
         }
 

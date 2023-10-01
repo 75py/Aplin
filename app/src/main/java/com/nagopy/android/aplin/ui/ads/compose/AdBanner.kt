@@ -19,7 +19,7 @@ import com.nagopy.android.aplin.ui.ads.AdsStatus
 @Composable
 fun AdBanner(
     state: AdsStatus,
-    updateAds: (AdsStatus, AdView) -> Unit,
+    updateAds: (AdsStatus, AdView) -> Unit
 ) {
     if (state != AdsStatus.Personalized && state != AdsStatus.NonPersonalized) {
         return

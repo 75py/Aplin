@@ -21,7 +21,7 @@ fun PreferenceScreen() {
                 title = stringResource(id = R.string.display_items),
                 entries = DisplayItem.values().associate {
                     it.name to stringResource(id = it.labelResId)
-                },
+                }
             )
         }
         prefsItem {
@@ -31,7 +31,7 @@ fun PreferenceScreen() {
                 entries = SortOrder.values().associate {
                     it.name to stringResource(id = it.labelResId)
                 },
-                defaultValue = SortOrder.DEFAULT.name,
+                defaultValue = SortOrder.DEFAULT.name
             )
         }
     }

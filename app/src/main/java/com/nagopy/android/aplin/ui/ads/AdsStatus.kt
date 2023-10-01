@@ -5,5 +5,5 @@ enum class AdsStatus {
     NonPersonalized,
     Personalized,
     Denied,
-    Error,
+    Error
 }

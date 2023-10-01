@@ -22,7 +22,8 @@ enum class SortOrder(val labelResId: Int) {
                 compareBy(
                     { it.firstInstallTime * -1 },
                     { it.label },
-                    { it.packageName })
+                    { it.packageName }
+                )
             )
         }
     },
@@ -32,10 +33,11 @@ enum class SortOrder(val labelResId: Int) {
                 compareBy(
                     { it.lastUpdateTime * -1 },
                     { it.label },
-                    { it.packageName })
+                    { it.packageName }
+                )
             )
         }
-    },
+    }
     ;
 
     protected abstract fun sort(packages: List<PackageModel>): List<PackageModel>
@@ -45,7 +47,7 @@ enum class SortOrder(val labelResId: Int) {
             disableablePackages = sort(packagesModel.disableablePackages),
             disabledPackages = sort(packagesModel.disabledPackages),
             userPackages = sort(packagesModel.userPackages),
-            allPackages = sort(packagesModel.allPackages),
+            allPackages = sort(packagesModel.allPackages)
         )
     }
 
@@ -53,5 +55,4 @@ enum class SortOrder(val labelResId: Int) {
         const val KEY = "sort_order"
         val DEFAULT = AppName
     }
-
 }

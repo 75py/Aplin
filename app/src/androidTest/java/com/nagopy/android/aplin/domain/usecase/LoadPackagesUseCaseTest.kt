@@ -30,8 +30,8 @@ class LoadPackagesUseCaseTest {
             PackageRepositoryImpl(context.packageManager),
             CategorizePackageUseCase(
                 PackageRepositoryImpl(context.packageManager),
-                DevicePolicyRepositoryImpl(context.getSystemService(DevicePolicyManager::class.java)),
-            ),
+                DevicePolicyRepositoryImpl(context.getSystemService(DevicePolicyManager::class.java))
+            )
         )
 
         val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

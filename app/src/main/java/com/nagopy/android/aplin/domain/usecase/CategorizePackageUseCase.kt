@@ -10,7 +10,7 @@ import java.lang.reflect.Field
 
 class CategorizePackageUseCase(
     private val packageRepository: PackageRepository,
-    private val devicePolicyRepository: DevicePolicyRepository,
+    private val devicePolicyRepository: DevicePolicyRepository
 ) {
 
     private val systemPackageSignatures: List<String> by lazy {
@@ -183,6 +183,6 @@ class CategorizePackageUseCase(
         "com.sonyericsson.providers.cnap", // 発信者名表示プロバイダー
         "com.sonymobile.android.contacts", // 連絡先
         "com.nttdocomo.android.wipe", // 遠隔初期化
-        "com.sonymobile.android.dialer", // 電話
+        "com.sonymobile.android.dialer" // 電話
     )
 }

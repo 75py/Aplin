@@ -32,7 +32,7 @@ fun RootScreen(
     adsStatus: AdsStatus,
     isGDPR: Boolean,
     showConsentForm: () -> Unit,
-    updateAds: (AdsStatus, AdView) -> Unit,
+    updateAds: (AdsStatus, AdView) -> Unit
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -57,7 +57,7 @@ fun RootScreen(
                     },
                     onSearchTriggered = {
                         mainViewModel.updateSearchWidgetState(SearchWidgetState.OPENED)
-                    },
+                    }
                 )
             }
         ) {
@@ -75,7 +75,7 @@ fun RootScreen(
                             searchByWeb = searchByWeb,
                             startOssLicensesActivity = startOssLicensesActivity,
                             isGDPR = isGDPR,
-                            showConsentForm = showConsentForm,
+                            showConsentForm = showConsentForm
                         )
                     }
                     Screen.appListScreens.forEach { appListScreen ->
@@ -85,7 +85,7 @@ fun RootScreen(
                                 screen = appListScreen,
                                 launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                                 startDetailSettingsActivity = startDetailSettingsActivity,
-                                searchByWeb = searchByWeb,
+                                searchByWeb = searchByWeb
                             )
                         }
                     }
@@ -96,7 +96,7 @@ fun RootScreen(
 
                 AdBanner(
                     state = adsStatus,
-                    updateAds = updateAds,
+                    updateAds = updateAds
                 )
             }
         }

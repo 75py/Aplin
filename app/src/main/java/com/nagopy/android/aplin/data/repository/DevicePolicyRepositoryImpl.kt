@@ -7,7 +7,7 @@ import logcat.logcat
 import java.lang.reflect.Method
 
 class DevicePolicyRepositoryImpl(
-    private val devicePolicyManager: DevicePolicyManager,
+    private val devicePolicyManager: DevicePolicyManager
 ) : DevicePolicyRepository {
 
     @VisibleForTesting

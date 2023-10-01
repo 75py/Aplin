@@ -29,7 +29,7 @@ class MainViewModel(
     private val packageManager: PackageManager,
     private val loadPackagesUseCase: LoadPackagesUseCase,
     private val ioDispatcher: CoroutineDispatcher,
-    private val userDataStore: UserDataStore,
+    private val userDataStore: UserDataStore
 ) : ViewModel() {
 
     private val _viewModelState = MutableStateFlow(MainUiState(isLoading = false))
@@ -52,7 +52,7 @@ class MainViewModel(
                                 packagesModel
                             )
                         },
-                        sortOrder = newOrder,
+                        sortOrder = newOrder
                     )
                 }
             }
@@ -72,7 +72,7 @@ class MainViewModel(
             _viewModelState.update {
                 it.copy(
                     isLoading = false,
-                    packagesModel = it.sortOrder.sort(result),
+                    packagesModel = it.sortOrder.sort(result)
                 )
             }
         }
@@ -102,10 +102,10 @@ class MainViewModel(
             activity.startActivity(actionWebSearch)
         } else {
             val url = "https://www.google.com/search?q=${
-                URLEncoder.encode(
-                    packageModel.label,
-                    "UTF-8"
-                )
+            URLEncoder.encode(
+                packageModel.label,
+                "UTF-8"
+            )
             }%20${packageModel.packageName}"
             val actionView = Intent(Intent.ACTION_VIEW)
                 .setData(Uri.parse(url))
