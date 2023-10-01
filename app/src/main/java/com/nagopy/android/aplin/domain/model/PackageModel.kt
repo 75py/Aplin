@@ -9,5 +9,5 @@ data class PackageModel(
     val isEnabled: Boolean,
     val firstInstallTime: Long,
     val lastUpdateTime: Long,
-    val versionName: String?,
+    val versionName: String?
 )

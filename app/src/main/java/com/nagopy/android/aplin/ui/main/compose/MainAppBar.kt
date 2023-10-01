@@ -48,7 +48,7 @@ fun MainAppBar(
     sharePackages: (List<PackageModel>) -> Unit,
     onTextChanged: (String) -> Unit,
     onCloseClicked: () -> Unit,
-    onSearchTriggered: () -> Unit,
+    onSearchTriggered: () -> Unit
 ) {
     when (state.searchWidgetState) {
         SearchWidgetState.CLOSED -> {
@@ -57,7 +57,7 @@ fun MainAppBar(
                 state = state,
                 currentScreen = currentScreen,
                 sharePackages = sharePackages,
-                onSearchTriggered = onSearchTriggered,
+                onSearchTriggered = onSearchTriggered
             )
         }
         SearchWidgetState.OPENED -> {
@@ -66,7 +66,7 @@ fun MainAppBar(
                 currentScreen = currentScreen,
                 text = state.searchText,
                 onTextChanged = onTextChanged,
-                onCloseClicked = onCloseClicked,
+                onCloseClicked = onCloseClicked
             )
         }
     }
@@ -78,7 +78,7 @@ fun DefaultAppBar(
     state: MainUiState,
     currentScreen: Screen,
     sharePackages: (List<PackageModel>) -> Unit,
-    onSearchTriggered: () -> Unit,
+    onSearchTriggered: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -94,7 +94,7 @@ fun DefaultAppBar(
                     sharePackages.invoke(
                         currentScreen.getAppList(
                             state.packagesModel,
-                            state.searchText,
+                            state.searchText
                         )
                     )
                 }) {
@@ -120,7 +120,7 @@ fun DefaultAppBar(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(id = R.string.preferences),
+                        contentDescription = stringResource(id = R.string.preferences)
                     )
                 }
             }
@@ -138,7 +138,7 @@ fun DefaultAppBar(
             }
         } else {
             null
-        },
+        }
     )
 }
 
@@ -148,7 +148,7 @@ fun SearchAppBar(
     currentScreen: Screen,
     text: String,
     onTextChanged: (String) -> Unit,
-    onCloseClicked: () -> Unit,
+    onCloseClicked: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     TopAppBar {
@@ -166,7 +166,7 @@ fun SearchAppBar(
                 )
             },
             textStyle = TextStyle(
-                fontSize = MaterialTheme.typography.subtitle1.fontSize,
+                fontSize = MaterialTheme.typography.subtitle1.fontSize
             ),
             singleLine = true,
             maxLines = 1,
@@ -196,17 +196,17 @@ fun SearchAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close Icon",
+                        contentDescription = "Close Icon"
                     )
                 }
             },
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search,
+                imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
                     // onSearchClicked(text)
-                },
+                }
             ),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
@@ -215,7 +215,7 @@ fun SearchAppBar(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
-            ),
+            )
         )
     }
 
@@ -235,7 +235,7 @@ fun SearchAppBarPreview() {
                     currentScreen = Screen.Top,
                     text = "text",
                     onTextChanged = {},
-                    onCloseClicked = {},
+                    onCloseClicked = {}
                 )
             }
         ) {}

@@ -19,7 +19,7 @@ fun AppListScreen(
     screen: Screen.AppListScreen,
     launcherLargeIconSize: Int,
     startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit,
+    searchByWeb: (PackageModel) -> Unit
 ) {
     if (state.packagesModel == null) {
         Loading()
@@ -29,7 +29,7 @@ fun AppListScreen(
             packages = screen.getAppList(state.packagesModel, state.searchText),
             launcherLargeIconSize = launcherLargeIconSize,
             startDetailSettingsActivity = startDetailSettingsActivity,
-            searchByWeb = searchByWeb,
+            searchByWeb = searchByWeb
         )
     }
 }
@@ -48,7 +48,7 @@ fun AppListScreenLoadedPreview() {
             isEnabled = it % 2 == 0,
             firstInstallTime = 0L,
             lastUpdateTime = 0L,
-            versionName = "1.0.0",
+            versionName = "1.0.0"
         )
     }
     AppListScreen(
@@ -59,6 +59,6 @@ fun AppListScreenLoadedPreview() {
         screen = Screen.AllAppList,
         launcherLargeIconSize = 36,
         startDetailSettingsActivity = {},
-        searchByWeb = {},
+        searchByWeb = {}
     )
 }

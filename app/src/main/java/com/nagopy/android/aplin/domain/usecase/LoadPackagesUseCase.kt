@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 
 class LoadPackagesUseCase(
     private val packageRepository: PackageRepository,
-    private val categorizePackageUseCase: CategorizePackageUseCase,
+    private val categorizePackageUseCase: CategorizePackageUseCase
 ) {
 
     suspend fun execute(): PackagesModel = coroutineScope {
@@ -49,7 +49,7 @@ class LoadPackagesUseCase(
                 disableablePackages = disableable,
                 disabledPackages = disabled,
                 userPackages = users,
-                allPackages = all,
+                allPackages = all
             )
         }
     }
@@ -62,7 +62,7 @@ class LoadPackagesUseCase(
             applicationInfo.enabled,
             firstInstallTime,
             lastUpdateTime,
-            versionName,
+            versionName
         )
     }
 }

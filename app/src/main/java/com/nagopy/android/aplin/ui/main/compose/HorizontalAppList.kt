@@ -30,7 +30,7 @@ import com.nagopy.android.aplin.domain.model.PackageModel
 fun HorizontalAppList(
     disableablePackages: List<PackageModel>,
     startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit,
+    searchByWeb: (PackageModel) -> Unit
 ) {
     BoxWithConstraints {
         val itemWidth = maxWidth / 2.6f
@@ -50,7 +50,7 @@ private fun Item(
     iconSize: Dp,
     startDetailSettingsActivity: (String) -> Unit,
     searchByWeb: (PackageModel) -> Unit,
-    pkg: PackageModel,
+    pkg: PackageModel
 ) {
     Card(
         modifier = Modifier
@@ -60,12 +60,12 @@ private fun Item(
             .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
             .combinedClickable(
                 onClick = { startDetailSettingsActivity.invoke(pkg.packageName) },
-                onLongClick = { searchByWeb.invoke(pkg) },
-            ),
+                onLongClick = { searchByWeb.invoke(pkg) }
+            )
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painter = rememberDrawablePainter(drawable = pkg.icon),
@@ -86,7 +86,7 @@ private fun Item(
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.End,
+                    textAlign = TextAlign.End
                 )
             }
         }

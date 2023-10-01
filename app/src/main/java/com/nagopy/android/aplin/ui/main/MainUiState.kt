@@ -8,5 +8,5 @@ data class MainUiState(
     val packagesModel: PackagesModel? = null,
     val sortOrder: SortOrder = SortOrder.DEFAULT,
     val searchWidgetState: SearchWidgetState = SearchWidgetState.CLOSED,
-    val searchText: String = "",
+    val searchText: String = ""
 )

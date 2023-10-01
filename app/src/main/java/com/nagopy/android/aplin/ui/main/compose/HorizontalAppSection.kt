@@ -22,7 +22,7 @@ fun HorizontalAppSection(
     packages: List<PackageModel>,
     navigateToVerticalList: () -> Unit,
     startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit,
+    searchByWeb: (PackageModel) -> Unit
 ) {
     Column {
         Row(
@@ -40,7 +40,7 @@ fun HorizontalAppSection(
             )
             Icon(
                 imageVector = Icons.Default.ArrowForward,
-                contentDescription = "",
+                contentDescription = ""
             )
         }
         Spacer(modifier = Modifier.height(8.dp))

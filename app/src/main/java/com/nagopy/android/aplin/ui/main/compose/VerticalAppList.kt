@@ -46,7 +46,7 @@ fun VerticalAppList(
     packages: List<PackageModel>,
     launcherLargeIconSize: Int,
     startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit,
+    searchByWeb: (PackageModel) -> Unit
 ) {
     val displayItems =
         UserDataStore(LocalContext.current.dataStore).displayItems.collectAsState(initial = emptyList())
@@ -65,7 +65,7 @@ private fun Item(
     searchByWeb: (PackageModel) -> Unit,
     iconSize: Dp,
     displayItems: List<DisplayItem>,
-    pkg: PackageModel,
+    pkg: PackageModel
 ) {
     Card(
         modifier = Modifier
@@ -75,12 +75,12 @@ private fun Item(
             .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
             .combinedClickable(
                 onClick = { startDetailSettingsActivity.invoke(pkg.packageName) },
-                onLongClick = { searchByWeb.invoke(pkg) },
-            ),
+                onLongClick = { searchByWeb.invoke(pkg) }
+            )
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = rememberDrawablePainter(drawable = pkg.icon),
@@ -92,7 +92,7 @@ private fun Item(
                     text = pkg.label,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Start,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 if (displayItems.isNotEmpty()) {
@@ -107,7 +107,7 @@ private fun Item(
                         ),
                         fontSize = 14.sp,
                         textAlign = TextAlign.End,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
 
@@ -119,7 +119,7 @@ private fun Item(
                         ),
                         fontSize = 14.sp,
                         textAlign = TextAlign.End,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
 
@@ -131,7 +131,7 @@ private fun Item(
                         ),
                         fontSize = 14.sp,
                         textAlign = TextAlign.End,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
 
@@ -139,7 +139,7 @@ private fun Item(
                     text = pkg.packageName,
                     fontSize = 14.sp,
                     textAlign = TextAlign.End,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -164,7 +164,7 @@ fun ItemPreview() {
             isEnabled = true,
             firstInstallTime = Date().time,
             lastUpdateTime = Date().time,
-            versionName = "1.0.0",
+            versionName = "1.0.0"
         )
     )
 }
@@ -183,13 +183,13 @@ fun VerticalAppListPreview() {
             isEnabled = it % 2 == 0,
             firstInstallTime = 0L,
             lastUpdateTime = 0L,
-            versionName = "1.0.0",
+            versionName = "1.0.0"
         )
     }
     VerticalAppList(
         packages = packages,
         launcherLargeIconSize = 32,
         startDetailSettingsActivity = {},
-        searchByWeb = {},
+        searchByWeb = {}
     )
 }

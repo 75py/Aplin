@@ -1,0 +1,84 @@
+[versions]
+# sdk
+compileSdk = "34"
+minSdk = "26"
+targetSdk = "34"
+javaVersion = "17"
+composeCompilerExtVersion = "1.5.3"
+
+# plugins
+ossLicensesPlugin = "0.10.6"
+androidGradlePlugin = "8.1.2"
+kotlinAndroidPlugin = "1.9.10"
+ktlintPlugin = "11.6.0"
+
+# libraries
+kotlin = "1.9.10"
+ktx = "1.12.0"
+composeUi = "1.5.2"
+composeMaterial = "1.5.2"
+composeToolingPreview = "1.5.2"
+lifecycleRuntimeKtx = "2.6.2"
+activityCompose = "1.7.2"
+junit = "4.13.2"
+androidxTestExtJunit = "1.1.5"
+androidxTestEspressoCore = "3.5.1"
+androidxTestRunner = "1.5.2"
+androidxTestRules = "1.5.0"
+androidxTestUiautomator = "2.2.0"
+koinAndroid = "3.5.0"
+kotlinReflect = "1.9.10"
+accompanistDrawablepainter = "0.32.0"
+logcat = "0.1"
+navigationCompose = "2.7.3"
+ossLicensesPluginVersion = "0.10.6"
+playServicesOssLicenses = "17.0.1"
+appcompat = "1.6.1"
+playServicesAds = "22.4.0"
+ump = "2.1.0"
+preferenceKtx = "1.2.1"
+mockk = "1.13.8"
+mockkAndroid = "1.13.8"
+mockkAgent = "1.13.8"
+composePrefs = "1.0.2"
+datastorePreferences = "1.0.0"
+
+[plugins]
+androidApp = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidLib = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroidPlugin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
+
+[libraries]
+ossLicenses = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
+androidxKtx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+composeUi = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
+composeMaterial = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
+composeToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeToolingPreview" }
+lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidxTestExtJunit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
+androidxTestEspressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspressoCore" }
+androidxTestRunner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+androidxTestRules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
+androidxTestUiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidxTestUiautomator" }
+kotlinTest = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+androidxComposeUiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeUi" }
+androidxComposeUiTooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
+koinAndroid = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
+kotlinReflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlinReflect" }
+accompanistDrawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
+logcat = { group = "com.squareup.logcat", name = "logcat", version.ref = "logcat" }
+navigationCompose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+oss-licenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "ossLicensesPluginVersion" }
+playServicesOssLicenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "playServicesOssLicenses" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+playServicesAds = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
+ump = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "ump" }
+preferenceKtx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockkAndroid = { group = "io.mockk", name = "mockk-android", version.ref = "mockkAndroid" }
+mockkAgent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkAgent" }
+composePrefs = { group = "com.github.JamalMulla", name = "ComposePrefs", version.ref = "composePrefs" }
+datastorePreferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }

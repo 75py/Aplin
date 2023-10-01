@@ -46,7 +46,7 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int) {
 
         private val values = listOf(
             Top,
-            Preferences,
+            Preferences
         ) + appListScreens
 
         fun find(route: String?): Screen {

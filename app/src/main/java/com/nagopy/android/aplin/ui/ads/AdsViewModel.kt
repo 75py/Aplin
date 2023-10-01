@@ -22,7 +22,7 @@ import logcat.LogPriority
 import logcat.logcat
 
 class AdsViewModel(
-    private val prefs: SharedPreferences,
+    private val prefs: SharedPreferences
 ) : ViewModel() {
 
     private val _adsState = MutableStateFlow(AdsStatus.NotInitialized)

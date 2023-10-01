@@ -32,7 +32,7 @@ fun MainScreen(
     searchByWeb: (PackageModel) -> Unit,
     startOssLicensesActivity: () -> Unit,
     isGDPR: Boolean,
-    showConsentForm: () -> Unit,
+    showConsentForm: () -> Unit
 ) {
     if (state.packagesModel == null) {
         Loading()
@@ -45,7 +45,7 @@ fun MainScreen(
             searchByWeb,
             startOssLicensesActivity,
             isGDPR,
-            showConsentForm,
+            showConsentForm
         )
     }
 }
@@ -59,7 +59,7 @@ fun MainScreenLoaded(
     searchByWeb: (PackageModel) -> Unit,
     startOssLicensesActivity: () -> Unit,
     isGDPR: Boolean,
-    showConsentForm: () -> Unit,
+    showConsentForm: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -74,7 +74,7 @@ fun MainScreenLoaded(
                     navController.navigate(appListScreen.route)
                 },
                 startDetailSettingsActivity = startDetailSettingsActivity,
-                searchByWeb = searchByWeb,
+                searchByWeb = searchByWeb
             )
             Spacer(modifier = Modifier.height(12.dp))
         }
@@ -106,7 +106,7 @@ fun MainScreenLoadedPreview() {
             isEnabled = it % 2 == 0,
             firstInstallTime = 0L,
             lastUpdateTime = 0L,
-            versionName = "1.0.0",
+            versionName = "1.0.0"
         )
     }
     AplinTheme {
@@ -118,7 +118,7 @@ fun MainScreenLoadedPreview() {
             searchByWeb = {},
             startDetailSettingsActivity = {},
             isGDPR = true,
-            showConsentForm = {},
+            showConsentForm = {}
         )
     }
 }

@@ -14,7 +14,7 @@ import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.staticProperties
 
 class PackageRepositoryImpl(
-    private val packageManager: PackageManager,
+    private val packageManager: PackageManager
 ) : PackageRepository {
 
     companion object {
@@ -60,7 +60,7 @@ class PackageRepositoryImpl(
     override suspend fun loadCurrentDefaultHomePackageName(): String? {
         val res = packageManager.resolveActivity(
             Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME),
-            PackageManager.MATCH_DEFAULT_ONLY,
+            PackageManager.MATCH_DEFAULT_ONLY
         )
         logcat(LogPriority.VERBOSE) { "loadCurrentDefaultHome = ${res?.activityInfo?.applicationInfo?.packageName}" }
         return res?.activityInfo?.applicationInfo?.packageName
