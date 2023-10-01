@@ -60,6 +60,7 @@ android {
             excludes += "META-INF/LICENSE-notice.md"
         }
     }
+    namespace 'com.nagopy.android.aplin'
 }
 
 dependencies {
