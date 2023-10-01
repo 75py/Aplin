@@ -1,10 +1,11 @@
 import java.util.Properties
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidApp)
+    alias(libs.plugins.kotlinAndroid)
     id("com.google.android.gms.oss-licenses-plugin")
-    id("org.jlleitschuh.gradle.ktlint")
+    alias(libs.plugins.ktlint)
 }
 
 android {
