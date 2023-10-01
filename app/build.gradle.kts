@@ -9,13 +9,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(34)
+    compileSdk = libs.versions.compileSdk.get().toInt()
     namespace = "com.nagopy.android.aplin"
 
     defaultConfig {
         applicationId = "com.nagopy.android.aplin"
-        minSdkVersion(26)
-        targetSdkVersion(34)
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 40
         versionName = "5.4.0"
 
@@ -39,17 +39,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.javaVersion.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.javaVersion.get())
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = libs.versions.javaVersion.get()
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = libs.versions.composeCompilerExtVersion.get()
     }
     packagingOptions {
         resources {

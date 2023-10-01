@@ -1,9 +1,18 @@
 [versions]
+# sdk
+compileSdk = "34"
+minSdk = "26"
+targetSdk = "34"
+javaVersion = "17"
+composeCompilerExtVersion = "1.5.3"
+
+# plugins
 ossLicensesPlugin = "0.10.6"
 androidGradlePlugin = "8.1.2"
 kotlinAndroidPlugin = "1.9.10"
 ktlintPlugin = "11.6.0"
 
+# libraries
 kotlin = "1.9.10"
 ktx = "1.12.0"
 composeUi = "1.5.2"
