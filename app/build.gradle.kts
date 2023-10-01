@@ -60,43 +60,43 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.compose.ui:ui:1.5.2")
-    implementation("androidx.compose.material:material:1.5.2")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.5.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.7.2")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestImplementation("androidx.test:rules:1.5.0")
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
-    androidTestImplementation("org.jetbrains.kotlin:kotlin-test")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.5.2")
+    implementation(libs.androidxKtx)
+    implementation(libs.composeUi)
+    implementation(libs.composeMaterial)
+    implementation(libs.composeToolingPreview)
+    implementation(libs.lifecycleRuntimeKtx)
+    implementation(libs.activityCompose)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidxTestExtJunit)
+    androidTestImplementation(libs.androidxTestEspressoCore)
+    androidTestImplementation(libs.androidxTestRunner)
+    androidTestImplementation(libs.androidxTestRules)
+    androidTestImplementation(libs.androidxTestUiautomator)
+    androidTestImplementation(libs.kotlinTest)
+    androidTestImplementation(libs.androidxComposeUiTestJunit4)
+    debugImplementation(libs.androidxComposeUiTooling)
 
-    implementation("io.insert-koin:koin-android:3.5.0")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
-    implementation("com.google.accompanist:accompanist-drawablepainter:0.32.0")
-    implementation("com.squareup.logcat:logcat:0.1")
+    implementation(libs.koinAndroid)
+    implementation(libs.kotlinReflect)
+    implementation(libs.accompanistDrawablepainter)
+    implementation(libs.logcat)
 
-    implementation("androidx.navigation:navigation-compose:2.7.3")
+    implementation(libs.navigationCompose)
 
-    implementation("com.google.android.gms:play-services-oss-licenses:17.0.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation(libs.playServicesOssLicenses)
+    implementation(libs.appcompat)
 
-    implementation("com.google.android.gms:play-services-ads:22.4.0")
+    implementation(libs.playServicesAds)
 
-    implementation("com.google.android.ump:user-messaging-platform:2.1.0")
-    implementation("androidx.preference:preference-ktx:1.2.1")
+    implementation(libs.ump)
+    implementation(libs.preferenceKtx)
 
-    testImplementation("io.mockk:mockk:1.13.8")
-    androidTestImplementation("io.mockk:mockk-android:1.13.8")
-    androidTestImplementation("io.mockk:mockk-agent:1.13.8")
+    testImplementation(libs.mockk)
+    androidTestImplementation(libs.mockkAndroid)
+    androidTestImplementation(libs.mockkAgent)
 
-    implementation("com.github.JamalMulla:ComposePrefs:1.0.2")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.composePrefs)
+    implementation(libs.datastorePreferences)
 }
 
 fun readProperties(propertiesFile: File) = Properties().apply {
