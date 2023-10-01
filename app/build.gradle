@@ -81,9 +81,9 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:1.5.2"
 
 
-    implementation "io.insert-koin:koin-android:3.2.0"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.20"
-    implementation "com.google.accompanist:accompanist-drawablepainter:0.23.1"
+    implementation "io.insert-koin:koin-android:3.5.0"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.9.10"
+    implementation "com.google.accompanist:accompanist-drawablepainter:0.32.0"
     implementation 'com.squareup.logcat:logcat:0.1'
 
     implementation "androidx.navigation:navigation-compose:2.7.3"
@@ -94,7 +94,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:22.4.0'
 
     implementation 'com.google.android.ump:user-messaging-platform:2.1.0'
-    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
 
     testImplementation "io.mockk:mockk:1.13.8"
     androidTestImplementation "io.mockk:mockk-android:1.13.8"
