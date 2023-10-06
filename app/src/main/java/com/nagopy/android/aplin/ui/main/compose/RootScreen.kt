@@ -1,7 +1,10 @@
 package com.nagopy.android.aplin.ui.main.compose
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -71,7 +74,13 @@ fun RootScreen(
                     startDestination = Screen.Top.route,
                     modifier = Modifier.weight(1f)
                 ) {
-                    composable(Screen.Top.route) {
+                    composable(
+                        Screen.Top.route,
+                        enterTransition = { slideInHorizontally { width -> width } },
+                        exitTransition = { slideOutHorizontally { width -> -width } },
+                        popEnterTransition = { slideInHorizontally { width -> -width } },
+                        popExitTransition = { slideOutHorizontally { width -> width } }
+                    ) {
                         MainScreen(
                             navController = navController,
                             state = state,
@@ -83,7 +92,13 @@ fun RootScreen(
                         )
                     }
                     Screen.appListScreens.forEach { appListScreen ->
-                        composable(appListScreen.route) {
+                        composable(
+                            appListScreen.route,
+                            enterTransition = { slideInHorizontally { width -> width } },
+                            exitTransition = { slideOutHorizontally { width -> -width } },
+                            popEnterTransition = { slideInHorizontally { width -> -width } },
+                            popExitTransition = { slideOutHorizontally { width -> width } }
+                        ) {
                             AppListScreen(
                                 state = state,
                                 screen = appListScreen,
@@ -93,7 +108,13 @@ fun RootScreen(
                             )
                         }
                     }
-                    composable(Screen.Preferences.route) {
+                    composable(
+                        Screen.Preferences.route,
+                        enterTransition = { slideInHorizontally { width -> width } },
+                        exitTransition = { slideOutHorizontally { width -> -width } },
+                        popEnterTransition = { slideInHorizontally { width -> -width } },
+                        popExitTransition = { slideOutHorizontally { width -> width } }
+                    ) {
                         PreferenceScreen()
                     }
                 }
