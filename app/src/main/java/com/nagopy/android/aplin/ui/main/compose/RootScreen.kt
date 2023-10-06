@@ -60,8 +60,12 @@ fun RootScreen(
                     }
                 )
             }
-        ) {
-            Column(Modifier.fillMaxSize()) {
+        ) { padding ->
+            Column(
+                Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
                 NavHost(
                     navController = navController,
                     startDestination = Screen.Top.route,
