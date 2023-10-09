@@ -16,8 +16,8 @@ android {
         applicationId = "com.nagopy.android.aplin"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 41
-        versionName = "5.4.1"
+        versionCode = 42
+        versionName = "5.4.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
