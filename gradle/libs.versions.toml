@@ -10,7 +10,7 @@ composeCompilerExtVersion = "1.5.3"
 ossLicensesPlugin = "0.10.6"
 androidGradlePlugin = "8.1.2"
 kotlinAndroidPlugin = "1.9.21"
-ktlintPlugin = "12.0.2"
+ktlintPlugin = "12.0.3"
 
 # libraries
 kotlin = "1.9.21"
