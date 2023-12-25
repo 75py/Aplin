@@ -13,7 +13,7 @@ kotlinAndroidPlugin = "1.9.21"
 ktlintPlugin = "12.0.3"
 
 # libraries
-kotlin = "1.9.21"
+kotlin = "1.9.22"
 ktx = "1.12.0"
 composeUi = "1.5.2"
 composeMaterial = "1.5.2"
