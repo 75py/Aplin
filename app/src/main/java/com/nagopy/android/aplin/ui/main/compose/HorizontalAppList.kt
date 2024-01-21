@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.nagopy.android.aplin.domain.model.PackageModel
@@ -33,7 +34,9 @@ fun HorizontalAppList(
     searchByWeb: (PackageModel) -> Unit
 ) {
     BoxWithConstraints {
-        val itemWidth = maxWidth / 2.6f
+        val w = maxWidth / 2.6f
+        val h = maxHeight / 2.6f
+        val itemWidth = min(w, h)
         val iconSize = itemWidth / 2.0f
         LazyRow {
             items(disableablePackages) { pkg ->
