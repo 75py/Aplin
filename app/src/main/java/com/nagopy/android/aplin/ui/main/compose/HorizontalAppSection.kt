@@ -25,25 +25,31 @@ fun HorizontalAppSection(
     searchByWeb: (PackageModel) -> Unit
 ) {
     Column {
-        Row(
-            modifier = Modifier
-                .clickable {
-                    navigateToVerticalList.invoke()
-                }
-                .padding(8.dp)
-        ) {
-            Text(
-                text = title + " (${packages.size})",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .weight(1f)
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowForward,
-                contentDescription = ""
-            )
-        }
+        SectionHeader(title, packages.size, navigateToVerticalList)
         Spacer(modifier = Modifier.height(8.dp))
         HorizontalAppList(packages, startDetailSettingsActivity, searchByWeb)
+    }
+}
+
+@Composable
+fun SectionHeader(
+    title: String,
+    packageCount: Int,
+    navigateToVerticalList: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable(onClick = navigateToVerticalList)
+            .padding(8.dp)
+    ) {
+        Text(
+            text = "$title ($packageCount)",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            imageVector = Icons.Default.ArrowForward,
+            contentDescription = ""
+        )
     }
 }
