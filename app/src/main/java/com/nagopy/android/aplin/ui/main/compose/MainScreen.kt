@@ -92,12 +92,15 @@ fun MainScreenLoaded(
     }
 }
 
-@Preview
+@Preview(name = "5-inch Device Portrait", widthDp = 360, heightDp = 640)
+@Preview(name = "5-inch Device Landscape", widthDp = 640, heightDp = 360)
+@Preview(name = "10-inch Tablet Portrait", widthDp = 600, heightDp = 960)
+@Preview(name = "10-inch Tablet Landscape", widthDp = 960, heightDp = 600)
 @Composable
 fun MainScreenLoadedPreview() {
     val packages = IntRange(0, 20).map {
         PackageModel(
-            packageName = "com.example$it",
+            packageName = if (it % 2 == 0) "com.example.foo.bar.foo.bar$it" else "com.example",
             label = "Example Label $it",
             icon = AppCompatResources.getDrawable(
                 LocalContext.current,
