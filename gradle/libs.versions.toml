@@ -4,7 +4,7 @@ compileSdk = "34"
 minSdk = "26"
 targetSdk = "34"
 javaVersion = "17"
-composeCompilerExtVersion = "1.5.8"
+composeCompilerExtVersion = "1.5.13"
 
 # plugins
 ossLicensesPlugin = "0.10.6"
