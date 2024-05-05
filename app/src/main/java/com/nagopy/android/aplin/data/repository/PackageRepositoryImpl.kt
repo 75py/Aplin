@@ -42,9 +42,14 @@ class PackageRepositoryImpl(
             PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
         val apps = packageManager.getInstalledApplications(retrieveFlags)
             .filterNot { hiddenModules.contains(it.packageName) }
-            .map {
+            .mapNotNull {
                 logcat(LogPriority.VERBOSE) { "loadAll() ${it.packageName}" }
-                packageManager.getPackageInfo(it.packageName, flags)
+                try {
+                    packageManager.getPackageInfo(it.packageName, flags)
+                } catch (e: PackageManager.NameNotFoundException) {
+                    logcat(LogPriority.WARN) { "error: $e" }
+                    null
+                }
             }
         return apps
     }
