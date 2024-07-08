@@ -39,7 +39,7 @@ ump = "2.2.0"
 preferenceKtx = "1.2.1"
 mockk = "1.13.10"
 mockkAndroid = "1.13.10"
-mockkAgent = "1.13.9"
+mockkAgent = "1.13.11"
 composePrefs = "1.0.6"
 datastorePreferences = "1.0.0"
 
