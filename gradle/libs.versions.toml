@@ -15,7 +15,7 @@ ktlintPlugin = "11.6.1"
 # libraries
 kotlin = "1.9.23"
 ktx = "1.13.1"
-composeUi = "1.6.8"
+composeUi = "1.7.0"
 composeMaterial = "1.6.8"
 composeToolingPreview = "1.6.8"
 lifecycleRuntimeKtx = "2.8.4"
