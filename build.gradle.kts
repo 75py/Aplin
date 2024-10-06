@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.androidApp) apply false
     alias(libs.plugins.androidLib) apply false
     alias(libs.plugins.kotlinAndroid) apply false
+    alias(libs.plugins.kotlinPluginCompose) apply false
     alias(libs.plugins.ktlint)
 }
 
