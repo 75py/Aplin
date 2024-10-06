@@ -31,18 +31,18 @@ class LoadPackagesUseCase(
                         currentDefaultHomePackageName
                     )
                 }
-                .map { it.toPackageModel() }
+                .mapNotNull { it.toPackageModel() }
                 .sortedWith(compareBy({ it.label }, { it.packageName }))
             val disabled = src
-                .filter { !it.applicationInfo.enabled }
-                .map { it.toPackageModel() }
+                .filter { it.applicationInfo?.enabled == false }
+                .mapNotNull { it.toPackageModel() }
                 .sortedWith(compareBy({ it.label }, { it.packageName }))
             val users = src
                 .filter { !categorizePackageUseCase.isBundled(it) }
-                .map { it.toPackageModel() }
+                .mapNotNull { it.toPackageModel() }
                 .sortedWith(compareBy({ it.label }, { it.packageName }))
             val all = src
-                .map { it.toPackageModel() }
+                .mapNotNull { it.toPackageModel() }
                 .sortedWith(compareBy({ it.label }, { it.packageName }))
 
             PackagesModel(
@@ -54,7 +54,11 @@ class LoadPackagesUseCase(
         }
     }
 
-    private fun PackageInfo.toPackageModel(): PackageModel {
+    private fun PackageInfo.toPackageModel(): PackageModel? {
+        val applicationInfo = this.applicationInfo
+        if (applicationInfo == null) {
+            return null
+        }
         return PackageModel(
             packageName,
             packageRepository.loadLabel(applicationInfo),

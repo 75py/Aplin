@@ -50,7 +50,11 @@ class CategorizePackageUseCase(
     }
 
     fun isBundled(packageInfo: PackageInfo): Boolean {
-        return packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM > 0
+        val flags = packageInfo.applicationInfo?.flags
+        if (flags == null) {
+            return false
+        }
+        return flags and ApplicationInfo.FLAG_SYSTEM > 0
     }
 
     fun isDisableable(
@@ -94,7 +98,7 @@ class CategorizePackageUseCase(
 
         // not implemented: hasBaseUserRestriction
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && packageInfo.applicationInfo.isResourceOverlay) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && packageInfo.applicationInfo?.isResourceOverlay == true) {
             if (isBundled) {
                 enabled = false
             } else {
@@ -110,8 +114,8 @@ class CategorizePackageUseCase(
         if (homePackages.contains(packageInfo.packageName) || isSystemPackage(packageInfo)
         ) {
             // Disable button for core system applications.
-        } else if (packageInfo.applicationInfo.enabled && !isDisabledUntilUsed(packageInfo)) {
-            disableable = !keepEnabledPackages.contains(packageInfo.applicationInfo.packageName)
+        } else if (packageInfo.applicationInfo?.enabled == true && !isDisabledUntilUsed(packageInfo)) {
+            disableable = !keepEnabledPackages.contains(packageInfo.applicationInfo?.packageName)
         } else {
             disableable = true
         }
