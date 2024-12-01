@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid) apply false
     alias(libs.plugins.kotlinPluginCompose) apply false
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kover)
 }
 
 tasks.register("clean", Delete::class) {

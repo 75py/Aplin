@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlinPluginCompose)
     id("com.google.android.gms.oss-licenses-plugin")
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kover)
 }
 
 android {
