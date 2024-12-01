@@ -30,3 +30,24 @@ jobs:
       run: ./gradlew ktlintCheck
     - name: test
       run: ./gradlew :app:testDebugUnitTest
+    - name: Add coverage report to PR
+      id: kover
+      uses: mi-kas/kover-report@v1
+      with:
+        path: |
+          ${{ github.workspace }}/app/build/reports/kover/report.xml
+        title: Code Coverage
+        update-comment: true
+        min-coverage-overall: 80
+        min-coverage-changed-files: 80
+        coverage-counter-type: LINE
+    - name: Check coverage for changed files
+      id: check-coverage
+      run: |
+        if [ "${{ steps.kover.outputs.coverage-changed-files }}" -ne 100 ]; then
+          echo "Coverage for changed files is less than 100%."
+          exit 1
+        fi
+    - name: Coverage Check Passed
+      if: success()
+      run: echo "Coverage is sufficient for merging."
