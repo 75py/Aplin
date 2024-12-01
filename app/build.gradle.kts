@@ -4,8 +4,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidApp)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinPluginCompose)
     id("com.google.android.gms.oss-licenses-plugin")
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -48,10 +50,7 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompilerExtVersion.get()
-    }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "META-INF/LICENSE.md"
@@ -64,6 +63,7 @@ dependencies {
     implementation(libs.androidxKtx)
     implementation(libs.composeUi)
     implementation(libs.composeMaterial)
+    implementation(libs.composeMaterialIconsExtended)
     implementation(libs.composeToolingPreview)
     implementation(libs.lifecycleRuntimeKtx)
     implementation(libs.activityCompose)

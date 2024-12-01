@@ -1,59 +1,62 @@
 [versions]
 # sdk
-compileSdk = "34"
+compileSdk = "35"
 minSdk = "26"
-targetSdk = "34"
+targetSdk = "35"
 javaVersion = "17"
-composeCompilerExtVersion = "1.5.13"
 
 # plugins
 ossLicensesPlugin = "0.10.6"
-androidGradlePlugin = "8.3.2"
-kotlinAndroidPlugin = "1.9.23"
+androidGradlePlugin = "8.7.0"
+kotlinAndroidPlugin = "2.0.20"
 ktlintPlugin = "11.6.1"
+koverPlugin = "0.8.3"
 
 # libraries
-kotlin = "1.9.23"
-ktx = "1.12.0"
-composeUi = "1.6.5"
-composeMaterial = "1.6.5"
-composeToolingPreview = "1.6.5"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
+kotlin = "2.0.20"
+ktx = "1.13.1"
+composeUi = "1.7.3"
+composeMaterial = "1.7.3"
+composeToolingPreview = "1.7.3"
+lifecycleRuntimeKtx = "2.8.6"
+activityCompose = "1.9.2"
 junit = "4.13.2"
-androidxTestExtJunit = "1.1.5"
-androidxTestEspressoCore = "3.5.1"
-androidxTestRunner = "1.5.2"
-androidxTestRules = "1.5.0"
+androidxTestExtJunit = "1.2.1"
+androidxTestEspressoCore = "3.6.1"
+androidxTestRunner = "1.6.2"
+androidxTestRules = "1.6.1"
 androidxTestUiautomator = "2.3.0"
 koinAndroid = "3.5.6"
-kotlinReflect = "1.9.23"
-accompanistDrawablepainter = "0.32.0"
+kotlinReflect = "2.0.20"
+accompanistDrawablepainter = "0.36.0"
 logcat = "0.1"
-navigationCompose = "2.7.7"
+navigationCompose = "2.8.2"
 ossLicensesPluginVersion = "0.10.6"
-playServicesOssLicenses = "17.0.1"
-appcompat = "1.6.1"
-playServicesAds = "22.4.0"
-ump = "2.2.0"
+playServicesOssLicenses = "17.1.0"
+appcompat = "1.7.0"
+playServicesAds = "23.4.0"
+ump = "3.0.0"
 preferenceKtx = "1.2.1"
-mockk = "1.13.10"
-mockkAndroid = "1.13.10"
-mockkAgent = "1.13.9"
+mockk = "1.13.12"
+mockkAndroid = "1.13.12"
+mockkAgent = "1.13.12"
 composePrefs = "1.0.6"
-datastorePreferences = "1.0.0"
+datastorePreferences = "1.1.1"
 
 [plugins]
 androidApp = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 androidLib = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroidPlugin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
+kotlinPluginCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "koverPlugin" }
 
 [libraries]
 ossLicenses = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
 androidxKtx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 composeUi = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
 composeMaterial = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
+composeMaterialIconsExtended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterial" }
 composeToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeToolingPreview" }
 lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

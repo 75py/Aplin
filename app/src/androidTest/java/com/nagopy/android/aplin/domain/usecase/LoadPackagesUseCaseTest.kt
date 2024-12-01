@@ -65,9 +65,9 @@ class LoadPackagesUseCaseTest {
                 val disableButtonLabel =
                     InstrumentationRegistry.getInstrumentation().context.getString(
                         if (model.isEnabled) {
-                            com.nagopy.android.aplin.test.R.string.test_btn_enable
-                        } else {
                             com.nagopy.android.aplin.test.R.string.test_btn_disable
+                        } else {
+                            com.nagopy.android.aplin.test.R.string.test_btn_enable
                         }
                     )
 
