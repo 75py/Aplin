@@ -41,6 +41,11 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
         coverage-counter-type: LINE
+    - name: Debug outputs
+      run: |
+        echo "Coverage overall: ${{ steps.kover.outputs.coverage-overall }}"
+        echo "Coverage changed files: ${{ steps.kover.outputs.coverage-changed-files }}"
+        echo "All outputs: ${{ toJson(steps.kover.outputs) }}"
     - name: Check coverage for changed files
       id: check-coverage
       run: |
