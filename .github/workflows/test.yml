@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  check:
 
     runs-on: ubuntu-latest
 
@@ -28,19 +28,24 @@ jobs:
         echo unitId=ca-app-pub-3940256099942544/6300978111touch >> ads.properties
     - name: ktlint
       run: ./gradlew ktlintCheck
-    - name: test
-      run: ./gradlew :app:testDebugUnitTest
+    - name: Generate kover coverage report
+      run: ./gradlew koverXmlReportDebug
     - name: Add coverage report to PR
       id: kover
       uses: mi-kas/kover-report@v1
       with:
         path: |
-          ${{ github.workspace }}/app/build/reports/kover/report.xml
+          ${{ github.workspace }}/app/build/reports/kover/reportDebug.xml
         title: Code Coverage
         update-comment: true
         min-coverage-overall: 80
         min-coverage-changed-files: 80
         coverage-counter-type: LINE
+    - name: Debug outputs
+      run: |
+        echo "Coverage overall: ${{ steps.kover.outputs.coverage-overall }}"
+        echo "Coverage changed files: ${{ steps.kover.outputs.coverage-changed-files }}"
+        echo "All outputs: ${{ toJson(steps.kover.outputs) }}"
     - name: Check coverage for changed files
       id: check-coverage
       run: |
