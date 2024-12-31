@@ -14,7 +14,7 @@ koverPlugin = "0.8.3"
 
 # libraries
 kotlin = "2.0.20"
-ktx = "1.13.1"
+ktx = "1.15.0"
 composeUi = "1.7.3"
 composeMaterial = "1.7.3"
 composeToolingPreview = "1.7.3"
