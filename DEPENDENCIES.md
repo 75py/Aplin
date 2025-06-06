@@ -4,7 +4,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 
 ## SDK Configuration
 
-- **Gradle Wrapper**: 8.11 - Build automation tool version
+- **Gradle Wrapper**: 8.12 - Build automation tool version
 - **Compile SDK**: 35 - Target SDK version for compilation
 - **Min SDK**: 26 - Minimum Android API level supported (Android 8.0)
 - **Target SDK**: 35 - Target Android API level (Android 15)
@@ -13,7 +13,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 ## Build Plugins
 
 ### Core Android Plugins
-- **Android Gradle Plugin** (8.7.0) - Essential plugin for Android app development, handles Android-specific build tasks
+- **Android Gradle Plugin** (8.10.0) - Essential plugin for Android app development, handles Android-specific build tasks
 - **Kotlin Android Plugin** (2.0.21) - Enables Kotlin language support in Android projects
 - **Kotlin Compose Plugin** (2.0.21) - Provides Kotlin compiler support for Jetpack Compose
 

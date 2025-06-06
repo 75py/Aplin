@@ -7,7 +7,7 @@ javaVersion = "17"
 
 # plugins
 ossLicensesPlugin = "0.10.6"
-androidGradlePlugin = "8.7.0"
+androidGradlePlugin = "8.10.0"
 kotlinAndroidPlugin = "2.0.21"
 ktlintPlugin = "12.1.1"
 koverPlugin = "0.8.3"
