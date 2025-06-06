@@ -5,7 +5,6 @@ import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.model.PackagesModel
 
 enum class SortOrder(val labelResId: Int) {
-
     AppName(R.string.pref_sort_order_app_name) {
         override fun sort(packages: List<PackageModel>): List<PackageModel> {
             return packages.sortedWith(compareBy({ it.label }, { it.packageName }))
@@ -22,8 +21,8 @@ enum class SortOrder(val labelResId: Int) {
                 compareBy(
                     { it.firstInstallTime * -1 },
                     { it.label },
-                    { it.packageName }
-                )
+                    { it.packageName },
+                ),
             )
         }
     },
@@ -33,12 +32,11 @@ enum class SortOrder(val labelResId: Int) {
                 compareBy(
                     { it.lastUpdateTime * -1 },
                     { it.label },
-                    { it.packageName }
-                )
+                    { it.packageName },
+                ),
             )
         }
-    }
-    ;
+    }, ;
 
     internal abstract fun sort(packages: List<PackageModel>): List<PackageModel>
 
@@ -47,7 +45,7 @@ enum class SortOrder(val labelResId: Int) {
             disableablePackages = sort(packagesModel.disableablePackages),
             disabledPackages = sort(packagesModel.disabledPackages),
             userPackages = sort(packagesModel.userPackages),
-            allPackages = sort(packagesModel.allPackages)
+            allPackages = sort(packagesModel.allPackages),
         )
     }
 

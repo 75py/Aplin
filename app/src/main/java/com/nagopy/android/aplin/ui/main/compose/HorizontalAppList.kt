@@ -32,15 +32,17 @@ import kotlin.math.min
 fun HorizontalAppList(
     disableablePackages: List<PackageModel>,
     startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit
+    searchByWeb: (PackageModel) -> Unit,
 ) {
     val lc = LocalConfiguration.current
-    val itemWidth = remember {
-        min(lc.screenWidthDp, lc.screenHeightDp).dp / 2.6f
-    }
-    val iconSize = remember {
-        itemWidth / 2.0f
-    }
+    val itemWidth =
+        remember {
+            min(lc.screenWidthDp, lc.screenHeightDp).dp / 2.6f
+        }
+    val iconSize =
+        remember {
+            itemWidth / 2.0f
+        }
     LazyRow {
         items(disableablePackages) { pkg ->
             Item(itemWidth, iconSize, startDetailSettingsActivity, searchByWeb, pkg)
@@ -55,27 +57,28 @@ private fun Item(
     iconSize: Dp,
     startDetailSettingsActivity: (String) -> Unit,
     searchByWeb: (PackageModel) -> Unit,
-    pkg: PackageModel
+    pkg: PackageModel,
 ) {
     Card(
-        modifier = Modifier
-            .width(itemWidth)
-            .wrapContentHeight()
-            .padding(8.dp)
-            .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
-            .combinedClickable(
-                onClick = { startDetailSettingsActivity.invoke(pkg.packageName) },
-                onLongClick = { searchByWeb.invoke(pkg) }
-            )
+        modifier =
+            Modifier
+                .width(itemWidth)
+                .wrapContentHeight()
+                .padding(8.dp)
+                .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
+                .combinedClickable(
+                    onClick = { startDetailSettingsActivity.invoke(pkg.packageName) },
+                    onLongClick = { searchByWeb.invoke(pkg) },
+                ),
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = rememberDrawablePainter(drawable = pkg.icon),
                 contentDescription = "",
-                modifier = Modifier.size(iconSize)
+                modifier = Modifier.size(iconSize),
             )
             Column(modifier = Modifier.padding(horizontal = 8.dp)) {
                 Text(
@@ -84,14 +87,14 @@ private fun Item(
                     fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     text = pkg.packageName,
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
                 )
             }
         }

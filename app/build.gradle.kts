@@ -100,8 +100,9 @@ dependencies {
     implementation(libs.datastorePreferences)
 }
 
-fun readProperties(propertiesFile: File) = Properties().apply {
-    propertiesFile.inputStream().use { fis ->
-        load(fis)
+fun readProperties(propertiesFile: File) =
+    Properties().apply {
+        propertiesFile.inputStream().use { fis ->
+            load(fis)
+        }
     }
-}

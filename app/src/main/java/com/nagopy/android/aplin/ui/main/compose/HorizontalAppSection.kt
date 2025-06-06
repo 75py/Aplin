@@ -22,7 +22,7 @@ fun HorizontalAppSection(
     packages: List<PackageModel>,
     navigateToVerticalList: () -> Unit,
     startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit
+    searchByWeb: (PackageModel) -> Unit,
 ) {
     Column {
         SectionHeader(title, packages.size, navigateToVerticalList)
@@ -35,21 +35,22 @@ fun HorizontalAppSection(
 fun SectionHeader(
     title: String,
     packageCount: Int,
-    navigateToVerticalList: () -> Unit
+    navigateToVerticalList: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .clickable(onClick = navigateToVerticalList)
-            .padding(8.dp)
+        modifier =
+            Modifier
+                .clickable(onClick = navigateToVerticalList)
+                .padding(8.dp),
     ) {
         Text(
             text = "$title ($packageCount)",
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Icon(
             imageVector = Icons.Default.ArrowForward,
-            contentDescription = ""
+            contentDescription = "",
         )
     }
 }

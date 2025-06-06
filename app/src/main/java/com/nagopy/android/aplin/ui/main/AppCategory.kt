@@ -4,26 +4,37 @@ import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.model.PackagesModel
 
 sealed class AppCategory {
-    abstract fun getAppList(packagesModel: PackagesModel, searchText: String): List<PackageModel>
+    abstract fun getAppList(
+        packagesModel: PackagesModel,
+        searchText: String,
+    ): List<PackageModel>
 
     object User : AppCategory() {
-        override fun getAppList(packagesModel: PackagesModel, searchText: String) =
-            packagesModel.userPackages.filter(searchText)
+        override fun getAppList(
+            packagesModel: PackagesModel,
+            searchText: String,
+        ) = packagesModel.userPackages.filter(searchText)
     }
 
     object Disableable : AppCategory() {
-        override fun getAppList(packagesModel: PackagesModel, searchText: String) =
-            packagesModel.disableablePackages.filter(searchText)
+        override fun getAppList(
+            packagesModel: PackagesModel,
+            searchText: String,
+        ) = packagesModel.disableablePackages.filter(searchText)
     }
 
     object Disabled : AppCategory() {
-        override fun getAppList(packagesModel: PackagesModel, searchText: String) =
-            packagesModel.disabledPackages.filter(searchText)
+        override fun getAppList(
+            packagesModel: PackagesModel,
+            searchText: String,
+        ) = packagesModel.disabledPackages.filter(searchText)
     }
 
     object All : AppCategory() {
-        override fun getAppList(packagesModel: PackagesModel, searchText: String) =
-            packagesModel.allPackages.filter(searchText)
+        override fun getAppList(
+            packagesModel: PackagesModel,
+            searchText: String,
+        ) = packagesModel.allPackages.filter(searchText)
     }
 
     protected fun List<PackageModel>.filter(searchText: String): List<PackageModel> {
@@ -31,9 +42,10 @@ sealed class AppCategory {
             return this
         }
         return this.filter {
-            it.label.contains(searchText) || it.packageName.contains(
-                searchText
-            )
+            it.label.contains(searchText) ||
+                it.packageName.contains(
+                    searchText,
+                )
         }
     }
 }

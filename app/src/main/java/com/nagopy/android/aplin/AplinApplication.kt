@@ -11,7 +11,6 @@ import org.koin.core.context.startKoin
 
 @Suppress("unused")
 class AplinApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
         AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = LogPriority.VERBOSE)

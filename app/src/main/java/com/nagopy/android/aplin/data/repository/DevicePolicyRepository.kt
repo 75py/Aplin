@@ -3,7 +3,6 @@ package com.nagopy.android.aplin.data.repository
 import android.app.admin.DevicePolicyManager
 
 interface DevicePolicyRepository {
-
     /**
      * [DevicePolicyManager]のpackageHasActiveAdminsメソッドを実行する
      * @param packageName パッケージ名

@@ -19,7 +19,7 @@ import com.nagopy.android.aplin.ui.ads.AdsStatus
 @Composable
 fun AdBanner(
     state: AdsStatus,
-    updateAds: (AdsStatus, AdView) -> Unit
+    updateAds: (AdsStatus, AdView) -> Unit,
 ) {
     if (state != AdsStatus.Personalized && state != AdsStatus.NonPersonalized) {
         return
@@ -27,10 +27,11 @@ fun AdBanner(
 
     if (LocalInspectionMode.current) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(36.dp)
-                .background(Color.Red)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(36.dp)
+                    .background(Color.Red),
         )
     } else {
         AndroidView(
@@ -43,7 +44,7 @@ fun AdBanner(
                 adView.adUnitId = BuildConfig.AD_UNIT_ID
                 adView
             },
-            update = { updateAds.invoke(state, it) }
+            update = { updateAds.invoke(state, it) },
         )
     }
 }

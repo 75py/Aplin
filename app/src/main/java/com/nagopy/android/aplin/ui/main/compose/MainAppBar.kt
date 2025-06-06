@@ -48,7 +48,7 @@ fun MainAppBar(
     sharePackages: (List<PackageModel>) -> Unit,
     onTextChanged: (String) -> Unit,
     onCloseClicked: () -> Unit,
-    onSearchTriggered: () -> Unit
+    onSearchTriggered: () -> Unit,
 ) {
     when (state.searchWidgetState) {
         SearchWidgetState.CLOSED -> {
@@ -57,7 +57,7 @@ fun MainAppBar(
                 state = state,
                 currentScreen = currentScreen,
                 sharePackages = sharePackages,
-                onSearchTriggered = onSearchTriggered
+                onSearchTriggered = onSearchTriggered,
             )
         }
         SearchWidgetState.OPENED -> {
@@ -66,7 +66,7 @@ fun MainAppBar(
                 currentScreen = currentScreen,
                 text = state.searchText,
                 onTextChanged = onTextChanged,
-                onCloseClicked = onCloseClicked
+                onCloseClicked = onCloseClicked,
             )
         }
     }
@@ -78,7 +78,7 @@ fun DefaultAppBar(
     state: MainUiState,
     currentScreen: Screen,
     sharePackages: (List<PackageModel>) -> Unit,
-    onSearchTriggered: () -> Unit
+    onSearchTriggered: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -94,13 +94,13 @@ fun DefaultAppBar(
                     sharePackages.invoke(
                         currentScreen.getAppList(
                             state.packagesModel,
-                            state.searchText
-                        )
+                            state.searchText,
+                        ),
                     )
                 }) {
                     Icon(
                         imageVector = Icons.Default.Share,
-                        contentDescription = stringResource(id = R.string.share)
+                        contentDescription = stringResource(id = R.string.share),
                     )
                 }
             }
@@ -111,7 +111,7 @@ fun DefaultAppBar(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(id = R.string.search)
+                        contentDescription = stringResource(id = R.string.search),
                     )
                 }
 
@@ -120,25 +120,26 @@ fun DefaultAppBar(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(id = R.string.preferences)
+                        contentDescription = stringResource(id = R.string.preferences),
                     )
                 }
             }
         },
-        navigationIcon = if (currentScreen != Screen.Top) {
-            {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
+        navigationIcon =
+            if (currentScreen != Screen.Top) {
+                {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                    }
                 }
-            }
-        } else {
-            null
-        }
+            } else {
+                null
+            },
     )
 }
 
@@ -148,42 +149,45 @@ fun SearchAppBar(
     currentScreen: Screen,
     text: String,
     onTextChanged: (String) -> Unit,
-    onCloseClicked: () -> Unit
+    onCloseClicked: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     TopAppBar {
         TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
             value = text,
             onValueChange = onTextChanged,
             placeholder = {
                 Text(
                     modifier = Modifier.alpha(ContentAlpha.medium),
                     text = stringResource(id = R.string.search_hint),
-                    color = Color.White
+                    color = Color.White,
                 )
             },
-            textStyle = TextStyle(
-                fontSize = MaterialTheme.typography.subtitle1.fontSize
-            ),
+            textStyle =
+                TextStyle(
+                    fontSize = MaterialTheme.typography.subtitle1.fontSize,
+                ),
             singleLine = true,
             maxLines = 1,
-            leadingIcon = if (currentScreen != Screen.Top) {
-                {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
+            leadingIcon =
+                if (currentScreen != Screen.Top) {
+                    {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                            )
+                        }
                     }
-                }
-            } else {
-                null
-            },
+                } else {
+                    null
+                },
             trailingIcon = {
                 IconButton(
                     onClick = {
@@ -192,30 +196,33 @@ fun SearchAppBar(
                         } else {
                             onCloseClicked()
                         }
-                    }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close Icon"
+                        contentDescription = "Close Icon",
                     )
                 }
             },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    // onSearchClicked(text)
-                }
-            ),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                cursorColor = Color.White.copy(alpha = ContentAlpha.medium),
-                disabledTextColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            )
+            keyboardOptions =
+                KeyboardOptions(
+                    imeAction = ImeAction.Search,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onSearch = {
+                        // onSearchClicked(text)
+                    },
+                ),
+            colors =
+                TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    cursorColor = Color.White.copy(alpha = ContentAlpha.medium),
+                    disabledTextColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
         )
     }
 
@@ -235,9 +242,9 @@ fun SearchAppBarPreview() {
                     currentScreen = Screen.Top,
                     text = "text",
                     onTextChanged = {},
-                    onCloseClicked = {}
+                    onCloseClicked = {},
                 )
-            }
+            },
         ) {}
     }
 }
