@@ -19,7 +19,7 @@ fun AppListScreen(
     screen: Screen.AppListScreen,
     launcherLargeIconSize: Int,
     startDetailSettingsActivity: (String) -> Unit,
-    searchByWeb: (PackageModel) -> Unit
+    searchByWeb: (PackageModel) -> Unit,
 ) {
     if (state.packagesModel == null) {
         Loading()
@@ -29,7 +29,7 @@ fun AppListScreen(
             packages = screen.getAppList(state.packagesModel, state.searchText),
             launcherLargeIconSize = launcherLargeIconSize,
             startDetailSettingsActivity = startDetailSettingsActivity,
-            searchByWeb = searchByWeb
+            searchByWeb = searchByWeb,
         )
     }
 }
@@ -40,28 +40,31 @@ fun AppListScreen(
 @Preview(name = "10-inch Tablet Landscape", widthDp = 960, heightDp = 600)
 @Composable
 fun AppListScreenLoadedPreview() {
-    val packages = IntRange(0, 20).map {
-        PackageModel(
-            packageName = "com.example$it",
-            label = "Example Label $it",
-            icon = AppCompatResources.getDrawable(
-                LocalContext.current,
-                R.mipmap.ic_launcher
-            )!!,
-            isEnabled = it % 2 == 0,
-            firstInstallTime = 0L,
-            lastUpdateTime = 0L,
-            versionName = "1.0.0"
-        )
-    }
+    val packages =
+        IntRange(0, 20).map {
+            PackageModel(
+                packageName = "com.example$it",
+                label = "Example Label $it",
+                icon =
+                    AppCompatResources.getDrawable(
+                        LocalContext.current,
+                        R.mipmap.ic_launcher,
+                    )!!,
+                isEnabled = it % 2 == 0,
+                firstInstallTime = 0L,
+                lastUpdateTime = 0L,
+                versionName = "1.0.0",
+            )
+        }
     AppListScreen(
-        state = MainUiState(
-            isLoading = false,
-            packagesModel = PackagesModel(packages, packages, packages, packages)
-        ),
+        state =
+            MainUiState(
+                isLoading = false,
+                packagesModel = PackagesModel(packages, packages, packages, packages),
+            ),
         screen = Screen.AllAppList,
         launcherLargeIconSize = 36,
         startDetailSettingsActivity = {},
-        searchByWeb = {}
+        searchByWeb = {},
     )
 }

@@ -13,7 +13,6 @@ import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 class DevicePolicyRepositoryImplTest {
-
     private lateinit var devicePolicyManager: DevicePolicyManager
     private lateinit var devicePolicyRepositoryImpl: DevicePolicyRepositoryImpl
 
