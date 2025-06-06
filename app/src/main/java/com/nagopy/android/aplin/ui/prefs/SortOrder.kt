@@ -40,7 +40,7 @@ enum class SortOrder(val labelResId: Int) {
     }
     ;
 
-    protected abstract fun sort(packages: List<PackageModel>): List<PackageModel>
+    internal abstract fun sort(packages: List<PackageModel>): List<PackageModel>
 
     fun sort(packagesModel: PackagesModel): PackagesModel {
         return PackagesModel(
