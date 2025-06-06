@@ -95,3 +95,47 @@ Aplin is an Android application manager that helps users view and manage install
 - **Logcat** provides structured logging for debugging
 
 This dependency structure supports a modern Android app with Material Design UI, proper testing coverage, and compliance with Play Store requirements.
+
+## Migration Notes
+
+### Koin 4.0.0 Update
+The update from Koin 3.5.6 to 4.0.0 is a major version change that may require code modifications:
+- Review dependency injection setup for any breaking changes
+- Check if any Koin API usage needs updating
+- Verify all modules and injections work correctly after the update
+
+### Kotlin 2.0.21 Update
+- Ensure compatibility with Kotlin 2.0.x features
+- Verify all Kotlin extensions and language features work correctly
+
+### Compose 1.7.5 Update
+- Latest Compose UI updates may include new features and optimizations
+- Verify all Compose components render correctly
+
+## Post-Update Verification Checklist
+
+After resolving network connectivity issues, perform these verification steps:
+
+1. **Build Verification**
+   - `./gradlew clean build` - Ensure project builds successfully
+   - Check for any compilation errors or warnings
+
+2. **Testing**
+   - `./gradlew test` - Run unit tests
+   - `./gradlew connectedAndroidTest` - Run instrumented tests
+   - Verify all tests pass
+
+3. **Koin Migration Verification**
+   - Test dependency injection functionality
+   - Verify all activities and fragments receive proper dependencies
+   - Check for any runtime injection errors
+
+4. **UI Testing**
+   - Launch the app and navigate through all screens
+   - Verify Compose UI renders correctly
+   - Test app functionality end-to-end
+
+5. **Performance**
+   - Monitor app startup time
+   - Check for any new ANRs or crashes
+   - Verify memory usage is within expected ranges
