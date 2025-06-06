@@ -35,7 +35,7 @@ fun RootScreen(
     adsStatus: AdsStatus,
     isGDPR: Boolean,
     showConsentForm: () -> Unit,
-    updateAds: (AdsStatus, AdView) -> Unit
+    updateAds: (AdsStatus, AdView) -> Unit,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -60,26 +60,26 @@ fun RootScreen(
                     },
                     onSearchTriggered = {
                         mainViewModel.updateSearchWidgetState(SearchWidgetState.OPENED)
-                    }
+                    },
                 )
-            }
+            },
         ) { padding ->
             Column(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
                 NavHost(
                     navController = navController,
                     startDestination = Screen.Top.route,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     composable(
                         Screen.Top.route,
                         enterTransition = { slideInHorizontally { width -> width } },
                         exitTransition = { slideOutHorizontally { width -> -width } },
                         popEnterTransition = { slideInHorizontally { width -> -width } },
-                        popExitTransition = { slideOutHorizontally { width -> width } }
+                        popExitTransition = { slideOutHorizontally { width -> width } },
                     ) {
                         MainScreen(
                             navController = navController,
@@ -88,7 +88,7 @@ fun RootScreen(
                             searchByWeb = searchByWeb,
                             startOssLicensesActivity = startOssLicensesActivity,
                             isGDPR = isGDPR,
-                            showConsentForm = showConsentForm
+                            showConsentForm = showConsentForm,
                         )
                     }
                     Screen.appListScreens.forEach { appListScreen ->
@@ -97,14 +97,14 @@ fun RootScreen(
                             enterTransition = { slideInHorizontally { width -> width } },
                             exitTransition = { slideOutHorizontally { width -> -width } },
                             popEnterTransition = { slideInHorizontally { width -> -width } },
-                            popExitTransition = { slideOutHorizontally { width -> width } }
+                            popExitTransition = { slideOutHorizontally { width -> width } },
                         ) {
                             AppListScreen(
                                 state = state,
                                 screen = appListScreen,
                                 launcherLargeIconSize = mainViewModel.launcherLargeIconSize,
                                 startDetailSettingsActivity = startDetailSettingsActivity,
-                                searchByWeb = searchByWeb
+                                searchByWeb = searchByWeb,
                             )
                         }
                     }
@@ -113,7 +113,7 @@ fun RootScreen(
                         enterTransition = { slideInHorizontally { width -> width } },
                         exitTransition = { slideOutHorizontally { width -> -width } },
                         popEnterTransition = { slideInHorizontally { width -> -width } },
-                        popExitTransition = { slideOutHorizontally { width -> width } }
+                        popExitTransition = { slideOutHorizontally { width -> width } },
                     ) {
                         PreferenceScreen()
                     }
@@ -121,7 +121,7 @@ fun RootScreen(
 
                 AdBanner(
                     state = adsStatus,
-                    updateAds = updateAds
+                    updateAds = updateAds,
                 )
             }
         }

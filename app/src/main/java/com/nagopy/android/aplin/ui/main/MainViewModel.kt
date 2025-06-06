@@ -29,9 +29,8 @@ class MainViewModel(
     private val packageManager: PackageManager,
     private val loadPackagesUseCase: LoadPackagesUseCase,
     private val ioDispatcher: CoroutineDispatcher,
-    private val userDataStore: UserDataStore
+    private val userDataStore: UserDataStore,
 ) : ViewModel() {
-
     private val _viewModelState = MutableStateFlow(MainUiState(isLoading = false))
     val viewModelState =
         _viewModelState.stateIn(viewModelScope, SharingStarted.Eagerly, _viewModelState.value)
@@ -47,12 +46,13 @@ class MainViewModel(
                 _viewModelState.update {
                     it.copy(
                         isLoading = false,
-                        packagesModel = it.packagesModel?.let { packagesModel ->
-                            newOrder.sort(
-                                packagesModel
-                            )
-                        },
-                        sortOrder = newOrder
+                        packagesModel =
+                            it.packagesModel?.let { packagesModel ->
+                                newOrder.sort(
+                                    packagesModel,
+                                )
+                            },
+                        sortOrder = newOrder,
                     )
                 }
             }
@@ -72,13 +72,16 @@ class MainViewModel(
             _viewModelState.update {
                 it.copy(
                     isLoading = false,
-                    packagesModel = it.sortOrder.sort(result)
+                    packagesModel = it.sortOrder.sort(result),
                 )
             }
         }
     }
 
-    fun startDetailSettingsActivity(activity: Activity, pkg: String) {
+    fun startDetailSettingsActivity(
+        activity: Activity,
+        pkg: String,
+    ) {
         val packageName = pkg.split(":")[0]
         val intent =
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
@@ -94,21 +97,26 @@ class MainViewModel(
         }
     }
 
-    fun searchByWeb(activity: Activity, packageModel: PackageModel) {
-        val actionWebSearch = Intent(Intent.ACTION_WEB_SEARCH)
-            .putExtra(SearchManager.QUERY, "${packageModel.label} ${packageModel.packageName}")
+    fun searchByWeb(
+        activity: Activity,
+        packageModel: PackageModel,
+    ) {
+        val actionWebSearch =
+            Intent(Intent.ACTION_WEB_SEARCH)
+                .putExtra(SearchManager.QUERY, "${packageModel.label} ${packageModel.packageName}")
 
         if (isLaunchable(actionWebSearch)) {
             activity.startActivity(actionWebSearch)
         } else {
             val url = "https://www.google.com/search?q=${
-            URLEncoder.encode(
-                packageModel.label,
-                "UTF-8"
-            )
+                URLEncoder.encode(
+                    packageModel.label,
+                    "UTF-8",
+                )
             }%20${packageModel.packageName}"
-            val actionView = Intent(Intent.ACTION_VIEW)
-                .setData(Uri.parse(url))
+            val actionView =
+                Intent(Intent.ACTION_VIEW)
+                    .setData(Uri.parse(url))
             if (isLaunchable(actionView)) {
                 activity.startActivity(actionView)
             } else {
@@ -125,7 +133,10 @@ class MainViewModel(
         activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
     }
 
-    fun sharePackages(activity: Activity, packages: List<PackageModel>) {
+    fun sharePackages(
+        activity: Activity,
+        packages: List<PackageModel>,
+    ) {
         ShareCompat.IntentBuilder(activity)
             .setText(packages.joinToString(separator = LINE_SEPARATOR) { it.packageName })
             .setType("text/plain")

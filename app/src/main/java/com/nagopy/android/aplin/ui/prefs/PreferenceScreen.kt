@@ -19,19 +19,21 @@ fun PreferenceScreen() {
             MultiSelectListPref(
                 key = DisplayItem.KEY,
                 title = stringResource(id = R.string.display_items),
-                entries = DisplayItem.values().associate {
-                    it.name to stringResource(id = it.labelResId)
-                }
+                entries =
+                    DisplayItem.values().associate {
+                        it.name to stringResource(id = it.labelResId)
+                    },
             )
         }
         prefsItem {
             ListPref(
                 key = SortOrder.KEY,
                 title = stringResource(id = R.string.pref_sort_order),
-                entries = SortOrder.values().associate {
-                    it.name to stringResource(id = it.labelResId)
-                },
-                defaultValue = SortOrder.DEFAULT.name
+                entries =
+                    SortOrder.values().associate {
+                        it.name to stringResource(id = it.labelResId)
+                    },
+                defaultValue = SortOrder.DEFAULT.name,
             )
         }
     }

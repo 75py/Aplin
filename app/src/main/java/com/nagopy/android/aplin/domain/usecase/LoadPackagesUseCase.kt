@@ -10,49 +10,53 @@ import kotlinx.coroutines.withContext
 
 class LoadPackagesUseCase(
     private val packageRepository: PackageRepository,
-    private val categorizePackageUseCase: CategorizePackageUseCase
+    private val categorizePackageUseCase: CategorizePackageUseCase,
 ) {
+    suspend fun execute(): PackagesModel =
+        coroutineScope {
+            withContext(coroutineContext) {
+                val loadAllAsync = async { packageRepository.loadAll() }
+                val loadHomePackageNamesAsync = async { packageRepository.loadHomePackageNames() }
+                val loadCurrentDefaultHomePackageNameAsync =
+                    async { packageRepository.loadCurrentDefaultHomePackageName() }
 
-    suspend fun execute(): PackagesModel = coroutineScope {
-        withContext(coroutineContext) {
-            val loadAllAsync = async { packageRepository.loadAll() }
-            val loadHomePackageNamesAsync = async { packageRepository.loadHomePackageNames() }
-            val loadCurrentDefaultHomePackageNameAsync =
-                async { packageRepository.loadCurrentDefaultHomePackageName() }
+                val src = loadAllAsync.await()
+                val homePackages = loadHomePackageNamesAsync.await()
+                val currentDefaultHomePackageName = loadCurrentDefaultHomePackageNameAsync.await()
+                val disableable =
+                    src
+                        .filter {
+                            categorizePackageUseCase.isDisableable(
+                                it,
+                                homePackages,
+                                currentDefaultHomePackageName,
+                            )
+                        }
+                        .mapNotNull { it.toPackageModel() }
+                        .sortedWith(compareBy({ it.label }, { it.packageName }))
+                val disabled =
+                    src
+                        .filter { it.applicationInfo?.enabled == false }
+                        .mapNotNull { it.toPackageModel() }
+                        .sortedWith(compareBy({ it.label }, { it.packageName }))
+                val users =
+                    src
+                        .filter { !categorizePackageUseCase.isBundled(it) }
+                        .mapNotNull { it.toPackageModel() }
+                        .sortedWith(compareBy({ it.label }, { it.packageName }))
+                val all =
+                    src
+                        .mapNotNull { it.toPackageModel() }
+                        .sortedWith(compareBy({ it.label }, { it.packageName }))
 
-            val src = loadAllAsync.await()
-            val homePackages = loadHomePackageNamesAsync.await()
-            val currentDefaultHomePackageName = loadCurrentDefaultHomePackageNameAsync.await()
-            val disableable = src
-                .filter {
-                    categorizePackageUseCase.isDisableable(
-                        it,
-                        homePackages,
-                        currentDefaultHomePackageName
-                    )
-                }
-                .mapNotNull { it.toPackageModel() }
-                .sortedWith(compareBy({ it.label }, { it.packageName }))
-            val disabled = src
-                .filter { it.applicationInfo?.enabled == false }
-                .mapNotNull { it.toPackageModel() }
-                .sortedWith(compareBy({ it.label }, { it.packageName }))
-            val users = src
-                .filter { !categorizePackageUseCase.isBundled(it) }
-                .mapNotNull { it.toPackageModel() }
-                .sortedWith(compareBy({ it.label }, { it.packageName }))
-            val all = src
-                .mapNotNull { it.toPackageModel() }
-                .sortedWith(compareBy({ it.label }, { it.packageName }))
-
-            PackagesModel(
-                disableablePackages = disableable,
-                disabledPackages = disabled,
-                userPackages = users,
-                allPackages = all
-            )
+                PackagesModel(
+                    disableablePackages = disableable,
+                    disabledPackages = disabled,
+                    userPackages = users,
+                    allPackages = all,
+                )
+            }
         }
-    }
 
     private fun PackageInfo.toPackageModel(): PackageModel? {
         val applicationInfo = this.applicationInfo
@@ -66,7 +70,7 @@ class LoadPackagesUseCase(
             applicationInfo.enabled,
             firstInstallTime,
             lastUpdateTime,
-            versionName
+            versionName,
         )
     }
 }

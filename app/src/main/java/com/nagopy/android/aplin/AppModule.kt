@@ -9,10 +9,11 @@ import com.nagopy.android.aplin.ui.prefs.dataStore
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val appModule = module {
-    single<DevicePolicyManager> { androidContext().getSystemService(DevicePolicyManager::class.java) }
-    single<PackageManager> { androidContext().packageManager }
-    single<ActivityManager> { androidContext().getSystemService(ActivityManager::class.java) }
-    single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
-    single { UserDataStore(androidContext().dataStore) }
-}
+val appModule =
+    module {
+        single<DevicePolicyManager> { androidContext().getSystemService(DevicePolicyManager::class.java) }
+        single<PackageManager> { androidContext().packageManager }
+        single<ActivityManager> { androidContext().getSystemService(ActivityManager::class.java) }
+        single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
+        single { UserDataStore(androidContext().dataStore) }
+    }

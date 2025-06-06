@@ -10,7 +10,6 @@ import com.nagopy.android.aplin.ui.main.compose.RootScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
-
     private val mainViewModel: MainViewModel by viewModel()
 
     private val adsViewModel: AdsViewModel by viewModel()
@@ -25,7 +24,7 @@ class MainActivity : ComponentActivity() {
                 startDetailSettingsActivity = { pkg: String ->
                     mainViewModel.startDetailSettingsActivity(
                         this@MainActivity,
-                        pkg
+                        pkg,
                     )
                 },
                 searchByWeb = { packageModel: PackageModel ->
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 showConsentForm = {
                     adsViewModel.loadForm(this, force = true)
                 },
-                updateAds = adsViewModel::updateAds
+                updateAds = adsViewModel::updateAds,
             )
         }
 

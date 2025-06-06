@@ -22,9 +22,8 @@ import logcat.LogPriority
 import logcat.logcat
 
 class AdsViewModel(
-    private val prefs: SharedPreferences
+    private val prefs: SharedPreferences,
 ) : ViewModel() {
-
     private val _adsState = MutableStateFlow(AdsStatus.NotInitialized)
     val adsState =
         _adsState.stateIn(viewModelScope, SharingStarted.Eagerly, _adsState.value)
@@ -62,18 +61,19 @@ class AdsViewModel(
 
     fun init(activity: Activity) {
         // Set tag for underage of consent. false means users are not underage.
-        val params = ConsentRequestParameters.Builder()
-            .apply {
-                if (BuildConfig.DEBUG) {
-                    setConsentDebugSettings(
-                        ConsentDebugSettings.Builder(activity)
-                            .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
-                            // .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_NOT_EEA)
-                            .build()
-                    )
+        val params =
+            ConsentRequestParameters.Builder()
+                .apply {
+                    if (BuildConfig.DEBUG) {
+                        setConsentDebugSettings(
+                            ConsentDebugSettings.Builder(activity)
+                                .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+                                // .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_NOT_EEA)
+                                .build(),
+                        )
+                    }
                 }
-            }
-            .build()
+                .build()
 
         consentInformation = UserMessagingPlatform.getConsentInformation(activity)
 
@@ -98,11 +98,14 @@ class AdsViewModel(
                 printLogs("requestConsentInfoUpdate error")
                 updateGDPRState()
                 _adsState.update { AdsStatus.Error }
-            }
+            },
         )
     }
 
-    fun loadForm(activity: Activity, force: Boolean = false) {
+    fun loadForm(
+        activity: Activity,
+        force: Boolean = false,
+    ) {
         UserMessagingPlatform.loadConsentForm(
             activity,
             { consentForm ->
@@ -115,7 +118,7 @@ class AdsViewModel(
                         loadForm(activity)
                     }
                 }
-            }
+            },
         ) {
             // / Handle Error.
             logcat { "$it" }
@@ -149,7 +152,7 @@ class AdsViewModel(
                 purposeConsent,
                 purposeLI,
                 hasGoogleVendorConsent,
-                hasGoogleVendorLI
+                hasGoogleVendorLI,
             )
     }
 
@@ -172,12 +175,15 @@ class AdsViewModel(
                 purposeConsent,
                 purposeLI,
                 hasGoogleVendorConsent,
-                hasGoogleVendorLI
+                hasGoogleVendorLI,
             )
     }
 
     // Check if a binary string has a "1" at position "index" (1-based)
-    private fun hasAttribute(input: String, index: Int): Boolean {
+    private fun hasAttribute(
+        input: String,
+        index: Int,
+    ): Boolean {
         return input.length >= index && input[index - 1] == '1'
     }
 
@@ -185,7 +191,7 @@ class AdsViewModel(
     private fun hasConsentFor(
         purposes: List<Int>,
         purposeConsent: String,
-        hasVendorConsent: Boolean
+        hasVendorConsent: Boolean,
     ): Boolean {
         return purposes.all { p -> hasAttribute(purposeConsent, p) } && hasVendorConsent
     }
@@ -196,7 +202,7 @@ class AdsViewModel(
         purposeConsent: String,
         purposeLI: String,
         hasVendorConsent: Boolean,
-        hasVendorLI: Boolean
+        hasVendorLI: Boolean,
     ): Boolean {
         return purposes.all { p ->
             (hasAttribute(purposeLI, p) && hasVendorLI) ||
@@ -219,7 +225,10 @@ isConsentFormAvailable: ${consentInformation.isConsentFormAvailable}
         }
     }
 
-    fun updateAds(state: AdsStatus, adView: AdView) {
+    fun updateAds(
+        state: AdsStatus,
+        adView: AdView,
+    ) {
         when (state) {
             AdsStatus.Personalized -> {
                 MobileAds.initialize(adView.context)
@@ -229,9 +238,10 @@ isConsentFormAvailable: ${consentInformation.isConsentFormAvailable}
                 MobileAds.initialize(adView.context)
                 val extras = Bundle()
                 extras.putString("npa", "1")
-                val request = AdRequest.Builder()
-                    .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-                    .build()
+                val request =
+                    AdRequest.Builder()
+                        .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+                        .build()
                 adView.loadAd(request)
             }
             else -> {

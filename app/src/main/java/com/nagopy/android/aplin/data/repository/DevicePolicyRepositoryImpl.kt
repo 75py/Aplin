@@ -7,15 +7,14 @@ import logcat.logcat
 import java.lang.reflect.Method
 
 class DevicePolicyRepositoryImpl(
-    private val devicePolicyManager: DevicePolicyManager
+    private val devicePolicyManager: DevicePolicyManager,
 ) : DevicePolicyRepository {
-
     @VisibleForTesting
     val packageHasActiveAdmins: Method? by lazy {
         try {
             DevicePolicyManager::class.java.getDeclaredMethod(
                 "packageHasActiveAdmins",
-                String::class.java
+                String::class.java,
             )
         } catch (t: Throwable) {
             logcat(LogPriority.VERBOSE) { "packageHasActiveAdmins: $t" }
