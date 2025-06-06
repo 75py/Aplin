@@ -22,17 +22,17 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class LoadPackagesUseCaseTest {
-
     @Test
     fun test() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        val useCase = LoadPackagesUseCase(
-            PackageRepositoryImpl(context.packageManager),
-            CategorizePackageUseCase(
+        val useCase =
+            LoadPackagesUseCase(
                 PackageRepositoryImpl(context.packageManager),
-                DevicePolicyRepositoryImpl(context.getSystemService(DevicePolicyManager::class.java))
+                CategorizePackageUseCase(
+                    PackageRepositoryImpl(context.packageManager),
+                    DevicePolicyRepositoryImpl(context.getSystemService(DevicePolicyManager::class.java)),
+                ),
             )
-        )
 
         val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val timeout = 3000L
@@ -46,13 +46,13 @@ class LoadPackagesUseCaseTest {
                 uiDevice.pressBack()
                 uiDevice.wait(
                     Until.hasObject(By.pkg(uiDevice.launcherPackageName).depth(0)),
-                    timeout
+                    timeout,
                 )
 
                 startDetailSettingsActivity(context, model.packageName)
                 uiDevice.wait(
                     Until.hasObject(By.pkg("com.android.settings").depth(0)),
-                    timeout
+                    timeout,
                 )
 
                 val isLabelFound =
@@ -68,7 +68,7 @@ class LoadPackagesUseCaseTest {
                             com.nagopy.android.aplin.test.R.string.test_btn_disable
                         } else {
                             com.nagopy.android.aplin.test.R.string.test_btn_enable
-                        }
+                        },
                     )
 
                 val isDisableButtonFound =
@@ -89,7 +89,10 @@ class LoadPackagesUseCaseTest {
         }
     }
 
-    private fun startDetailSettingsActivity(context: Context, pkg: String) {
+    private fun startDetailSettingsActivity(
+        context: Context,
+        pkg: String,
+    ) {
         val packageName = pkg.split(":")[0]
         val intent =
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))

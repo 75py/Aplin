@@ -10,7 +10,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PackageRepositoryImplTest {
-
     private lateinit var packageManager: PackageManager
     private lateinit var packRepositoryImpl: PackageRepositoryImpl
 
