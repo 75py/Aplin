@@ -4,7 +4,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 
 ## SDK Configuration
 
-- **Gradle Wrapper**: 8.12 - Build automation tool version
+- **Gradle Wrapper**: 8.14.2 - Build automation tool version
 - **Compile SDK**: 35 - Target SDK version for compilation
 - **Min SDK**: 26 - Minimum Android API level supported (Android 8.0)
 - **Target SDK**: 35 - Target Android API level (Android 15)
@@ -98,6 +98,10 @@ Aplin is an Android application manager that helps users view and manage install
 This dependency structure supports a modern Android app with Material Design UI, proper testing coverage, and compliance with Play Store requirements.
 
 ## Migration Notes
+
+### Gradle 8.14.2 Update
+- Updated from Gradle 8.12 to 8.14.2 for latest build performance improvements and bug fixes
+- No breaking changes expected for this minor version update
 
 ### Gradle 8.11 Update
 - Updated from Gradle 8.9 to 8.11 for latest build performance improvements and bug fixes
