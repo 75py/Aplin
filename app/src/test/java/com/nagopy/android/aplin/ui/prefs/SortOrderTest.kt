@@ -144,7 +144,7 @@ class SortOrderTest {
             createPackageModel("com.example.z", "App B"),
             createPackageModel("com.example.a", "App A")
         )
-        
+
         val packagesModel = PackagesModel(
             disableablePackages = packages,
             disabledPackages = packages,

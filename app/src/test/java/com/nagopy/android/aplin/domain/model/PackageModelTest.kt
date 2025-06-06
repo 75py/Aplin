@@ -2,7 +2,10 @@ package com.nagopy.android.aplin.domain.model
 
 import android.graphics.drawable.Drawable
 import io.mockk.mockk
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PackageModelTest {
@@ -10,7 +13,6 @@ class PackageModelTest {
     @Test
     fun packageModel_hasCorrectProperties() {
         val mockIcon: Drawable = mockk()
-        
         val packageModel = PackageModel(
             packageName = "com.example.test",
             label = "Test App",
@@ -33,7 +35,6 @@ class PackageModelTest {
     @Test
     fun packageModel_withNullVersionName_handlesCorrectly() {
         val mockIcon: Drawable = mockk()
-        
         val packageModel = PackageModel(
             packageName = "com.example.test",
             label = "Test App",

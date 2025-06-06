@@ -6,7 +6,8 @@ import com.nagopy.android.aplin.data.repository.DevicePolicyRepository
 import com.nagopy.android.aplin.data.repository.PackageRepository
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Assert.*
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -20,10 +21,9 @@ class CategorizePackageUseCaseTest {
     fun setUp() {
         packageRepository = mockk()
         devicePolicyRepository = mockk()
-        
+
         // Mock the system package to return null by default
         every { packageRepository.systemPackage } returns null
-        
         categorizePackageUseCase = CategorizePackageUseCase(
             packageRepository,
             devicePolicyRepository
@@ -78,7 +78,7 @@ class CategorizePackageUseCaseTest {
     fun isDisableable_withBundledAppAndActiveAdmins_returnsFalse() {
         val packageInfo = createPackageInfo("com.example.systemapp")
         packageInfo.applicationInfo!!.flags = ApplicationInfo.FLAG_SYSTEM
-        
+
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.systemapp") } returns true
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.systemapp") } returns false
 
@@ -95,7 +95,7 @@ class CategorizePackageUseCaseTest {
     fun isDisableable_withProfileOrDeviceOwner_returnsFalse() {
         val packageInfo = createPackageInfo("com.example.systemapp")
         packageInfo.applicationInfo!!.flags = ApplicationInfo.FLAG_SYSTEM
-        
+
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.systemapp") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.systemapp") } returns true
 
@@ -112,7 +112,7 @@ class CategorizePackageUseCaseTest {
     fun isDisableable_withHomePackageAsBundled_returnsFalse() {
         val packageInfo = createPackageInfo("com.example.launcher")
         packageInfo.applicationInfo!!.flags = ApplicationInfo.FLAG_SYSTEM
-        
+
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher") } returns false
 
@@ -129,7 +129,7 @@ class CategorizePackageUseCaseTest {
     fun isDisableable_withSingleHomePackageAsDefault_returnsFalse() {
         val packageInfo = createPackageInfo("com.example.launcher")
         packageInfo.applicationInfo!!.flags = 0 // Not bundled
-        
+
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher") } returns false
 
@@ -146,7 +146,7 @@ class CategorizePackageUseCaseTest {
     fun isDisableable_withMultipleHomePackagesAsCurrentDefault_returnsFalse() {
         val packageInfo = createPackageInfo("com.example.launcher1")
         packageInfo.applicationInfo!!.flags = 0 // Not bundled
-        
+
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher1") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher1") } returns false
 
@@ -164,7 +164,7 @@ class CategorizePackageUseCaseTest {
         val packageInfo = createPackageInfo("com.example.launcher1")
         packageInfo.applicationInfo!!.flags = 0 // Not bundled
         packageInfo.applicationInfo!!.enabled = true
-        
+
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher1") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher1") } returns false
 

@@ -2,7 +2,8 @@ package com.nagopy.android.aplin.domain.model
 
 import android.graphics.drawable.Drawable
 import io.mockk.mockk
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PackagesModelTest {
