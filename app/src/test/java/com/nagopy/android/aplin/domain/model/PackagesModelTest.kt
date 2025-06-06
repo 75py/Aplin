@@ -7,7 +7,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PackagesModelTest {
-
     private val mockIcon: Drawable = mockk()
 
     private fun createPackageModel(packageName: String): PackageModel {
@@ -18,7 +17,7 @@ class PackagesModelTest {
             isEnabled = true,
             firstInstallTime = 0L,
             lastUpdateTime = 0L,
-            versionName = "1.0"
+            versionName = "1.0",
         )
     }
 
@@ -29,12 +28,13 @@ class PackagesModelTest {
         val userPackages = listOf(createPackageModel("user"))
         val allPackages = listOf(createPackageModel("all"))
 
-        val packagesModel = PackagesModel(
-            disableablePackages = disableablePackages,
-            disabledPackages = disabledPackages,
-            userPackages = userPackages,
-            allPackages = allPackages
-        )
+        val packagesModel =
+            PackagesModel(
+                disableablePackages = disableablePackages,
+                disabledPackages = disabledPackages,
+                userPackages = userPackages,
+                allPackages = allPackages,
+            )
 
         assertEquals(disableablePackages, packagesModel.disableablePackages)
         assertEquals(disabledPackages, packagesModel.disabledPackages)
@@ -44,12 +44,13 @@ class PackagesModelTest {
 
     @Test
     fun packagesModel_withEmptyLists_handlesCorrectly() {
-        val packagesModel = PackagesModel(
-            disableablePackages = emptyList(),
-            disabledPackages = emptyList(),
-            userPackages = emptyList(),
-            allPackages = emptyList()
-        )
+        val packagesModel =
+            PackagesModel(
+                disableablePackages = emptyList(),
+                disabledPackages = emptyList(),
+                userPackages = emptyList(),
+                allPackages = emptyList(),
+            )
 
         assertTrue(packagesModel.disableablePackages.isEmpty())
         assertTrue(packagesModel.disabledPackages.isEmpty())
@@ -59,18 +60,20 @@ class PackagesModelTest {
 
     @Test
     fun packagesModel_withMultiplePackages_maintainsOrder() {
-        val packages = listOf(
-            createPackageModel("first"),
-            createPackageModel("second"),
-            createPackageModel("third")
-        )
+        val packages =
+            listOf(
+                createPackageModel("first"),
+                createPackageModel("second"),
+                createPackageModel("third"),
+            )
 
-        val packagesModel = PackagesModel(
-            disableablePackages = packages,
-            disabledPackages = packages.reversed(),
-            userPackages = packages,
-            allPackages = packages.reversed()
-        )
+        val packagesModel =
+            PackagesModel(
+                disableablePackages = packages,
+                disabledPackages = packages.reversed(),
+                userPackages = packages,
+                allPackages = packages.reversed(),
+            )
 
         assertEquals("first", packagesModel.disableablePackages[0].packageName)
         assertEquals("second", packagesModel.disableablePackages[1].packageName)

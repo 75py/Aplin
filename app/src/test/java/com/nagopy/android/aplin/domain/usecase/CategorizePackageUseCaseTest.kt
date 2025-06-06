@@ -12,7 +12,6 @@ import org.junit.Before
 import org.junit.Test
 
 class CategorizePackageUseCaseTest {
-
     private lateinit var packageRepository: PackageRepository
     private lateinit var devicePolicyRepository: DevicePolicyRepository
     private lateinit var categorizePackageUseCase: CategorizePackageUseCase
@@ -24,10 +23,11 @@ class CategorizePackageUseCaseTest {
 
         // Mock the system package to return null by default
         every { packageRepository.systemPackage } returns null
-        categorizePackageUseCase = CategorizePackageUseCase(
-            packageRepository,
-            devicePolicyRepository
-        )
+        categorizePackageUseCase =
+            CategorizePackageUseCase(
+                packageRepository,
+                devicePolicyRepository,
+            )
     }
 
     @Test
@@ -65,11 +65,12 @@ class CategorizePackageUseCaseTest {
         val packageInfo = createPackageInfo("com.example.userapp")
         packageInfo.applicationInfo!!.flags = 0 // Not system app
 
-        val result = categorizePackageUseCase.isDisableable(
-            packageInfo,
-            emptySet(),
-            null
-        )
+        val result =
+            categorizePackageUseCase.isDisableable(
+                packageInfo,
+                emptySet(),
+                null,
+            )
 
         assertFalse(result)
     }
@@ -82,11 +83,12 @@ class CategorizePackageUseCaseTest {
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.systemapp") } returns true
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.systemapp") } returns false
 
-        val result = categorizePackageUseCase.isDisableable(
-            packageInfo,
-            emptySet(),
-            null
-        )
+        val result =
+            categorizePackageUseCase.isDisableable(
+                packageInfo,
+                emptySet(),
+                null,
+            )
 
         assertFalse(result)
     }
@@ -99,11 +101,12 @@ class CategorizePackageUseCaseTest {
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.systemapp") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.systemapp") } returns true
 
-        val result = categorizePackageUseCase.isDisableable(
-            packageInfo,
-            emptySet(),
-            null
-        )
+        val result =
+            categorizePackageUseCase.isDisableable(
+                packageInfo,
+                emptySet(),
+                null,
+            )
 
         assertFalse(result)
     }
@@ -116,11 +119,12 @@ class CategorizePackageUseCaseTest {
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher") } returns false
 
-        val result = categorizePackageUseCase.isDisableable(
-            packageInfo,
-            setOf("com.example.launcher"),
-            null
-        )
+        val result =
+            categorizePackageUseCase.isDisableable(
+                packageInfo,
+                setOf("com.example.launcher"),
+                null,
+            )
 
         assertFalse(result)
     }
@@ -133,11 +137,13 @@ class CategorizePackageUseCaseTest {
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher") } returns false
 
-        val result = categorizePackageUseCase.isDisableable(
-            packageInfo,
-            setOf("com.example.launcher"), // Only one home package
-            "com.example.launcher"
-        )
+        val result =
+            categorizePackageUseCase.isDisableable(
+                packageInfo,
+                // Only one home package
+                setOf("com.example.launcher"),
+                "com.example.launcher",
+            )
 
         assertFalse(result)
     }
@@ -150,11 +156,14 @@ class CategorizePackageUseCaseTest {
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher1") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher1") } returns false
 
-        val result = categorizePackageUseCase.isDisableable(
-            packageInfo,
-            setOf("com.example.launcher1", "com.example.launcher2"), // Multiple home packages
-            "com.example.launcher1" // This package is the current default
-        )
+        val result =
+            categorizePackageUseCase.isDisableable(
+                packageInfo,
+                // Multiple home packages
+                setOf("com.example.launcher1", "com.example.launcher2"),
+                // This package is the current default
+                "com.example.launcher1",
+            )
 
         assertFalse(result)
     }
@@ -168,11 +177,14 @@ class CategorizePackageUseCaseTest {
         every { devicePolicyRepository.packageHasActiveAdmins("com.example.launcher1") } returns false
         every { devicePolicyRepository.isProfileOrDeviceOwner("com.example.launcher1") } returns false
 
-        val result = categorizePackageUseCase.isDisableable(
-            packageInfo,
-            setOf("com.example.launcher1", "com.example.launcher2"), // Multiple home packages
-            "com.example.launcher2" // Different package is the current default
-        )
+        val result =
+            categorizePackageUseCase.isDisableable(
+                packageInfo,
+                // Multiple home packages
+                setOf("com.example.launcher1", "com.example.launcher2"),
+                // Different package is the current default
+                "com.example.launcher2",
+            )
 
         // The exact result depends on handleDisableable logic
         // Since this is not a home package anymore in the logic flow, it should return false
