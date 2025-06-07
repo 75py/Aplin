@@ -36,7 +36,7 @@ enum class SortOrder(val labelResId: Int) {
                 ),
             )
         }
-    };
+    }, ;
 
     internal abstract fun sort(packages: List<PackageModel>): List<PackageModel>
 
