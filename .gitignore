@@ -15,3 +15,6 @@
 local.properties
 ads.properties
 .idea/
+
+# Rev-design tool temporary files
+/tmp/rev-design-runner.kt
