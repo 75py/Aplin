@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.Aplin" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">#c67d00</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 </resources>
