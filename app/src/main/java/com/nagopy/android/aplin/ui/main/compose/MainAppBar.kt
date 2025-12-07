@@ -1,6 +1,7 @@
 package com.nagopy.android.aplin.ui.main.compose
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
@@ -81,6 +82,7 @@ fun DefaultAppBar(
     onSearchTriggered: () -> Unit,
 ) {
     TopAppBar(
+        modifier = Modifier.statusBarsPadding(),
         title = {
             Text(text = stringResource(id = currentScreen.resourceId))
         },
@@ -152,7 +154,9 @@ fun SearchAppBar(
     onCloseClicked: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
-    TopAppBar {
+    TopAppBar(
+        modifier = Modifier.statusBarsPadding(),
+    ) {
         TextField(
             modifier =
                 Modifier
