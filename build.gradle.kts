@@ -1,9 +1,10 @@
 buildscript {
     repositories {
         google()
+        mavenCentral()
     }
     dependencies {
-        classpath(libs.ossLicenses)
+        classpath(libs.licenseePlugin)
     }
 }
 

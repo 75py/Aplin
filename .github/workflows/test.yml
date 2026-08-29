@@ -22,24 +22,40 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: dummy
+    - name: Configure Play test ad IDs
       run: |
         echo appId=ca-app-pub-3940256099942544~3347511713 > ads.properties
         echo unitId=ca-app-pub-3940256099942544/6300978111 >> ads.properties
     - name: ktlint
       run: ./gradlew ktlintCheck
-    - name: Generate kover coverage report
-      run: ./gradlew koverXmlReportDebug
+    - name: Unit tests
+      run: ./gradlew testPlayDebugUnitTest testFossDebugUnitTest
+    - name: Generate Kover coverage reports
+      run: ./gradlew koverXmlReportPlayDebug koverXmlReportFossDebug
     - name: Android lint
-      run: ./gradlew lintRelease
-    - name: Build release bundle
-      run: ./gradlew bundleRelease
-    - name: Add coverage report to PR
-      id: kover
+      run: ./gradlew -PallowTestAds=true lintPlayRelease lintFossRelease
+    - name: Compile instrumentation test APKs
+      run: ./gradlew assemblePlayDebugAndroidTest assembleFossDebugAndroidTest
+    - name: Build Play release bundle
+      run: ./gradlew -PallowTestAds=true bundlePlayRelease
+    - name: Build FOSS release APK
+      run: ./gradlew assembleFossRelease
+    - name: Add Play coverage report to PR
+      id: kover_play
       uses: mi-kas/kover-report@v1
       with:
-        path: |
-          ${{ github.workspace }}/app/build/reports/kover/reportDebug.xml
-        title: Code Coverage
+        path: ${{ github.workspace }}/app/build/reports/kover/reportPlayDebug.xml
+        title: Play Code Coverage
         update-comment: true
         coverage-counter-type: LINE
+    - name: Add FOSS coverage report to PR
+      id: kover_foss
+      uses: mi-kas/kover-report@v1
+      with:
+        path: ${{ github.workspace }}/app/build/reports/kover/reportFossDebug.xml
+        title: FOSS Code Coverage
+        update-comment: true
+        coverage-counter-type: LINE
+    - name: Remove temporary ad properties
+      if: always()
+      run: rm -f ads.properties

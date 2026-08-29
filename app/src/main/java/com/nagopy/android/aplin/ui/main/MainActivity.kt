@@ -35,19 +35,18 @@ class MainActivity : ComponentActivity() {
                 sharePackages = { packages ->
                     mainViewModel.sharePackages(this@MainActivity, packages)
                 },
-                startOssLicensesActivity = {
-                    mainViewModel.startOssLicensesActivity(this)
+                startLicensesActivity = {
+                    mainViewModel.startLicensesActivity(this)
                 },
                 adsStatus = adsViewModel.adsState.collectAsState().value,
-                isGDPR = adsViewModel.isGDPRState.collectAsState().value,
-                showConsentForm = {
-                    adsViewModel.loadForm(this, force = true)
+                privacyOptionsRequired = adsViewModel.privacyOptionsRequired.collectAsState().value,
+                showPrivacyOptions = {
+                    adsViewModel.showPrivacyOptions(this)
                 },
-                updateAds = adsViewModel::updateAds,
             )
         }
 
-        adsViewModel.init(this)
+        adsViewModel.initialize(this)
     }
 
     override fun onRestart() {

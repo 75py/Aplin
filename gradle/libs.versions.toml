@@ -6,7 +6,6 @@ targetSdk = "36"
 javaVersion = "17"
 
 # plugins
-ossLicensesPlugin = "0.10.6"
 androidGradlePlugin = "8.13.2"
 kotlinAndroidPlugin = "2.3.21"
 ktlintPlugin = "14.2.0"
@@ -29,16 +28,15 @@ koinAndroid = "4.2.2"
 kotlinReflect = "2.3.21"
 logcat = "0.4"
 navigationCompose = "2.9.8"
-ossLicensesPluginVersion = "0.10.6"
-playServicesOssLicenses = "17.1.0"
 appcompat = "1.7.1"
-playServicesAds = "23.5.0"
-ump = "3.1.0"
-preferenceKtx = "1.2.1"
+licenseePlugin = "1.14.1"
+playServicesAds = "25.4.0"
+ump = "4.0.0"
 mockk = "1.14.11"
 mockkAndroid = "1.14.11"
 mockkAgent = "1.14.11"
 datastorePreferences = "1.2.1"
+kotlinxSerializationJson = "1.9.0"
 
 [plugins]
 androidApp = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -48,7 +46,7 @@ kotlinPluginCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref 
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "koverPlugin" }
 
 [libraries]
-ossLicenses = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
+licenseePlugin = { group = "app.cash.licensee", name = "licensee-gradle-plugin", version.ref = "licenseePlugin" }
 androidxKtx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 composeUi = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
 composeMaterial = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
@@ -66,13 +64,11 @@ koinAndroid = { group = "io.insert-koin", name = "koin-android", version.ref = "
 kotlinReflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlinReflect" }
 logcat = { group = "com.squareup.logcat", name = "logcat", version.ref = "logcat" }
 navigationCompose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-oss-licenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "ossLicensesPluginVersion" }
-playServicesOssLicenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "playServicesOssLicenses" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 playServicesAds = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
 ump = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "ump" }
-preferenceKtx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockkAndroid = { group = "io.mockk", name = "mockk-android", version.ref = "mockkAndroid" }
 mockkAgent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkAgent" }
 datastorePreferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+kotlinxSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
