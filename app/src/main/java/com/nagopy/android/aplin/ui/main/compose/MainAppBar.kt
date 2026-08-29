@@ -1,6 +1,10 @@
 package com.nagopy.android.aplin.ui.main.compose
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
@@ -19,6 +23,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -81,6 +86,10 @@ fun DefaultAppBar(
     onSearchTriggered: () -> Unit,
 ) {
     TopAppBar(
+        modifier =
+            Modifier
+                .background(MaterialTheme.colors.primarySurface)
+                .statusBarsPadding(),
         title = {
             Text(text = stringResource(id = currentScreen.resourceId))
         },
@@ -152,7 +161,12 @@ fun SearchAppBar(
     onCloseClicked: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
-    TopAppBar {
+    TopAppBar(
+        modifier =
+            Modifier
+                .background(MaterialTheme.colors.primarySurface)
+                .statusBarsPadding(),
+    ) {
         TextField(
             modifier =
                 Modifier
@@ -245,6 +259,8 @@ fun SearchAppBarPreview() {
                     onCloseClicked = {},
                 )
             },
-        ) {}
+        ) { padding ->
+            Box(modifier = Modifier.padding(padding))
+        }
     }
 }
