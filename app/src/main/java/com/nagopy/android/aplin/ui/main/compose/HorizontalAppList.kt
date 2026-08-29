@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.nagopy.android.aplin.domain.model.PackageModel
 import kotlin.math.min
 
@@ -76,7 +75,7 @@ private fun Item(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                painter = rememberDrawablePainter(drawable = pkg.icon),
+                painter = rememberAndroidDrawablePainter(drawable = pkg.icon),
                 contentDescription = "",
                 modifier = Modifier.size(iconSize),
             )
