@@ -15,8 +15,8 @@ class SortOrderTest {
         label: String,
         firstInstallTime: Long = 0L,
         lastUpdateTime: Long = 0L,
-    ): PackageModel {
-        return PackageModel(
+    ): PackageModel =
+        PackageModel(
             packageName = packageName,
             label = label,
             icon = mockIcon,
@@ -25,7 +25,6 @@ class SortOrderTest {
             lastUpdateTime = lastUpdateTime,
             versionName = "1.0",
         )
-    }
 
     @Test
     fun appName_sortsPackagesByLabelThenPackageName() {

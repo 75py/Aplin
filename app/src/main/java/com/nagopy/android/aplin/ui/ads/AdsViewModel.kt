@@ -62,18 +62,19 @@ class AdsViewModel(
     fun init(activity: Activity) {
         // Set tag for underage of consent. false means users are not underage.
         val params =
-            ConsentRequestParameters.Builder()
+            ConsentRequestParameters
+                .Builder()
                 .apply {
                     if (BuildConfig.DEBUG) {
                         setConsentDebugSettings(
-                            ConsentDebugSettings.Builder(activity)
+                            ConsentDebugSettings
+                                .Builder(activity)
                                 .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
                                 // .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_NOT_EEA)
                                 .build(),
                         )
                     }
-                }
-                .build()
+                }.build()
 
         consentInformation = UserMessagingPlatform.getConsentInformation(activity)
 
@@ -82,7 +83,8 @@ class AdsViewModel(
         consentInformation.requestConsentInfoUpdate(
             activity,
             params,
-            { // The consent information state was updated.
+            {
+                // The consent information state was updated.
                 printLogs("requestConsentInfoUpdate")
                 updateGDPRState()
                 updateState()
@@ -183,18 +185,14 @@ class AdsViewModel(
     private fun hasAttribute(
         input: String,
         index: Int,
-    ): Boolean {
-        return input.length >= index && input[index - 1] == '1'
-    }
+    ): Boolean = input.length >= index && input[index - 1] == '1'
 
     // Check if consent is given for a list of purposes
     private fun hasConsentFor(
         purposes: List<Int>,
         purposeConsent: String,
         hasVendorConsent: Boolean,
-    ): Boolean {
-        return purposes.all { p -> hasAttribute(purposeConsent, p) } && hasVendorConsent
-    }
+    ): Boolean = purposes.all { p -> hasAttribute(purposeConsent, p) } && hasVendorConsent
 
     // Check if a vendor either has consent or legitimate interest for a list of purposes
     private fun hasConsentOrLegitimateInterestFor(
@@ -203,12 +201,11 @@ class AdsViewModel(
         purposeLI: String,
         hasVendorConsent: Boolean,
         hasVendorLI: Boolean,
-    ): Boolean {
-        return purposes.all { p ->
+    ): Boolean =
+        purposes.all { p ->
             (hasAttribute(purposeLI, p) && hasVendorLI) ||
                 (hasAttribute(purposeConsent, p) && hasVendorConsent)
         }
-    }
 
     private fun printLogs(msg: String) {
         logcat(LogPriority.VERBOSE) {
@@ -239,7 +236,8 @@ isConsentFormAvailable: ${consentInformation.isConsentFormAvailable}
                 val extras = Bundle()
                 extras.putString("npa", "1")
                 val request =
-                    AdRequest.Builder()
+                    AdRequest
+                        .Builder()
                         .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
                         .build()
                 adView.loadAd(request)

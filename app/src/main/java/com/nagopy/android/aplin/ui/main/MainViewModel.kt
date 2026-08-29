@@ -86,7 +86,8 @@ class MainViewModel(
         val intent =
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
         if (activity.isInMultiWindowMode) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT)
+            intent
+                .addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }
@@ -125,9 +126,7 @@ class MainViewModel(
         }
     }
 
-    private fun isLaunchable(intent: Intent): Boolean {
-        return intent.resolveActivity(packageManager) != null
-    }
+    private fun isLaunchable(intent: Intent): Boolean = intent.resolveActivity(packageManager) != null
 
     fun startOssLicensesActivity(activity: Activity) {
         activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
@@ -137,7 +136,8 @@ class MainViewModel(
         activity: Activity,
         packages: List<PackageModel>,
     ) {
-        ShareCompat.IntentBuilder(activity)
+        ShareCompat
+            .IntentBuilder(activity)
             .setText(packages.joinToString(separator = LINE_SEPARATOR) { it.packageName })
             .setType("text/plain")
             .startChooser()

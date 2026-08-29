@@ -75,7 +75,8 @@ private fun PreferenceScreenContent(
     val sortOrderLabels = SortOrder.values().associateWith { stringResource(id = it.labelResId) }
     val noItemsSelected = stringResource(id = R.string.pref_no_items_selected)
     val displayItemsSummary =
-        DisplayItem.values()
+        DisplayItem
+            .values()
             .filter(displayItems::contains)
             .joinToString { displayItemLabels.getValue(it) }
             .ifEmpty { noItemsSelected }
@@ -139,8 +140,7 @@ private fun PreferenceRow(
                 .clickable(role = Role.Button, onClick = onClick)
                 .semantics(mergeDescendants = true) {
                     stateDescription = summary
-                }
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                }.padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Text(
             text = title,
@@ -179,8 +179,7 @@ private fun DisplayItemsDialog(
                                     onValueChange = {
                                         onSelectionChanged(toggleDisplayItem(selectedItems, item))
                                     },
-                                )
-                                .padding(vertical = 12.dp),
+                                ).padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Checkbox(
@@ -229,8 +228,7 @@ private fun SortOrderDialog(
                                     selected = sortOrder == selectedSortOrder,
                                     role = Role.RadioButton,
                                     onClick = { onSelectionChanged(sortOrder) },
-                                )
-                                .padding(vertical = 12.dp),
+                                ).padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         RadioButton(

@@ -4,7 +4,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 
 ## SDK Configuration
 
-- **Gradle Wrapper**: 8.14.2 - Build automation tool version
+- **Gradle Wrapper**: 8.14.5 - Build automation tool version
 - **Compile SDK**: 35 - Target SDK version for compilation
 - **Min SDK**: 26 - Minimum Android API level supported (Android 8.0)
 - **Target SDK**: 35 - Target Android API level (Android 15)
@@ -13,13 +13,13 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 ## Build Plugins
 
 ### Core Android Plugins
-- **Android Gradle Plugin** (8.10.0) - Essential plugin for Android app development, handles Android-specific build tasks
-- **Kotlin Android Plugin** (2.0.21) - Enables Kotlin language support in Android projects
-- **Kotlin Compose Plugin** (2.0.21) - Provides Kotlin compiler support for Jetpack Compose
+- **Android Gradle Plugin** (8.13.2) - Essential plugin for Android app development, handles Android-specific build tasks
+- **Kotlin Android Plugin** (2.3.21) - Enables Kotlin language support in Android projects
+- **Kotlin Compose Plugin** (2.3.21) - Provides Kotlin compiler support for Jetpack Compose
 
 ### Code Quality & Analysis
-- **ktlint** (12.1.1) - Kotlin linter and formatter for consistent code style
-- **Kover** (0.8.3) - Code coverage tool for Kotlin projects
+- **ktlint** (14.2.0) - Kotlin linter and formatter for consistent code style
+- **Kover** (0.9.9) - Code coverage tool for Kotlin projects
 
 ### License Management
 - **OSS Licenses Plugin** (0.10.6) - Generates open source license reports for compliance
@@ -52,7 +52,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 - **Preference KTX** (1.2.1) - Kotlin extensions for Android preferences
 
 ### Utilities
-- **Kotlin Reflect** (2.0.21) - Kotlin reflection library for runtime introspection
+- **Kotlin Reflect** (2.3.21) - Kotlin reflection library for runtime introspection
 - **Logcat** (0.1) - Structured logging library for Android
 
 ### Google Play Services
@@ -64,7 +64,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 
 ### Unit Testing
 - **JUnit** (4.13.2) - Standard Java testing framework for unit tests
-- **Kotlin Test** (2.0.21) - Kotlin-specific testing utilities
+- **Kotlin Test** (2.3.21) - Kotlin-specific testing utilities
 
 ### Android Testing
 - **AndroidX Test JUnit** (1.2.1) - JUnit integration for Android instrumented tests
@@ -97,9 +97,9 @@ This dependency structure supports a modern Android app with Material Design UI,
 
 ## Migration Notes
 
-### Gradle 8.14.2 Update
-- Updated from Gradle 8.12 to 8.14.2 for latest build performance improvements and bug fixes
-- No breaking changes expected for this minor version update
+### Gradle 8.14.5 Update
+- Updated the Gradle Wrapper from 8.14.2 to 8.14.5 as a patch update for bug fixes
+- No breaking changes expected for this patch update
 
 ### Gradle 8.11 Update
 - Updated from Gradle 8.9 to 8.11 for latest build performance improvements and bug fixes
@@ -116,8 +116,8 @@ The update from Koin 3.5.6 to 4.0.0 is a major version change that may require c
 - Check if any Koin API usage needs updating
 - Verify all modules and injections work correctly after the update
 
-### Kotlin 2.0.21 Update
-- Ensure compatibility with Kotlin 2.0.x features
+### Kotlin 2.3.21 Update
+- Ensure compatibility with Kotlin 2.3.x features
 - Verify all Kotlin extensions and language features work correctly
 
 ### Compose 1.7.5 Update
