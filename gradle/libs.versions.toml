@@ -1,8 +1,8 @@
 [versions]
 # sdk
-compileSdk = "35"
+compileSdk = "36"
 minSdk = "26"
-targetSdk = "35"
+targetSdk = "36"
 javaVersion = "17"
 
 # plugins

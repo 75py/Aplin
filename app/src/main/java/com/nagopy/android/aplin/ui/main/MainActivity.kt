@@ -3,6 +3,7 @@ package com.nagopy.android.aplin.ui.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.ads.AdsViewModel
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             val state = mainViewModel.viewModelState.collectAsState().value
             RootScreen(
