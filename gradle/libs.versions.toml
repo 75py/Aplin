@@ -14,32 +14,31 @@ koverPlugin = "0.9.9"
 
 # libraries
 kotlin = "2.3.21"
-ktx = "1.15.0"
-composeUi = "1.7.5"
-composeMaterial = "1.7.5"
-composeToolingPreview = "1.7.5"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
+ktx = "1.18.0"
+composeUi = "1.11.4"
+composeMaterial = "1.11.4"
+composeMaterialIcons = "1.7.8"
+composeToolingPreview = "1.11.4"
+lifecycleRuntimeKtx = "2.10.0"
+activityCompose = "1.13.0"
 junit = "4.13.2"
-androidxTestExtJunit = "1.2.1"
-androidxTestEspressoCore = "3.6.1"
-androidxTestRunner = "1.6.2"
-androidxTestRules = "1.6.1"
-androidxTestUiautomator = "2.3.0"
-koinAndroid = "4.0.0"
+androidxTestExtJunit = "1.3.0"
+androidxTestRunner = "1.7.0"
+androidxTestUiautomator = "2.4.0"
+koinAndroid = "4.2.2"
 kotlinReflect = "2.3.21"
-logcat = "0.1"
-navigationCompose = "2.8.4"
+logcat = "0.4"
+navigationCompose = "2.9.8"
 ossLicensesPluginVersion = "0.10.6"
 playServicesOssLicenses = "17.1.0"
-appcompat = "1.7.0"
+appcompat = "1.7.1"
 playServicesAds = "23.5.0"
 ump = "3.1.0"
 preferenceKtx = "1.2.1"
-mockk = "1.13.13"
-mockkAndroid = "1.13.13"
-mockkAgent = "1.13.13"
-datastorePreferences = "1.1.1"
+mockk = "1.14.11"
+mockkAndroid = "1.14.11"
+mockkAgent = "1.14.11"
+datastorePreferences = "1.2.1"
 
 [plugins]
 androidApp = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -53,18 +52,15 @@ ossLicenses = { group = "com.google.android.gms", name = "oss-licenses-plugin", 
 androidxKtx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 composeUi = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
 composeMaterial = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
-composeMaterialIconsCore = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeMaterial" }
+composeMaterialIconsCore = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeMaterialIcons" }
 composeToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeToolingPreview" }
 lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidxTestExtJunit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
-androidxTestEspressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspressoCore" }
 androidxTestRunner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
-androidxTestRules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
 androidxTestUiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidxTestUiautomator" }
 kotlinTest = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
-androidxComposeUiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "composeUi" }
 androidxComposeUiTooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
 koinAndroid = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
 kotlinReflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlinReflect" }

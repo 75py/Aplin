@@ -83,12 +83,9 @@ dependencies {
     implementation(libs.activityCompose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidxTestExtJunit)
-    androidTestImplementation(libs.androidxTestEspressoCore)
     androidTestImplementation(libs.androidxTestRunner)
-    androidTestImplementation(libs.androidxTestRules)
     androidTestImplementation(libs.androidxTestUiautomator)
     androidTestImplementation(libs.kotlinTest)
-    androidTestImplementation(libs.androidxComposeUiTestJunit4)
     debugImplementation(libs.androidxComposeUiTooling)
 
     implementation(libs.koinAndroid)

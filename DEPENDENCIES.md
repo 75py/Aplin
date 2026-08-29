@@ -5,9 +5,9 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 ## SDK Configuration
 
 - **Gradle Wrapper**: 8.14.5 - Build automation tool version
-- **Compile SDK**: 35 - Target SDK version for compilation
+- **Compile SDK**: 36 - Target SDK version for compilation
 - **Min SDK**: 26 - Minimum Android API level supported (Android 8.0)
-- **Target SDK**: 35 - Target Android API level (Android 15)
+- **Target SDK**: 36 - Target Android API level (Android 16)
 - **Java Version**: 17 - Java language version used for compilation
 
 ## Build Plugins
@@ -27,33 +27,33 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 ## Core Libraries
 
 ### Android Core
-- **AndroidX Core KTX** (1.15.0) - Kotlin extensions for Android core APIs, providing more concise and idiomatic code
-- **AppCompat** (1.7.0) - Backward compatibility library for modern Android features on older devices
+- **AndroidX Core KTX** (1.18.0) - Kotlin extensions for Android core APIs, providing more concise and idiomatic code
+- **AppCompat** (1.7.1) - Backward compatibility library and theme support used by the application
 
 ### Jetpack Compose UI Framework
-- **Compose UI** (1.7.5) - Core Jetpack Compose library for building native Android UI
-- **Compose Material** (1.7.5) - Material Design components for Compose
-- **Compose Material Icons Core** (1.7.5) - Core Material icon set used by the app
-- **Compose UI Tooling Preview** (1.7.5) - Preview support for Compose in Android Studio
-- **Compose UI Tooling** (1.7.5) - Debug tooling for Compose (debug builds only)
+- **Compose UI** (1.11.4) - Core Jetpack Compose library for building native Android UI
+- **Compose Material** (1.11.4) - Material Design components for Compose
+- **Compose Material Icons Core** (1.7.8) - Core Material icon set used by the app; this artifact line is separately versioned because newer Compose releases no longer publish Material Icons updates
+- **Compose UI Tooling Preview** (1.11.4) - Preview support for Compose in Android Studio
+- **Compose UI Tooling** (1.11.4) - Debug tooling for Compose (debug builds only)
 
 ### Lifecycle & Activity
-- **Lifecycle Runtime KTX** (2.8.7) - Lifecycle-aware components with Kotlin extensions
-- **Activity Compose** (1.9.3) - Integration between Activities and Jetpack Compose
+- **Lifecycle Runtime KTX** (2.10.0) - Lifecycle-aware components with Kotlin extensions
+- **Activity Compose** (1.13.0) - Integration between Activities and Jetpack Compose
 
 ### Navigation
-- **Navigation Compose** (2.8.4) - Navigation component for Jetpack Compose, handles in-app navigation
+- **Navigation Compose** (2.9.8) - Navigation component for Jetpack Compose, handles in-app navigation
 
 ### Dependency Injection
-- **Koin Android** (4.0.0) - Lightweight dependency injection framework for Android
+- **Koin Android** (4.2.2) - Lightweight dependency injection framework for Android
 
 ### Data & Preferences
-- **DataStore Preferences** (1.1.1) - Modern replacement for SharedPreferences with type safety and coroutine support
+- **DataStore Preferences** (1.2.1) - Modern replacement for SharedPreferences with type safety and coroutine support
 - **Preference KTX** (1.2.1) - Kotlin extensions for Android preferences
 
 ### Utilities
 - **Kotlin Reflect** (2.3.21) - Kotlin reflection library for runtime introspection
-- **Logcat** (0.1) - Structured logging library for Android
+- **Logcat** (0.4) - Structured logging library for Android
 
 ### Google Play Services
 - **Play Services Ads** (23.5.0) - Google Mobile Ads SDK for displaying advertisements
@@ -67,19 +67,14 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 - **Kotlin Test** (2.3.21) - Kotlin-specific testing utilities
 
 ### Android Testing
-- **AndroidX Test JUnit** (1.2.1) - JUnit integration for Android instrumented tests
-- **AndroidX Test Espresso Core** (3.6.1) - UI testing framework for Android
-- **AndroidX Test Runner** (1.6.2) - Test runner for Android instrumented tests
-- **AndroidX Test Rules** (1.6.1) - Test rules for Android testing
-- **AndroidX Test UI Automator** (2.3.0) - UI testing framework for cross-app interactions
-
-### Compose Testing
-- **Compose UI Test JUnit4** (1.7.5) - Testing utilities for Jetpack Compose UIs
+- **AndroidX Test JUnit** (1.3.0) - JUnit integration for Android instrumented tests
+- **AndroidX Test Runner** (1.7.0) - Test runner for Android instrumented tests
+- **AndroidX Test UI Automator** (2.4.0) - UI testing framework for cross-app interactions
 
 ### Mocking
-- **MockK** (1.13.13) - Mocking library for Kotlin unit tests
-- **MockK Android** (1.13.13) - Android-specific MockK extensions
-- **MockK Agent** (1.13.13) - JVM agent for MockK advanced features
+- **MockK** (1.14.11) - Mocking library for Kotlin unit tests
+- **MockK Android** (1.14.11) - Android-specific MockK extensions
+- **MockK Agent** (1.14.11) - JVM agent for MockK advanced features
 
 ## Purpose in Aplin
 
@@ -95,7 +90,7 @@ Aplin is an Android application manager that helps users view and manage install
 
 This dependency structure supports a modern Android app with Material Design UI, proper testing coverage, and compliance with Play Store requirements.
 
-## Migration Notes
+## Historical Migration Notes
 
 ### Gradle 8.14.5 Update
 - Updated the Gradle Wrapper from 8.14.2 to 8.14.5 as a patch update for bug fixes
@@ -124,9 +119,18 @@ The update from Koin 3.5.6 to 4.0.0 is a major version change that may require c
 - Latest Compose UI updates may include new features and optimizations
 - Verify all Compose components render correctly
 
+## Common Dependency Update (2026-08-29)
+
+- AndroidX stable versions were checked against the Android Developers stable release table and Google Maven metadata. Compose UI, Material, and Tooling are kept on the same `1.11.4` line, which is compatible with the unchanged compileSdk 36 and AGP 8.13.2. Material Icons Core remains on its separately published latest stable `1.7.8` artifact line.
+- `espresso-core`, `androidx.test:rules`, and Compose `ui-test-junit4` were removed because `rg` found no source or test usage. The remaining AndroidX Test dependencies are used by the instrumented tests.
+- AppCompat was updated from `1.7.0` to `1.7.1` and remains a direct dependency because `themes.xml` directly uses `Theme.AppCompat.Light.NoActionBar`; the four preview calls continue to use `AppCompatResources.getDrawable`.
+- Lifecycle `2.11.0` was not adopted because atomic alignment of `lifecycle-runtime-compose` and `lifecycle-viewmodel-compose` requires compileSdk 37 and AGP 9.1; `2.10.0` is the compatible stable line for this unchanged build setup.
+- No direct Material Components dependency is declared or resolved in the release runtime graph.
+- `play-services-ads`, `user-messaging-platform`, `play-services-oss-licenses`, the OSS Licenses Gradle plugin, and `preference-ktx` were intentionally left unchanged for the flavor-separation work.
+
 ## Post-Update Verification Checklist
 
-After resolving network connectivity issues, perform these verification steps:
+Use this checklist to verify dependency and build changes:
 
 1. **Build Verification**
    - `./gradlew clean build` - Ensure project builds successfully
