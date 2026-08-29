@@ -63,7 +63,7 @@ dependencies {
     implementation(libs.androidxKtx)
     implementation(libs.composeUi)
     implementation(libs.composeMaterial)
-    implementation(libs.composeMaterialIconsExtended)
+    implementation(libs.composeMaterialIconsCore)
     implementation(libs.composeToolingPreview)
     implementation(libs.lifecycleRuntimeKtx)
     implementation(libs.activityCompose)
@@ -79,7 +79,6 @@ dependencies {
 
     implementation(libs.koinAndroid)
     implementation(libs.kotlinReflect)
-    implementation(libs.accompanistDrawablepainter)
     implementation(libs.logcat)
 
     implementation(libs.navigationCompose)
@@ -96,7 +95,6 @@ dependencies {
     androidTestImplementation(libs.mockkAndroid)
     androidTestImplementation(libs.mockkAgent)
 
-    implementation(libs.composePrefs)
     implementation(libs.datastorePreferences)
 }
 

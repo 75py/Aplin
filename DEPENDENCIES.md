@@ -33,7 +33,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 ### Jetpack Compose UI Framework
 - **Compose UI** (1.7.5) - Core Jetpack Compose library for building native Android UI
 - **Compose Material** (1.7.5) - Material Design components for Compose
-- **Compose Material Icons Extended** (1.7.5) - Extended set of Material Design icons for Compose
+- **Compose Material Icons Core** (1.7.5) - Core Material icon set used by the app
 - **Compose UI Tooling Preview** (1.7.5) - Preview support for Compose in Android Studio
 - **Compose UI Tooling** (1.7.5) - Debug tooling for Compose (debug builds only)
 
@@ -50,11 +50,9 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 ### Data & Preferences
 - **DataStore Preferences** (1.1.1) - Modern replacement for SharedPreferences with type safety and coroutine support
 - **Preference KTX** (1.2.1) - Kotlin extensions for Android preferences
-- **ComposePrefs** (1.0.6) - Preference components built for Jetpack Compose
 
 ### Utilities
 - **Kotlin Reflect** (2.0.21) - Kotlin reflection library for runtime introspection
-- **Accompanist Drawable Painter** (0.36.0) - Utility for using Android drawables in Compose
 - **Logcat** (0.1) - Structured logging library for Android
 
 ### Google Play Services

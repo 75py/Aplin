@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.prefs.DisplayItem
@@ -84,7 +83,7 @@ private fun Item(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
-                painter = rememberDrawablePainter(drawable = pkg.icon),
+                painter = rememberAndroidDrawablePainter(drawable = pkg.icon),
                 contentDescription = "",
                 modifier = Modifier.size(iconSize),
             )

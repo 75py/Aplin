@@ -16,6 +16,7 @@
     <string name="display_item_first_install_time">First install time</string>
     <string name="display_item_last_update_time">Last update time</string>
     <string name="display_item_version_name">Version name</string>
+    <string name="pref_no_items_selected">None selected</string>
 
     <string name="first_install_time_format">First install: %s</string>
     <string name="last_update_time_format">Last update: %s</string>

@@ -28,7 +28,6 @@ androidxTestRules = "1.6.1"
 androidxTestUiautomator = "2.3.0"
 koinAndroid = "4.0.0"
 kotlinReflect = "2.0.21"
-accompanistDrawablepainter = "0.36.0"
 logcat = "0.1"
 navigationCompose = "2.8.4"
 ossLicensesPluginVersion = "0.10.6"
@@ -40,7 +39,6 @@ preferenceKtx = "1.2.1"
 mockk = "1.13.13"
 mockkAndroid = "1.13.13"
 mockkAgent = "1.13.13"
-composePrefs = "1.0.6"
 datastorePreferences = "1.1.1"
 
 [plugins]
@@ -56,7 +54,7 @@ ossLicenses = { group = "com.google.android.gms", name = "oss-licenses-plugin", 
 androidxKtx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 composeUi = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
 composeMaterial = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
-composeMaterialIconsExtended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterial" }
+composeMaterialIconsCore = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeMaterial" }
 composeToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeToolingPreview" }
 lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 activityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -71,7 +69,6 @@ androidxComposeUiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-j
 androidxComposeUiTooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
 koinAndroid = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
 kotlinReflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlinReflect" }
-accompanistDrawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
 logcat = { group = "com.squareup.logcat", name = "logcat", version.ref = "logcat" }
 navigationCompose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 oss-licenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "ossLicensesPluginVersion" }
@@ -83,5 +80,4 @@ preferenceKtx = { group = "androidx.preference", name = "preference-ktx", versio
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockkAndroid = { group = "io.mockk", name = "mockk-android", version.ref = "mockkAndroid" }
 mockkAgent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkAgent" }
-composePrefs = { group = "com.github.JamalMulla", name = "ComposePrefs", version.ref = "composePrefs" }
 datastorePreferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
