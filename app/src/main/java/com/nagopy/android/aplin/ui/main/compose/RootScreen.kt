@@ -15,7 +15,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.ads.AdView
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.ui.ads.AdsStatus
 import com.nagopy.android.aplin.ui.ads.compose.AdBanner
@@ -33,11 +32,10 @@ fun RootScreen(
     startDetailSettingsActivity: (String) -> Unit,
     searchByWeb: (PackageModel) -> Unit,
     sharePackages: (List<PackageModel>) -> Unit,
-    startOssLicensesActivity: () -> Unit,
+    startLicensesActivity: () -> Unit,
     adsStatus: AdsStatus,
-    isGDPR: Boolean,
-    showConsentForm: () -> Unit,
-    updateAds: (AdsStatus, AdView) -> Unit,
+    privacyOptionsRequired: Boolean,
+    showPrivacyOptions: () -> Unit,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -90,9 +88,9 @@ fun RootScreen(
                             state = state,
                             startDetailSettingsActivity = startDetailSettingsActivity,
                             searchByWeb = searchByWeb,
-                            startOssLicensesActivity = startOssLicensesActivity,
-                            isGDPR = isGDPR,
-                            showConsentForm = showConsentForm,
+                            startLicensesActivity = startLicensesActivity,
+                            privacyOptionsRequired = privacyOptionsRequired,
+                            showPrivacyOptions = showPrivacyOptions,
                         )
                     }
                     Screen.appListScreens.forEach { appListScreen ->
@@ -123,10 +121,7 @@ fun RootScreen(
                     }
                 }
 
-                AdBanner(
-                    state = adsStatus,
-                    updateAds = updateAds,
-                )
+                AdBanner(adsStatus)
             }
         }
     }

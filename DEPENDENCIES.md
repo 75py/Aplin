@@ -22,7 +22,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 - **Kover** (0.9.9) - Code coverage tool for Kotlin projects
 
 ### License Management
-- **OSS Licenses Plugin** (0.10.6) - Generates open source license reports for compliance
+- **Cash App Licensee Gradle plugin** (1.14.1) - Validates dependency licenses and bundles a reproducible build-time `artifacts.json` report; no Licensee runtime library is shipped
 
 ## Core Libraries
 
@@ -49,16 +49,16 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 
 ### Data & Preferences
 - **DataStore Preferences** (1.2.1) - Modern replacement for SharedPreferences with type safety and coroutine support
-- **Preference KTX** (1.2.1) - Kotlin extensions for Android preferences
 
 ### Utilities
 - **Kotlin Reflect** (2.3.21) - Kotlin reflection library for runtime introspection
 - **Logcat** (0.4) - Structured logging library for Android
 
-### Google Play Services
-- **Play Services Ads** (23.5.0) - Google Mobile Ads SDK for displaying advertisements
-- **Play Services OSS Licenses** (17.1.0) - Library for displaying open source licenses
-- **User Messaging Platform (UMP)** (3.1.0) - Google's solution for GDPR and privacy compliance
+### Distribution-specific libraries
+- **Play only: Google Mobile Ads SDK** (25.4.0) - AdMob banner ads; isolated to `playImplementation`
+- **Play only: User Messaging Platform** (4.0.0) - Official consent and privacy-options flow; isolated to `playImplementation`
+- **FOSS only: none** - No Google Play Services, AdMob, UMP, or automatic network runtime dependency
+- **Kotlinx Serialization JSON** (1.9.0) - Parses the offline Licensee catalog in the common license screen
 
 ## Testing Libraries
 
@@ -84,7 +84,8 @@ Aplin is an Android application manager that helps users view and manage install
 - **Navigation** handles moving between different app screens
 - **Koin** manages dependency injection for clean architecture
 - **DataStore/Preferences** store user settings and app state
-- **Play Services** handle advertisements and license compliance
+- **Play distribution libraries** handle AdMob advertising and Google's UMP consent flow
+- **Licensee** generates the offline dependency-license catalog at build time for both variants
 - **Testing libraries** ensure code quality and reliability
 - **Logcat** provides structured logging for debugging
 
@@ -119,6 +120,15 @@ The update from Koin 3.5.6 to 4.0.0 is a major version change that may require c
 - Latest Compose UI updates may include new features and optimizations
 - Verify all Compose components render correctly
 
+## Distribution matrix (2026-08-29)
+
+- `play` keeps the existing Play application ID `com.nagopy.android.aplin`; `foss` adds the `.foss` application ID suffix.
+- Both variants use compile/target SDK 36, min SDK 26, versionCode 46, and versionName 5.6.0.
+- Both variants keep `QUERY_ALL_PACKAGES` because package classification is Aplin's core on-device feature.
+- Only Play has AdMob/UMP dependencies, AdMob manifest metadata, and INTERNET/ACCESS_NETWORK_STATE. The Google Mobile Ads SDK may contribute AD_ID to the Play merged manifest; FOSS removes it defensively and contains no matching runtime classes.
+- FOSS has no ads, UMP, automatic communication, or INTERNET/ACCESS_NETWORK_STATE/AD_ID permission. Web lookup is only a user-initiated `ACTION_WEB_SEARCH` intent handled by another app.
+- Both variants display the dependency catalog offline from Licensee's generated `assets/app/cash/licensee/artifacts.json`. Google OSS Licenses plugin/library has been removed.
+
 ## Common Dependency Update (2026-08-29)
 
 - AndroidX stable versions were checked against the Android Developers stable release table and Google Maven metadata. Compose UI, Material, and Tooling are kept on the same `1.11.4` line, which is compatible with the unchanged compileSdk 36 and AGP 8.13.2. Material Icons Core remains on its separately published latest stable `1.7.8` artifact line.
@@ -126,7 +136,10 @@ The update from Koin 3.5.6 to 4.0.0 is a major version change that may require c
 - AppCompat was updated from `1.7.0` to `1.7.1` and remains a direct dependency because `themes.xml` directly uses `Theme.AppCompat.Light.NoActionBar`; the four preview calls continue to use `AppCompatResources.getDrawable`.
 - Lifecycle `2.11.0` was not adopted because atomic alignment of `lifecycle-runtime-compose` and `lifecycle-viewmodel-compose` requires compileSdk 37 and AGP 9.1; `2.10.0` is the compatible stable line for this unchanged build setup.
 - No direct Material Components dependency is declared or resolved in the release runtime graph.
-- `play-services-ads`, `user-messaging-platform`, `play-services-oss-licenses`, the OSS Licenses Gradle plugin, and `preference-ktx` were intentionally left unchanged for the flavor-separation work.
+- Google Mobile Ads SDK 25.4.0 and UMP 4.0.0 are Play-only. The official UMP flow requests consent information at every launch, loads and shows required forms, checks `canRequestAds()`, exposes privacy options only when required, and does not read cached TCF values in application code.
+- Cash App Licensee 1.14.1 is build-time only. Its generated report is bundled at the documented `assets/app/cash/licensee/artifacts.json` path and is parsed by the app without a Licensee runtime dependency.
+- The in-app catalog displays coordinates and every license name, identifier, and URL present in that generated metadata. It is not a substitute for full NOTICE/copyright texts; F-Droid metadata and asset/notice licensing remain separate release work.
+- Managed-emulator CI, reproducible-build proof, full third-party NOTICE/copyright text inclusion, and release signing remain outside this distribution change.
 
 ## Post-Update Verification Checklist
 

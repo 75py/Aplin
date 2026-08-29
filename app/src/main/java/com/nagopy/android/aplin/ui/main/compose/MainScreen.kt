@@ -30,9 +30,9 @@ fun MainScreen(
     state: MainUiState,
     startDetailSettingsActivity: (String) -> Unit,
     searchByWeb: (PackageModel) -> Unit,
-    startOssLicensesActivity: () -> Unit,
-    isGDPR: Boolean,
-    showConsentForm: () -> Unit,
+    startLicensesActivity: () -> Unit,
+    privacyOptionsRequired: Boolean,
+    showPrivacyOptions: () -> Unit,
 ) {
     if (state.packagesModel == null) {
         Loading()
@@ -43,9 +43,9 @@ fun MainScreen(
             state.searchText,
             startDetailSettingsActivity,
             searchByWeb,
-            startOssLicensesActivity,
-            isGDPR,
-            showConsentForm,
+            startLicensesActivity,
+            privacyOptionsRequired,
+            showPrivacyOptions,
         )
     }
 }
@@ -57,9 +57,9 @@ fun MainScreenLoaded(
     searchText: String,
     startDetailSettingsActivity: (String) -> Unit,
     searchByWeb: (PackageModel) -> Unit,
-    startOssLicensesActivity: () -> Unit,
-    isGDPR: Boolean,
-    showConsentForm: () -> Unit,
+    startLicensesActivity: () -> Unit,
+    privacyOptionsRequired: Boolean,
+    showPrivacyOptions: () -> Unit,
 ) {
     Column(
         modifier =
@@ -80,13 +80,13 @@ fun MainScreenLoaded(
             Spacer(modifier = Modifier.height(12.dp))
         }
 
-        Button(onClick = startOssLicensesActivity) {
+        Button(onClick = startLicensesActivity) {
             Text(stringResource(id = R.string.licenses))
         }
 
-        if (isGDPR) {
+        if (privacyOptionsRequired) {
             Spacer(modifier = Modifier.height(12.dp))
-            Button(onClick = showConsentForm) {
+            Button(onClick = showPrivacyOptions) {
                 Text(stringResource(id = R.string.change_consent_state))
             }
         }
@@ -120,11 +120,11 @@ fun MainScreenLoadedPreview() {
             navController = rememberNavController(),
             packagesModel = PackagesModel(packages, packages, packages, packages),
             searchText = "",
-            startOssLicensesActivity = {},
+            startLicensesActivity = {},
             searchByWeb = {},
             startDetailSettingsActivity = {},
-            isGDPR = true,
-            showConsentForm = {},
+            privacyOptionsRequired = true,
+            showPrivacyOptions = {},
         )
     }
 }

@@ -7,12 +7,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.nagopy.android.aplin.R
 import com.nagopy.android.aplin.domain.model.PackageModel
 import com.nagopy.android.aplin.domain.usecase.LoadPackagesUseCase
+import com.nagopy.android.aplin.ui.licenses.LicensesActivity
 import com.nagopy.android.aplin.ui.prefs.UserDataStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.logcat
-import java.net.URLEncoder
 
 class MainViewModel(
     activityManager: ActivityManager,
@@ -107,29 +108,26 @@ class MainViewModel(
                 .putExtra(SearchManager.QUERY, "${packageModel.label} ${packageModel.packageName}")
 
         if (isLaunchable(actionWebSearch)) {
-            activity.startActivity(actionWebSearch)
-        } else {
-            val url = "https://www.google.com/search?q=${
-                URLEncoder.encode(
-                    packageModel.label,
-                    "UTF-8",
-                )
-            }%20${packageModel.packageName}"
-            val actionView =
-                Intent(Intent.ACTION_VIEW)
-                    .setData(Uri.parse(url))
-            if (isLaunchable(actionView)) {
-                activity.startActivity(actionView)
-            } else {
-                logcat { "ActivityNotFound" }
+            try {
+                activity.startActivity(actionWebSearch)
+            } catch (exception: Exception) {
+                logcat { "Unable to start web search: $exception" }
+                showWebSearchUnavailable(activity)
             }
+        } else {
+            logcat { "No web search activity available" }
+            showWebSearchUnavailable(activity)
         }
+    }
+
+    private fun showWebSearchUnavailable(activity: Activity) {
+        Toast.makeText(activity, R.string.web_search_unavailable, Toast.LENGTH_SHORT).show()
     }
 
     private fun isLaunchable(intent: Intent): Boolean = intent.resolveActivity(packageManager) != null
 
-    fun startOssLicensesActivity(activity: Activity) {
-        activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
+    fun startLicensesActivity(activity: Activity) {
+        activity.startActivity(Intent(activity, LicensesActivity::class.java))
     }
 
     fun sharePackages(

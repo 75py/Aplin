@@ -6,6 +6,10 @@
     <string name="category_disabled">Disabled Apps</string>
     <string name="category_all">All Apps</string>
     <string name="licenses">Open source licenses</string>
+    <string name="licenses_unavailable">License information is unavailable.</string>
+    <string name="license_unknown">Unknown license</string>
+    <string name="license_source">Source: %s</string>
+    <string name="web_search_unavailable">No web search app is available.</string>
     <string name="change_consent_state" translatable="false">Change consent state</string>
     <string name="share">Share</string>
     <string name="search">Search</string>
