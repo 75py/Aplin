@@ -9,8 +9,8 @@ import org.junit.Test
 class PackagesModelTest {
     private val mockIcon: Drawable = mockk()
 
-    private fun createPackageModel(packageName: String): PackageModel {
-        return PackageModel(
+    private fun createPackageModel(packageName: String): PackageModel =
+        PackageModel(
             packageName = packageName,
             label = "App $packageName",
             icon = mockIcon,
@@ -19,7 +19,6 @@ class PackagesModelTest {
             lastUpdateTime = 0L,
             versionName = "1.0",
         )
-    }
 
     @Test
     fun packagesModel_hasCorrectProperties() {

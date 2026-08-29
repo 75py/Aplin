@@ -10,7 +10,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class UserDataStore(private val dataStore: DataStore<Preferences>) {
+class UserDataStore(
+    private val dataStore: DataStore<Preferences>,
+) {
     private val displayItemsKey = stringSetPreferencesKey(DisplayItem.KEY)
     private val sortOrderKey = stringPreferencesKey(SortOrder.KEY)
 

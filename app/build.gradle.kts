@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -11,13 +12,22 @@ plugins {
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
     namespace = "com.nagopy.android.aplin"
 
     defaultConfig {
         applicationId = "com.nagopy.android.aplin"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
         versionCode = 46
         versionName = "5.6.0"
 
@@ -44,11 +54,9 @@ android {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.javaVersion.get())
         targetCompatibility = JavaVersion.toVersion(libs.versions.javaVersion.get())
     }
-    kotlinOptions {
-        jvmTarget = libs.versions.javaVersion.get()
-    }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -56,6 +64,12 @@ android {
             excludes += "META-INF/LICENSE.md"
             excludes += "META-INF/LICENSE-notice.md"
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(libs.versions.javaVersion.get()))
     }
 }
 

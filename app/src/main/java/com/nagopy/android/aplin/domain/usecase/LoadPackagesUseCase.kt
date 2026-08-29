@@ -31,8 +31,7 @@ class LoadPackagesUseCase(
                                 homePackages,
                                 currentDefaultHomePackageName,
                             )
-                        }
-                        .mapNotNull { it.toPackageModel() }
+                        }.mapNotNull { it.toPackageModel() }
                         .sortedWith(compareBy({ it.label }, { it.packageName }))
                 val disabled =
                     src

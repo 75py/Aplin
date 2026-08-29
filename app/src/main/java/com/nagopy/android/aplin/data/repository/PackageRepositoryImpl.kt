@@ -31,7 +31,8 @@ class PackageRepositoryImpl(
 
         val hiddenModules =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                packageManager.getInstalledModules(0)
+                packageManager
+                    .getInstalledModules(0)
                     .map { it.packageName }
                     .toHashSet()
             } else {
@@ -43,7 +44,8 @@ class PackageRepositoryImpl(
             PackageManager.MATCH_DISABLED_COMPONENTS or
                 PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
         val apps =
-            packageManager.getInstalledApplications(retrieveFlags)
+            packageManager
+                .getInstalledApplications(retrieveFlags)
                 .filterNot { hiddenModules.contains(it.packageName) }
                 .mapNotNull {
                     logcat(LogPriority.VERBOSE) { "loadAll() ${it.packageName}" }
@@ -60,7 +62,8 @@ class PackageRepositoryImpl(
     override suspend fun loadHomePackageNames(): Set<String> {
         val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
         val pkgs =
-            packageManager.queryIntentActivities(intent, 0)
+            packageManager
+                .queryIntentActivities(intent, 0)
                 .map { it.activityInfo.packageName }
         logcat(LogPriority.VERBOSE) { "loadHomePackageNames = $pkgs" }
         return pkgs.toHashSet()
@@ -76,13 +79,9 @@ class PackageRepositoryImpl(
         return res?.activityInfo?.applicationInfo?.packageName
     }
 
-    override fun loadLabel(applicationInfo: ApplicationInfo): String {
-        return applicationInfo.loadLabel(packageManager).toString()
-    }
+    override fun loadLabel(applicationInfo: ApplicationInfo): String = applicationInfo.loadLabel(packageManager).toString()
 
-    override fun loadIcon(applicationInfo: ApplicationInfo): Drawable {
-        return applicationInfo.loadIcon(packageManager)
-    }
+    override fun loadIcon(applicationInfo: ApplicationInfo): Drawable = applicationInfo.loadIcon(packageManager)
 
     override val systemPackage: PackageInfo? by lazy {
         try {
@@ -97,9 +96,11 @@ class PackageRepositoryImpl(
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
                 val v =
-                    PackageManager::class.declaredMemberFunctions.firstOrNull {
-                        it.name == "getPermissionControllerPackageName"
-                    }?.call(packageManager) as? String
+                    PackageManager::class
+                        .declaredMemberFunctions
+                        .firstOrNull {
+                            it.name == "getPermissionControllerPackageName"
+                        }?.call(packageManager) as? String
                 logcat(LogPriority.VERBOSE) { "permissionControllerPackageName = $v" }
                 return@lazy v
             } catch (t: Throwable) {
@@ -113,9 +114,11 @@ class PackageRepositoryImpl(
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
                 val v =
-                    PackageManager::class.declaredMemberFunctions.firstOrNull {
-                        it.name == "getServicesSystemSharedLibraryPackageName"
-                    }?.call(packageManager) as? String
+                    PackageManager::class
+                        .declaredMemberFunctions
+                        .firstOrNull {
+                            it.name == "getServicesSystemSharedLibraryPackageName"
+                        }?.call(packageManager) as? String
                 logcat(LogPriority.VERBOSE) { "servicesSystemSharedLibraryPackageName = $v" }
                 return@lazy v
             } catch (t: Throwable) {
@@ -129,9 +132,11 @@ class PackageRepositoryImpl(
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             try {
                 val v =
-                    PackageManager::class.declaredMemberFunctions.firstOrNull {
-                        it.name == "getSharedSystemSharedLibraryPackageName"
-                    }?.call(packageManager) as? String
+                    PackageManager::class
+                        .declaredMemberFunctions
+                        .firstOrNull {
+                            it.name == "getSharedSystemSharedLibraryPackageName"
+                        }?.call(packageManager) as? String
                 logcat(LogPriority.VERBOSE) { "sharedSystemSharedLibraryPackageName = $v" }
                 return@lazy v
             } catch (t: Throwable) {
@@ -144,9 +149,11 @@ class PackageRepositoryImpl(
     override val printSpoolerPackageName: String? by lazy {
         try {
             val v =
-                PrintManager::class.staticProperties.firstOrNull {
-                    it.name == "PRINT_SPOOLER_PACKAGE_NAME"
-                }?.call() as? String
+                PrintManager::class
+                    .staticProperties
+                    .firstOrNull {
+                        it.name == "PRINT_SPOOLER_PACKAGE_NAME"
+                    }?.call() as? String
             logcat(LogPriority.VERBOSE) { "PRINT_SPOOLER_PACKAGE_NAME = $v" }
             return@lazy v ?: "com.android.printspooler"
         } catch (t: Throwable) {

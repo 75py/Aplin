@@ -72,8 +72,11 @@ class LoadPackagesUseCaseTest {
                     )
 
                 val isDisableButtonFound =
-                    uiDevice.findObject(UiSelector().textStartsWith(disableButtonLabel))
-                        .waitForExists(timeout)
+                    uiDevice
+                        .findObject(
+                            UiSelector()
+                                .textStartsWith(disableButtonLabel),
+                        ).waitForExists(timeout)
                 if (!isDisableButtonFound) {
                     logcat(LogPriority.ERROR) { "disable button not found: ${model.packageName} ${model.label}" }
                     return@forEach

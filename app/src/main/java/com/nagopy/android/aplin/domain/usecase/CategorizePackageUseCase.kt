@@ -16,8 +16,8 @@ class CategorizePackageUseCase(
         getSignatureStrings(packageRepository.systemPackage)
     }
 
-    private fun isSystemPackage(packageInfo: PackageInfo?): Boolean {
-        return packageInfo != null &&
+    private fun isSystemPackage(packageInfo: PackageInfo?): Boolean =
+        packageInfo != null &&
             (
                 isThisASystemPackage(packageInfo) ||
                     packageInfo.packageName == packageRepository.permissionControllerPackageName ||
@@ -26,10 +26,9 @@ class CategorizePackageUseCase(
                     packageInfo.packageName == packageRepository.printSpoolerPackageName ||
                     packageInfo.packageName == packageRepository.deviceProvisioningPackage
             )
-    }
 
-    private fun getSignatureStrings(packageInfo: PackageInfo?): List<String> {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    private fun getSignatureStrings(packageInfo: PackageInfo?): List<String> =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             packageInfo?.signingInfo?.let { signingInfo ->
                 if (signingInfo.hasMultipleSigners()) {
                     signingInfo.apkContentsSigners.map { sig -> sig.toCharsString() }
@@ -41,7 +40,6 @@ class CategorizePackageUseCase(
             @Suppress("DEPRECATION")
             packageInfo?.signatures?.map { sig -> sig.toCharsString() }
         } ?: emptyList()
-    }
 
     private fun isThisASystemPackage(packageInfo: PackageInfo?): Boolean {
         val signatures = getSignatureStrings(packageInfo)
@@ -97,7 +95,10 @@ class CategorizePackageUseCase(
 
         // not implemented: hasBaseUserRestriction
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && packageInfo.applicationInfo?.isResourceOverlay == true) {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            packageInfo.applicationInfo?.isResourceOverlay == true
+        ) {
             if (isBundled) {
                 enabled = false
             } else {

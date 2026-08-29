@@ -46,8 +46,7 @@ sealed class Screen(
     abstract class AppListScreen(
         route: String,
         @StringRes resourceId: Int,
-    ) :
-        Screen(route, resourceId) {
+    ) : Screen(route, resourceId) {
         abstract fun getAppList(
             packagesModel: PackagesModel,
             searchText: String,
@@ -64,8 +63,6 @@ sealed class Screen(
                 Preferences,
             ) + appListScreens
 
-        fun find(route: String?): Screen {
-            return values.find { it.route == route } ?: Top
-        }
+        fun find(route: String?): Screen = values.find { it.route == route } ?: Top
     }
 }

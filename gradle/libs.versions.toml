@@ -7,13 +7,13 @@ javaVersion = "17"
 
 # plugins
 ossLicensesPlugin = "0.10.6"
-androidGradlePlugin = "8.10.0"
-kotlinAndroidPlugin = "2.0.21"
-ktlintPlugin = "12.1.1"
-koverPlugin = "0.8.3"
+androidGradlePlugin = "8.13.2"
+kotlinAndroidPlugin = "2.3.21"
+ktlintPlugin = "14.2.0"
+koverPlugin = "0.9.9"
 
 # libraries
-kotlin = "2.0.21"
+kotlin = "2.3.21"
 ktx = "1.15.0"
 composeUi = "1.7.5"
 composeMaterial = "1.7.5"
@@ -27,7 +27,7 @@ androidxTestRunner = "1.6.2"
 androidxTestRules = "1.6.1"
 androidxTestUiautomator = "2.3.0"
 koinAndroid = "4.0.0"
-kotlinReflect = "2.0.21"
+kotlinReflect = "2.3.21"
 logcat = "0.1"
 navigationCompose = "2.8.4"
 ossLicensesPluginVersion = "0.10.6"
@@ -43,7 +43,6 @@ datastorePreferences = "1.1.1"
 
 [plugins]
 androidApp = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-androidLib = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinAndroidPlugin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
 kotlinPluginCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
