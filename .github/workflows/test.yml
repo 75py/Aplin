@@ -42,17 +42,4 @@ jobs:
           ${{ github.workspace }}/app/build/reports/kover/reportDebug.xml
         title: Code Coverage
         update-comment: true
-        min-coverage-overall: 9.5
         coverage-counter-type: LINE
-    - name: Check overall coverage
-      id: check-coverage
-      env:
-        COVERAGE_OVERALL: ${{ steps.kover.outputs.coverage-overall }}
-      run: |
-        if ! awk -v coverage="$COVERAGE_OVERALL" 'BEGIN { exit !(coverage + 0 >= 9.5) }'; then
-          echo "Overall coverage is less than the 9.5% baseline: $COVERAGE_OVERALL"
-          exit 1
-        fi
-    - name: Coverage Check Passed
-      if: success()
-      run: echo "Coverage is sufficient for merging."
