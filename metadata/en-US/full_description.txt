@@ -1,0 +1,12 @@
+Aplin helps you inspect and manage the applications already installed on your device.
+
+Features:
+
+* Browse installed apps in multiple categories, including non-system, potentially disableable, and disabled apps.
+* Search by app name or package name.
+* Open an app's system settings page to manage it.
+* Share package names as text.
+* Optionally send a search request for one app to the device's selected web-search app from an app row.
+* View the dependency license metadata bundled with the application.
+
+The FOSS build processes the installed-app list on the device and contains no advertising, consent-management, or network permission. It does not automatically collect the installed-app list or upload it in the background. If you explicitly choose Share, package names in the shared list are sent to the external share target you select. A web search sends one app label and package name to another app only after you choose that action; Aplin does not perform the web request itself.
