@@ -38,8 +38,12 @@ jobs:
       run: ./gradlew assemblePlayDebugAndroidTest assembleFossDebugAndroidTest
     - name: Build Play release bundle
       run: ./gradlew -PallowTestAds=true bundlePlayRelease
+    - name: Remove temporary ad properties before FOSS build
+      run: rm -f ads.properties
     - name: Build FOSS release APK
       run: ./gradlew assembleFossRelease
+    - name: Verify FOSS release APK
+      run: sh scripts/verify-foss-apk.sh app/build/outputs/apk/foss/release/app-foss-release-unsigned.apk
     - name: Add Play coverage report to PR
       id: kover_play
       uses: mi-kas/kover-report@v1

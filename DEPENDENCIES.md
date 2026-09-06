@@ -57,7 +57,7 @@ This document provides an overview of all Gradle dependencies used in the Aplin 
 ### Distribution-specific libraries
 - **Play only: Google Mobile Ads SDK** (25.4.0) - AdMob banner ads; isolated to `playImplementation`
 - **Play only: User Messaging Platform** (4.0.0) - Official consent and privacy-options flow; isolated to `playImplementation`
-- **FOSS only: none** - No Google Play Services, AdMob, UMP, or automatic network runtime dependency
+- **FOSS only: none** - No Google Play Services, AdMob, UMP, or automatic network runtime dependency; the final APK is checked by `scripts/verify-foss-apk.sh`
 - **Kotlinx Serialization JSON** (1.9.0) - Parses the offline Licensee catalog in the common license screen
 
 ## Testing Libraries
@@ -122,12 +122,17 @@ The update from Koin 3.5.6 to 4.0.0 is a major version change that may require c
 
 ## Distribution matrix (2026-08-29)
 
-- `play` keeps the existing Play application ID `com.nagopy.android.aplin`; `foss` adds the `.foss` application ID suffix.
+- `play` keeps `com.nagopy.android.aplin`; `foss` uses `com.nagopy.android.aplin.foss`.
 - Both variants use compile/target SDK 36, min SDK 26, versionCode 46, and versionName 5.6.0.
-- Both variants keep `QUERY_ALL_PACKAGES` because package classification is Aplin's core on-device feature.
-- Only Play has AdMob/UMP dependencies, AdMob manifest metadata, and INTERNET/ACCESS_NETWORK_STATE. The Google Mobile Ads SDK may contribute AD_ID to the Play merged manifest; FOSS removes it defensively and contains no matching runtime classes.
-- FOSS has no ads, UMP, automatic communication, or INTERNET/ACCESS_NETWORK_STATE/AD_ID permission. Web lookup is only a user-initiated `ACTION_WEB_SEARCH` intent handled by another app.
-- Both variants display the dependency catalog offline from Licensee's generated `assets/app/cash/licensee/artifacts.json`. Google OSS Licenses plugin/library has been removed.
+- Both use `QUERY_ALL_PACKAGES` for local enumeration and classification of packages already installed on the device. Neither variant automatically collects that list or uploads it in the background.
+- Only Play uses AdMob/UMP and their network/advertising manifest entries. FOSS has no advertising runtime or network permissions. A user-selected Share sends package names to the selected external share target; a user-initiated `ACTION_WEB_SEARCH` sends one app label and package name to an external handler.
+- Both variants display the build-generated Licensee dependency catalog offline from `assets/app/cash/licensee/artifacts.json`. Licensee is build-time only.
+
+## F-Droid readiness automation
+
+- F-Droid listing metadata is maintained under `metadata/<locale>` in the supported root layout. The common launcher artwork and metadata icon are documented in `ASSET-LICENSES.md`.
+- CI runs `assembleFossRelease`, then `scripts/verify-foss-apk.sh`. The smoke check uses a validated `aapt2` to check the package, version, target SDK, exact two-permission allowlist, ZIP integrity/member names, a non-empty Licensee catalog with no forbidden exact dependency group IDs, DEX strings, and manifest/resource dump text for known Play advertising, UMP, and Google OSS license runtime identifiers. It is a static boundary check, not proof of signatures, unknown obfuscated code, reproducible builds, device behavior, or F-Droid acceptance.
+- A future immutable release tag/commit and a separate external `fdroiddata` submission/review are still required. This repository does not add `.fdroid.yml` or an `fdroiddata` recipe.
 
 ## Common Dependency Update (2026-08-29)
 
@@ -138,7 +143,7 @@ The update from Koin 3.5.6 to 4.0.0 is a major version change that may require c
 - No direct Material Components dependency is declared or resolved in the release runtime graph.
 - Google Mobile Ads SDK 25.4.0 and UMP 4.0.0 are Play-only. The official UMP flow requests consent information at every launch, loads and shows required forms, checks `canRequestAds()`, exposes privacy options only when required, and does not read cached TCF values in application code.
 - Cash App Licensee 1.14.1 is build-time only. Its generated report is bundled at the documented `assets/app/cash/licensee/artifacts.json` path and is parsed by the app without a Licensee runtime dependency.
-- The in-app catalog displays coordinates and every license name, identifier, and URL present in that generated metadata. It is not a substitute for full NOTICE/copyright texts; F-Droid metadata and asset/notice licensing remain separate release work.
+- The in-app catalog displays coordinates and every license name, identifier, and URL present in that generated metadata. It is not a substitute for full NOTICE/copyright texts. Original non-code asset licensing is documented in `ASSET-LICENSES.md`; third-party NOTICE/copyright text inclusion remains separate release work.
 - Managed-emulator CI, reproducible-build proof, full third-party NOTICE/copyright text inclusion, and release signing remain outside this distribution change.
 
 ## Post-Update Verification Checklist
