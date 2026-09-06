@@ -30,6 +30,11 @@ jobs:
       run: ./gradlew ktlintCheck
     - name: Unit tests
       run: ./gradlew testPlayDebugUnitTest testFossDebugUnitTest
+    - name: Verify bundled third-party notices
+      run: |
+        ./gradlew exportPlayNoticeArtifacts exportFossNoticeArtifacts
+        python3 -m unittest discover -s scripts -p 'test_*.py'
+        python3 scripts/update-third-party-notices.py --check
     - name: Generate Kover coverage reports
       run: ./gradlew koverXmlReportPlayDebug koverXmlReportFossDebug
     - name: Android lint

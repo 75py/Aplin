@@ -138,8 +138,8 @@ The update from Koin 3.5.6 to 4.0.0 is a major version change that may require c
 - No direct Material Components dependency is declared or resolved in the release runtime graph.
 - Google Mobile Ads SDK 25.4.0 and UMP 4.0.0 are Play-only. The official UMP flow requests consent information at every launch, loads and shows required forms, checks `canRequestAds()`, exposes privacy options only when required, and does not read cached TCF values in application code.
 - Cash App Licensee 1.14.1 is build-time only. Its generated report is bundled at the documented `assets/app/cash/licensee/artifacts.json` path and is parsed by the app without a Licensee runtime dependency.
-- The in-app catalog displays coordinates and every license name, identifier, and URL present in that generated metadata. It is not a substitute for full NOTICE/copyright texts; F-Droid metadata and asset/notice licensing remain separate release work.
-- Managed-emulator CI, reproducible-build proof, full third-party NOTICE/copyright text inclusion, and release signing remain outside this distribution change.
+- The in-app catalog displays coordinates and every license name, identifier, and URL present in that generated metadata. A separate offline view displays bundled full license, NOTICE, copyright and artwork attribution texts. Each distribution has a reviewed dependency/archive manifest; builds reject stale or altered notice bundles. See `licenses/README.md` for provenance and update instructions.
+- Managed-emulator CI, reproducible-build proof, F-Droid submission, and release signing remain separate release work.
 
 ## Post-Update Verification Checklist
 

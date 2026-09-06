@@ -1,5 +1,8 @@
 import com.android.build.gradle.api.ApplicationVariant
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.security.MessageDigest
 import java.util.Properties
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -75,6 +78,94 @@ android {
 
 android.applicationVariants.all {
     configurePlayAds(this)
+}
+
+// Keep the reviewed release notices in sync with each distribution's actual graph.
+// Debug builds display the same release notices, excluding development-only tooling.
+listOf("play", "foss").forEach { distribution ->
+    val capitalized = distribution.replaceFirstChar(Char::uppercaseChar)
+    val report = layout.buildDirectory.file("reports/licensee/android${capitalized}Release/artifacts.json")
+    val notices = file("src/$distribution/assets/licenses/third-party-notices.txt")
+    val manifest = rootProject.file("licenses/$distribution.json")
+
+    tasks.register("export${capitalized}NoticeArtifacts") {
+        dependsOn("licenseeAndroid${capitalized}Release")
+        val output = layout.buildDirectory.file("reports/third-party-notices/$distribution-artifacts.json")
+        outputs.file(output)
+        // The output contains local cache paths, so always refresh it on request.
+        outputs.upToDateWhen { false }
+        doLast {
+            val artifacts =
+                configurations
+                    .getByName("${distribution}ReleaseRuntimeClasspath")
+                    .resolvedConfiguration.resolvedArtifacts
+                    .sortedBy { "${it.moduleVersion.id}:${it.file.name}" }
+                    .map { mapOf("coordinate" to it.moduleVersion.id.toString(), "file" to it.file.absolutePath) }
+            output.get().asFile.apply {
+                parentFile.mkdirs()
+                writeText(JsonOutput.prettyPrint(JsonOutput.toJson(artifacts)) + "\n")
+            }
+        }
+    }
+
+    val validateNotices =
+        tasks.register("validate${capitalized}ThirdPartyNotices") {
+            dependsOn("licenseeAndroid${capitalized}Release")
+            inputs.file(report)
+            inputs.file(manifest)
+            inputs.file(notices)
+            inputs.files(provider { configurations.getByName("${distribution}ReleaseRuntimeClasspath") })
+            doLast {
+                val recorded = JsonSlurper().parse(manifest) as Map<*, *>
+                val artifacts = JsonSlurper().parse(report.get().asFile) as List<*>
+                val coordinates =
+                    artifacts
+                        .map { entry ->
+                            val artifact = entry as Map<*, *>
+                            "${artifact["groupId"]}:${artifact["artifactId"]}:${artifact["version"]}"
+                        }.toSet()
+                val expected = (recorded["dependencies"] as List<*>).toSet()
+                check(coordinates == expected) {
+                    "Third-party notices are stale for $distribution. Review dependency LICENSE/NOTICE changes, " +
+                        "run export${capitalized}NoticeArtifacts and scripts/update-third-party-notices.py. " +
+                        "Added: ${coordinates - expected}; removed: ${expected - coordinates}"
+                }
+                val actualHash =
+                    MessageDigest
+                        .getInstance("SHA-256")
+                        .digest(notices.readBytes())
+                        .joinToString("") { "%02x".format(it) }
+                check(actualHash == recorded["noticesSha256"]) {
+                    "Bundled third-party notices differ from the reviewed $distribution manifest. Regenerate and review them."
+                }
+                val actualArtifacts =
+                    configurations
+                        .getByName("${distribution}ReleaseRuntimeClasspath")
+                        .resolvedConfiguration.resolvedArtifacts
+                        .map { artifact ->
+                            val hash =
+                                MessageDigest
+                                    .getInstance("SHA-256")
+                                    .digest(artifact.file.readBytes())
+                                    .joinToString("") { "%02x".format(it) }
+                            "${artifact.moduleVersion.id}:${artifact.file.name}:$hash"
+                        }.toSet()
+                val recordedArtifacts =
+                    (recorded["artifacts"] as List<*>)
+                        .map { entry ->
+                            val artifact = entry as Map<*, *>
+                            "${artifact["coordinate"]}:${artifact["file"]}:${artifact["sha256"]}"
+                        }.toSet()
+                check(actualArtifacts == recordedArtifacts) {
+                    "Resolved $distribution AAR/JAR contents differ from the reviewed notices. Review and regenerate them."
+                }
+            }
+        }
+    tasks.configureEach {
+        if (name == "pre${capitalized}ReleaseBuild" || name == "pre${capitalized}DebugBuild") {
+            dependsOn(validateNotices)
+        }
+    }
 }
 
 val validatePlayReleaseAds =

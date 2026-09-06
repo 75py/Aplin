@@ -30,11 +30,11 @@ The Play release is available [on Google Play](https://play.google.com/store/app
 
 Play release requires a local, untracked `ads.properties` containing a correctly formatted real `appId` and `unitId`. Missing, placeholder, malformed, or known Google test IDs fail release validation. For non-publishable local/CI checks only, pass `-PallowTestAds=true`; this adds the `.ci` suffix, so `bundlePlayRelease` uses `com.nagopy.android.aplin.ci` and cannot be confused with the normal `com.nagopy.android.aplin` release. Play debug uses Google's official test IDs. FOSS builds do not read this file. `bundlePlayRelease` is unsigned unless a signing configuration is supplied separately.
 
-The open source license screen is generated from Cash App Licensee's build-time report and reads the bundled `assets/app/cash/licensee/artifacts.json` file offline. It displays dependency coordinates and the license metadata present in that generated list, not complete NOTICE/copyright texts. Licensee itself is not an application runtime dependency. F-Droid metadata and asset/notice licensing remain separate release work.
+The open source license screen reads Cash App Licensee's bundled dependency catalog offline and provides a separate view of complete bundled third-party license and notice texts. The texts include upstream archive notices, reviewed supplemental copyright/NOTICE files, Google SDK third-party notices in Play, and Android robot artwork attribution. Licensee itself is not an application runtime dependency. See [license provenance and update instructions](licenses/README.md).
 
 FOSS uses `QUERY_ALL_PACKAGES` only to classify packages already installed on the device. It does not use that permission for network access or data collection.
 
-Managed-emulator CI, reproducible-build proof, full third-party NOTICE/copyright text inclusion, and release signing are outside this distribution split and remain separate release work.
+Managed-emulator CI, reproducible-build proof, F-Droid submission, and release signing remain separate release work.
 
 ## License
 Aplin's source code is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).

@@ -1,0 +1,7 @@
+Android robot artwork
+
+The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.
+
+Artwork used in Aplin launcher icons.
+https://developer.android.com/distribute/marketing-tools/brand-guidelines
+https://creativecommons.org/licenses/by/3.0/
