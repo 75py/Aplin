@@ -33,6 +33,8 @@ sh scripts/verify-foss-apk.sh
 
 Play release requires a local, untracked `ads.properties` containing correctly formatted real `appId` and `unitId` values. For non-publishable local or CI checks only, pass `-PallowTestAds=true`; Play debug uses Google's official test IDs. FOSS artifacts do not use or package values from this file. `bundlePlayRelease` is unsigned unless a signing configuration is supplied separately.
 
+The open source license screen reads Cash App Licensee's bundled dependency catalog offline and provides a separate view of complete bundled third-party license and notice texts. The texts include upstream archive notices, reviewed supplemental copyright/NOTICE files, Google SDK third-party notices in Play, and Android robot artwork attribution. Licensee itself is not an application runtime dependency. See [license provenance and update instructions](licenses/README.md).
+
 ## Privacy and variants
 
 Both variants use `QUERY_ALL_PACKAGES` only to enumerate and classify packages already installed on the device. Neither variant automatically collects the installed-app list or uploads it in the background. If you explicitly choose Share, package names in the shared list are sent to the external share target you select. A user-initiated web search sends one app label and package name in an `ACTION_WEB_SEARCH` intent to another installed handler; Aplin does not perform the web request itself.
@@ -45,7 +47,7 @@ The common launcher artwork and F-Droid metadata icon are documented in [ASSET-L
 
 CI builds `assembleFossRelease` and then runs `scripts/verify-foss-apk.sh`. The small static smoke check uses a validated `aapt2`, checks the FOSS package, version, target SDK, exact two-permission allowlist, ZIP integrity and member names, a non-empty Licensee catalog with no forbidden exact dependency group IDs, DEX strings, and `aapt2` manifest/resource dumps for known Play advertising, UMP, and Google OSS license runtime identifiers. It does not prove signatures, unknown obfuscated code, reproducible builds, device behavior, or F-Droid acceptance.
 
-The future release tag/commit, release signing, external `fdroiddata` submission/review, managed-emulator coverage, and complete third-party NOTICE/copyright text remain separate release work.
+The future release tag/commit, release signing, external `fdroiddata` submission/review, managed-emulator coverage, and reproducible-build proof remain separate release work.
 
 ## License
 

@@ -7,8 +7,13 @@
     <string name="category_all">全てのアプリ</string>
     <string name="licenses">オープンソースライセンス</string>
     <string name="licenses_unavailable">ライセンス情報を読み込めません。</string>
+    <string name="licenses_notices_button">ライセンス全文を表示</string>
+    <string name="licenses_notices_title">サードパーティライセンスの全文</string>
+    <string name="licenses_notices_loading">ライセンス全文を読み込んでいます…</string>
+    <string name="licenses_notices_unavailable">ライセンス全文を読み込めません。</string>
     <string name="license_unknown">不明なライセンス</string>
     <string name="license_source">ソース：%s</string>
+    <string name="navigate_back">戻る</string>
     <string name="web_search_unavailable">ウェブ検索アプリが見つかりません。</string>
     <string name="share">共有</string>
     <string name="search">検索</string>

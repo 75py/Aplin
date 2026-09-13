@@ -1,0 +1,6 @@
+Google SDK components
+
+These Google SDKs are proprietary components. Their Maven metadata specifies the Android Software Development Kit License Agreement:
+https://developer.android.com/studio/terms.html
+
+The third-party open-source license and attribution texts supplied inside each SDK are reproduced separately below. Those texts apply to the named third-party components; they do not relicense the Google SDK itself.
