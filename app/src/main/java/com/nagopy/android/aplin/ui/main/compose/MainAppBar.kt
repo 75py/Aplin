@@ -9,6 +9,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -20,13 +22,14 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
@@ -35,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -91,46 +95,54 @@ fun DefaultAppBar(
                 .background(MaterialTheme.colors.primarySurface)
                 .statusBarsPadding(),
         title = {
-            Text(text = stringResource(id = currentScreen.resourceId))
+            Text(
+                text = stringResource(id = currentScreen.resourceId),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         },
         actions = {
             if (state.isLoading && state.packagesModel != null) {
                 CircularProgressIndicator(color = Color.LightGray)
             }
 
-            if (currentScreen is Screen.AppListScreen && state.packagesModel != null) {
-                IconButton(onClick = {
-                    sharePackages.invoke(
-                        currentScreen.getAppList(
-                            state.packagesModel,
-                            state.searchText,
-                        ),
-                    )
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = stringResource(id = R.string.share),
-                    )
-                }
-            }
-
             if (currentScreen !is Screen.Preferences) {
-                IconButton(onClick = {
-                    onSearchTriggered()
-                }) {
+                var menuExpanded by remember { mutableStateOf(false) }
+                IconButton(onClick = { menuExpanded = true }) {
                     Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(id = R.string.search),
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = stringResource(id = R.string.more_options),
                     )
                 }
-
-                IconButton(onClick = {
-                    navController.navigate(Screen.Preferences.route)
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(id = R.string.preferences),
-                    )
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false },
+                ) {
+                    if (currentScreen is Screen.AppListScreen && state.packagesModel != null) {
+                        DropdownMenuItem(onClick = {
+                            menuExpanded = false
+                            sharePackages.invoke(
+                                currentScreen.getAppList(
+                                    state.packagesModel,
+                                    state.searchText,
+                                ),
+                            )
+                        }) {
+                            Text(text = stringResource(id = R.string.share))
+                        }
+                    }
+                    DropdownMenuItem(onClick = {
+                        menuExpanded = false
+                        onSearchTriggered()
+                    }) {
+                        Text(text = stringResource(id = R.string.search))
+                    }
+                    DropdownMenuItem(onClick = {
+                        menuExpanded = false
+                        navController.navigate(Screen.Preferences.route)
+                    }) {
+                        Text(text = stringResource(id = R.string.preferences))
+                    }
                 }
             }
         },
