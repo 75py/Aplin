@@ -13,8 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +51,10 @@ fun VerticalAppList(
     val displayItems =
         UserDataStore(LocalContext.current.dataStore).displayItems.collectAsState(initial = emptyList())
     val iconSize = with(LocalDensity.current) { launcherLargeIconSize.toDp() }
-    LazyColumn(modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 400.dp),
+        modifier = modifier,
+    ) {
         items(packages) { pkg ->
             Item(startDetailSettingsActivity, searchByWeb, iconSize, displayItems.value, pkg)
         }

@@ -38,6 +38,7 @@ fun AppListScreen(
 @Preview(name = "5-inch Device Landscape", widthDp = 640, heightDp = 360)
 @Preview(name = "10-inch Tablet Portrait", widthDp = 600, heightDp = 960)
 @Preview(name = "10-inch Tablet Landscape", widthDp = 960, heightDp = 600)
+@Preview(name = "Foldable Inner Portrait", widthDp = 840, heightDp = 900)
 @Composable
 fun AppListScreenLoadedPreview() {
     val packages =
