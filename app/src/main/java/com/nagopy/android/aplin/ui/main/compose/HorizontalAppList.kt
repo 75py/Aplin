@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import com.nagopy.android.aplin.domain.model.PackageModel
 import kotlin.math.min
@@ -35,11 +36,11 @@ fun HorizontalAppList(
 ) {
     val lc = LocalConfiguration.current
     val itemWidth =
-        remember {
-            min(lc.screenWidthDp, lc.screenHeightDp).dp / 2.6f
+        remember(lc.screenWidthDp, lc.screenHeightDp) {
+            min(min(lc.screenWidthDp, lc.screenHeightDp).dp / 2.6f, 160.dp)
         }
     val iconSize =
-        remember {
+        remember(lc.screenWidthDp, lc.screenHeightDp) {
             itemWidth / 2.0f
         }
     LazyRow {
