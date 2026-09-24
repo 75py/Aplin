@@ -3,7 +3,7 @@
 set -eu
 
 EXPECTED_PACKAGE='com.nagopy.android.aplin.foss'
-EXPECTED_VERSION_CODE='46'
+EXPECTED_VERSION_CODE='47'
 EXPECTED_VERSION_NAME='5.6.0'
 EXPECTED_TARGET_SDK='36'
 DEFAULT_APK='app/build/outputs/apk/foss/release/app-foss-release-unsigned.apk'
