@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -107,6 +108,15 @@ fun DefaultAppBar(
             }
 
             if (currentScreen !is Screen.Preferences) {
+                IconButton(onClick = {
+                    onSearchTriggered()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(id = R.string.search),
+                    )
+                }
+
                 var menuExpanded by remember { mutableStateOf(false) }
                 IconButton(onClick = { menuExpanded = true }) {
                     Icon(
@@ -130,12 +140,6 @@ fun DefaultAppBar(
                         }) {
                             Text(text = stringResource(id = R.string.share))
                         }
-                    }
-                    DropdownMenuItem(onClick = {
-                        menuExpanded = false
-                        onSearchTriggered()
-                    }) {
-                        Text(text = stringResource(id = R.string.search))
                     }
                     DropdownMenuItem(onClick = {
                         menuExpanded = false
