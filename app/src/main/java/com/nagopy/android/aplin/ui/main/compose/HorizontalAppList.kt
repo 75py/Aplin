@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -22,6 +21,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.coerceAtMost
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nagopy.android.aplin.domain.model.PackageModel
@@ -34,14 +34,8 @@ fun HorizontalAppList(
     searchByWeb: (PackageModel) -> Unit,
 ) {
     val lc = LocalConfiguration.current
-    val itemWidth =
-        remember {
-            min(lc.screenWidthDp, lc.screenHeightDp).dp / 2.6f
-        }
-    val iconSize =
-        remember {
-            itemWidth / 2.0f
-        }
+    val itemWidth = (min(lc.screenWidthDp, lc.screenHeightDp).dp / 2.6f).coerceAtMost(160.dp)
+    val iconSize = itemWidth / 2.0f
     LazyRow {
         items(disableablePackages) { pkg ->
             Item(itemWidth, iconSize, startDetailSettingsActivity, searchByWeb, pkg)

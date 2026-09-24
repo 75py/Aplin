@@ -5,14 +5,16 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
@@ -39,6 +41,9 @@ import java.util.Date
 
 private const val TOO_OLD_TIMESTAMP = 1230768000000L // 2009-01-01
 
+// Two columns from an 800dp-wide screen, including the 8dp padding added by AppListScreen.
+private val MIN_COLUMN_WIDTH = 392.dp
+
 @Composable
 fun VerticalAppList(
     modifier: Modifier = Modifier,
@@ -50,9 +55,27 @@ fun VerticalAppList(
     val displayItems =
         UserDataStore(LocalContext.current.dataStore).displayItems.collectAsState(initial = emptyList())
     val iconSize = with(LocalDensity.current) { launcherLargeIconSize.toDp() }
-    LazyColumn(modifier) {
-        items(packages) { pkg ->
-            Item(startDetailSettingsActivity, searchByWeb, iconSize, displayItems.value, pkg)
+    BoxWithConstraints(modifier) {
+        val columns = (maxWidth / MIN_COLUMN_WIDTH).toInt().coerceAtLeast(1)
+        // Rows are laid out manually (instead of LazyVerticalGrid) so cards in the same row share the same height.
+        LazyColumn {
+            items(packages.chunked(columns), key = { it.first().packageName }) { rowPackages ->
+                Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+                    rowPackages.forEach { pkg ->
+                        Item(
+                            startDetailSettingsActivity,
+                            searchByWeb,
+                            iconSize,
+                            displayItems.value,
+                            pkg,
+                            Modifier.weight(1f).fillMaxHeight(),
+                        )
+                    }
+                    repeat(columns - rowPackages.size) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+            }
         }
     }
 }
@@ -65,12 +88,12 @@ private fun Item(
     iconSize: Dp,
     displayItems: List<DisplayItem>,
     pkg: PackageModel,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
                 .padding(8.dp)
                 .alpha(if (pkg.isEnabled) 1.0f else 0.5f)
                 .combinedClickable(
